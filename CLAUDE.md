@@ -68,6 +68,26 @@ Microsoft Fabric Planning knowledge hub owned by Khaled Chowdhury ("The Fabric W
 - WCAG AA color contrast compliance
 - This site is **not officially affiliated with Microsoft** — do not use Microsoft branding or Microsoft blue (`#0078d4`)
 
+## llms.txt and /md/ Maintenance
+
+This project auto-generates `/llms.txt`, `/llms-full.txt`, and the `/md/` directory via a GitHub Action.
+
+- Generator script: `scripts/generate-llms-txt.mjs`
+- GitHub Action: `.github/workflows/generate-llms-txt.yml`
+- Output: `public/llms.txt`, `public/llms-full.txt`, and `public/md/` directory
+- Schedule: Weekly (Monday 6 AM UTC) + on every content push to `main` + manual trigger
+
+**When adding new content types or changing content directory structure:**
+Update the `SOURCES` array in `scripts/generate-llms-txt.mjs` to include the new paths.
+
+**When adding new pages that should appear in llms.txt:**
+No action needed if the page is a markdown file inside one of the configured `SOURCES` directories. The script auto-discovers all `.md`/`.mdx` files. Pages authored as `.astro` files are not currently picked up.
+
+**To manually regenerate:**
+Run `node scripts/generate-llms-txt.mjs` locally, or trigger the GitHub Action manually from the Actions tab.
+
+**Do NOT edit `public/llms.txt`, `public/llms-full.txt`, or anything in `public/md/` manually.** They are auto-generated and will be overwritten.
+
 ## Where to look
 
 - `.claude/skills/site-platform.md` — design system, colors, typography, layout, Netlify Forms, SEO, accessibility
