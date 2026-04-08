@@ -45,8 +45,6 @@ const posts = (await getCollection("socialMedia")).sort(
                 url={post.data.url}
                 date={post.data.date}
                 excerpt={post.data.excerpt}
-                likes={post.data.likes}
-                comments={post.data.comments}
                 image={post.data.image}
               />
             ))}

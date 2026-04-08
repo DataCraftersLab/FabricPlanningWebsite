@@ -83,13 +83,6 @@ export default function MobileMenu() {
             >
               About
             </a>
-            <a
-              href="/contact"
-              className="rounded-md px-3 py-3 text-base font-medium text-white hover:bg-white/10"
-              onClick={close}
-            >
-              Contact
-            </a>
           </nav>
         </div>
       )}
