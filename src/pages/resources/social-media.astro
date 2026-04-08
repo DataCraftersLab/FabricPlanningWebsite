@@ -1,25 +1,57 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import SocialCard from "../../components/SocialCard.astro";
+
+const posts = (await getCollection("socialMedia")).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
 ---
 
 <Layout
-  title="Social Media — Fabric Planning"
+  title="From the Community — Fabric Planning"
   description="Discussions, insights, and updates on Microsoft Fabric Planning from across social media."
 >
-  <section
-    class="flex min-h-[60vh] items-center justify-center px-6 py-20 text-center"
-  >
-    <div>
-      <p
-        class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-fabric-purple"
-      >
-        Social Media
-      </p>
-      <h1
-        class="text-4xl font-bold tracking-tight text-forest md:text-5xl"
-      >
-        Coming soon
-      </h1>
+  <section class="bg-[#f8fafc]">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <header class="mb-12 text-center">
+        <p
+          class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-fabric-purple"
+        >
+          Resources
+        </p>
+        <h1
+          class="mb-4 text-4xl font-bold tracking-tight text-forest md:text-5xl"
+        >
+          From the Community
+        </h1>
+        <p class="mx-auto max-w-2xl text-base text-gray-muted md:text-lg">
+          Discussions, insights, and updates on Microsoft Fabric Planning from
+          across LinkedIn, Reddit, and beyond.
+        </p>
+      </header>
+
+      {
+        posts.length === 0 ? (
+          <p class="text-center text-base text-gray-muted">
+            No community posts yet. Check back soon.
+          </p>
+        ) : (
+          <div class="grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {posts.map((post) => (
+              <SocialCard
+                author={post.data.author}
+                platform={post.data.platform}
+                url={post.data.url}
+                date={post.data.date}
+                excerpt={post.data.excerpt}
+                likes={post.data.likes}
+                comments={post.data.comments}
+              />
+            ))}
+          </div>
+        )
+      }
     </div>
   </section>
 </Layout>
