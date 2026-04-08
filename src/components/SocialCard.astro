@@ -7,9 +7,11 @@ interface Props {
   excerpt: string;
   likes: number;
   comments: number;
+  image?: string;
 }
 
-const { author, platform, url, date, excerpt, likes, comments } = Astro.props;
+const { author, platform, url, date, excerpt, likes, comments, image } =
+  Astro.props;
 
 const platformLabel =
   platform === "linkedin"
@@ -70,6 +72,17 @@ const timeAgo =
   <p class="mb-4 line-clamp-4 text-sm leading-relaxed text-slate-text">
     &ldquo;{excerpt}&rdquo;
   </p>
+
+  {
+    image && (
+      <img
+        src={image}
+        alt={`Post by ${author}`}
+        loading="lazy"
+        class="mb-4 h-[120px] w-full rounded-lg object-cover"
+      />
+    )
+  }
 
   <div
     class="mt-auto flex items-center justify-between border-t border-slate-100 pt-3"

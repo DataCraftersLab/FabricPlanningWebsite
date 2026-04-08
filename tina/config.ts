@@ -102,6 +102,13 @@ export default defineConfig({
           },
           { type: "boolean", name: "isPast", label: "Is Past" },
           {
+            type: "string",
+            name: "featuredImage",
+            label: "Featured Image URL",
+            description:
+              "Full URL on https://media.fabricplanning.io. Do NOT commit images to the repo.",
+          },
+          {
             type: "rich-text",
             name: "body",
             label: "Extended Description",
@@ -193,6 +200,13 @@ export default defineConfig({
           },
           { type: "number", name: "likes", label: "Likes" },
           { type: "number", name: "comments", label: "Comments" },
+          {
+            type: "string",
+            name: "image",
+            label: "Image URL",
+            description:
+              "Full URL on https://media.fabricplanning.io. Do NOT commit images to the repo.",
+          },
         ],
       },
 

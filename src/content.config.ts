@@ -12,6 +12,7 @@ const events = defineCollection({
     description: z.string(),
     registrationUrl: z.string().optional(),
     isPast: z.boolean().default(false),
+    featuredImage: z.string().url().optional(),
   }),
 });
 
@@ -25,6 +26,7 @@ const socialMedia = defineCollection({
     excerpt: z.string(),
     likes: z.number().default(0),
     comments: z.number().default(0),
+    image: z.string().url().optional(),
   }),
 });
 

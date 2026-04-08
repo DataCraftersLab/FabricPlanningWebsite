@@ -165,27 +165,34 @@ const socialPosts = (await getCollection("socialMedia")).sort(
         </div>
       </div>
 
-      <div
-        id="events-scroll"
-        class="-mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-6 pb-2"
-        style="scrollbar-width: thin;"
-      >
-        {
-          events.map((event) => (
-            <div class="snap-start">
-              <EventCard
-                title={event.data.title}
-                date={event.data.date}
-                time={event.data.time}
-                location={event.data.location}
-                type={event.data.type}
-                registrationUrl={event.data.registrationUrl}
-                isPast={event.data.isPast}
-              />
-            </div>
-          ))
-        }
-      </div>
+      {
+        events.length === 0 ? (
+          <p class="text-base text-gray-muted">
+            No events scheduled right now. Check back soon.
+          </p>
+        ) : (
+          <div
+            id="events-scroll"
+            class="-mx-6 flex snap-x snap-mandatory justify-start gap-6 overflow-x-auto scroll-smooth px-6 pb-2"
+            style="scrollbar-width: thin;"
+          >
+            {events.map((event) => (
+              <div class="shrink-0 snap-start">
+                <EventCard
+                  title={event.data.title}
+                  date={event.data.date}
+                  time={event.data.time}
+                  location={event.data.location}
+                  type={event.data.type}
+                  registrationUrl={event.data.registrationUrl}
+                  isPast={event.data.isPast}
+                  featuredImage={event.data.featuredImage}
+                />
+              </div>
+            ))}
+          </div>
+        )
+      }
     </div>
   </section>
 
@@ -213,27 +220,34 @@ const socialPosts = (await getCollection("socialMedia")).sort(
         </a>
       </div>
 
-      <div
-        id="social-scroll"
-        class="-mx-6 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-6 pb-2"
-        style="scrollbar-width: thin;"
-      >
-        {
-          socialPosts.map((post) => (
-            <div class="snap-start">
-              <SocialCard
-                author={post.data.author}
-                platform={post.data.platform}
-                url={post.data.url}
-                date={post.data.date}
-                excerpt={post.data.excerpt}
-                likes={post.data.likes}
-                comments={post.data.comments}
-              />
-            </div>
-          ))
-        }
-      </div>
+      {
+        socialPosts.length === 0 ? (
+          <p class="text-base text-gray-muted">
+            No community posts yet. Check back soon.
+          </p>
+        ) : (
+          <div
+            id="social-scroll"
+            class="-mx-6 flex snap-x snap-mandatory justify-start gap-6 overflow-x-auto scroll-smooth px-6 pb-2"
+            style="scrollbar-width: thin;"
+          >
+            {socialPosts.map((post) => (
+              <div class="shrink-0 snap-start">
+                <SocialCard
+                  author={post.data.author}
+                  platform={post.data.platform}
+                  url={post.data.url}
+                  date={post.data.date}
+                  excerpt={post.data.excerpt}
+                  likes={post.data.likes}
+                  comments={post.data.comments}
+                  image={post.data.image}
+                />
+              </div>
+            ))}
+          </div>
+        )
+      }
     </div>
   </section>
 
@@ -276,15 +290,12 @@ const socialPosts = (await getCollection("socialMedia")).sort(
         </div>
 
         <div class="flex justify-center md:justify-end">
-          <div
-            class="flex h-[140px] w-[200px] items-center justify-center rounded-xl"
-            style="background-color: #0a1d14; border: 1px solid #1B7A50;"
-            aria-hidden="true"
-          >
-            <span class="text-2xl font-bold tracking-wider text-mint-teal">
-              FFUG
-            </span>
-          </div>
+          <img
+            src="https://media.fabricplanning.io/branding/Finance%20Fabric%20User%20Group.png"
+            alt="Finance Fabric User Group - Where Finance Meets Fabric"
+            loading="lazy"
+            class="w-full max-w-[280px] rounded-xl object-cover"
+          />
         </div>
       </div>
     </div>
