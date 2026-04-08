@@ -436,6 +436,119 @@ function buildIndividualMd(item) {
   return `# ${item.title}\n\n${body}\n\n${footer}\n`;
 }
 
+/** HTML escape helper for the directory listing page. */
+function escapeHtml(s) {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+/**
+ * Build an index.html for /md/. Netlify (and most static hosts) auto-serve
+ * index.html when a directory URL is requested, so this is what users see
+ * at https://fabricplanning.io/md/.
+ */
+function buildMdIndexHtml(grouped) {
+  const ordered = [...grouped].sort((a, b) => {
+    if (a.source.section === "Main Pages") return -1;
+    if (b.source.section === "Main Pages") return 1;
+    return 0;
+  });
+
+  const sections = [];
+  for (const g of ordered) {
+    if (!g.items.length) continue;
+    const items = g.items
+      .map((item) => {
+        const href = `/md/${item.mdRelPath}`;
+        return `      <li><a href="${escapeHtml(href)}">${escapeHtml(item.title)}</a></li>`;
+      })
+      .join("\n");
+    sections.push(
+      `    <h2>${escapeHtml(g.source.section)}</h2>\n    <ul>\n${items}\n    </ul>`,
+    );
+  }
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Markdown Library — ${escapeHtml(SITE_TITLE)}</title>
+  <meta name="description" content="Browsable markdown copies of every page on fabricplanning.io.">
+  <style>
+    :root {
+      --forest: #0f2b1e;
+      --purple: #5B3F9E;
+      --slate: #334155;
+      --muted: #64748b;
+      --bg: #ffffff;
+      --wash: #faf9fc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+      color: var(--slate);
+      background: var(--bg);
+      line-height: 1.6;
+    }
+    h1 {
+      font-size: 2rem;
+      color: var(--forest);
+      margin: 0 0 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    h2 {
+      font-size: 1.125rem;
+      color: var(--forest);
+      margin: 2rem 0 0.5rem;
+      letter-spacing: -0.01em;
+    }
+    p { margin: 0 0 1rem; }
+    .lede { color: var(--muted); margin-bottom: 2rem; }
+    ul { padding-left: 1.25rem; margin: 0 0 1rem; }
+    li { margin: 0.25rem 0; }
+    a { color: var(--purple); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .meta {
+      margin-top: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #e2e8f0;
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
+    code {
+      background: var(--wash);
+      padding: 0.125rem 0.375rem;
+      border-radius: 4px;
+      font-size: 0.875em;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>${escapeHtml(SITE_TITLE)} — Markdown Library</h1>
+    <p class="lede">Browsable markdown copies of every page on <a href="${SITE_URL}/">fabricplanning.io</a>. These files are auto-generated for AI consumers and humans who want plain-text access to the site.</p>
+
+${sections.join("\n")}
+
+    <p class="meta">
+      Curated index: <a href="${SITE_URL}/llms.txt"><code>/llms.txt</code></a><br>
+      Everything in one file: <a href="${SITE_URL}/llms-full.txt"><code>/llms-full.txt</code></a><br>
+      Standard: <a href="https://llmstxt.org/" target="_blank" rel="noopener noreferrer">llmstxt.org</a>
+    </p>
+  </main>
+</body>
+</html>
+`;
+}
+
 function buildMdIndex(grouped) {
   const lines = [];
   lines.push(`# ${SITE_TITLE} — Markdown Library`);
@@ -495,8 +608,13 @@ async function main() {
     }
   }
 
-  // 4. Write index.md
+  // 4. Write index.md and index.html (the latter is what Netlify serves at /md/)
   fs.writeFileSync(path.join(MD_DIR, "index.md"), buildMdIndex(grouped), "utf8");
+  fs.writeFileSync(
+    path.join(MD_DIR, "index.html"),
+    buildMdIndexHtml(grouped),
+    "utf8",
+  );
 
   // 5. Write llms.txt and llms-full.txt
   ensureDir(PUBLIC_DIR);
