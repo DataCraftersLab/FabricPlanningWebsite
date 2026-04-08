@@ -1,0 +1,81 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+const cards = [
+  {
+    href: "/resources/events",
+    eyebrow: "Live & on-demand",
+    title: "Events",
+    description:
+      "Upcoming sessions, past recordings, and community meetups for finance and data professionals working with Microsoft Fabric Planning.",
+    accent: "border-t-medium-green",
+    cta: "Browse events",
+  },
+  {
+    href: "/resources/blog",
+    eyebrow: "Articles",
+    title: "Blog",
+    description:
+      "Long-form analysis, walkthroughs, and lessons from practitioners building real planning models on Microsoft Fabric.",
+    accent: "border-t-fabric-purple",
+    cta: "Read the blog",
+  },
+  {
+    href: "/resources/social-media",
+    eyebrow: "Community signal",
+    title: "Social Media",
+    description:
+      "Discussions, insights, and updates from across LinkedIn, Reddit, and beyond — curated for the Fabric Planning community.",
+    accent: "border-t-dc-blue",
+    cta: "See what's being said",
+  },
+];
+---
+
+<Layout
+  title="Resources — Fabric Planning"
+  description="Events, blog posts, and community discussions on Microsoft Fabric Planning."
+>
+  <section class="bg-white">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <header class="mb-16 text-center">
+        <p
+          class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-fabric-purple"
+        >
+          Resources
+        </p>
+        <h1
+          class="mb-4 text-4xl font-bold tracking-tight text-forest md:text-5xl"
+        >
+          Everything in one place
+        </h1>
+        <p class="mx-auto max-w-2xl text-base text-gray-muted md:text-lg">
+          Events, articles, and community conversations on Microsoft Fabric
+          Planning — all in one hub.
+        </p>
+      </header>
+
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          cards.map((card) => (
+            <a
+              href={card.href}
+              class={`group flex flex-col rounded-xl border-t-[3px] ${card.accent} bg-white p-8 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-1 hover:shadow-md`}
+            >
+              <p class="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gray-muted">
+                {card.eyebrow}
+              </p>
+              <h2 class="mb-3 text-2xl font-bold text-forest">{card.title}</h2>
+              <p class="mb-6 flex-1 text-base leading-relaxed text-slate-text">
+                {card.description}
+              </p>
+              <span class="text-sm font-semibold text-deep-green group-hover:underline">
+                {card.cta} &rarr;
+              </span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>
