@@ -7,10 +7,19 @@ interface Props {
   type: "virtual" | "in-person" | "webinar";
   registrationUrl?: string;
   isPast: boolean;
+  featuredImage?: string;
 }
 
-const { title, date, time, location, type, registrationUrl, isPast } =
-  Astro.props;
+const {
+  title,
+  date,
+  time,
+  location,
+  type,
+  registrationUrl,
+  isPast,
+  featuredImage,
+} = Astro.props;
 
 const typeBorderClass = isPast
   ? "border-t-gray-muted"
@@ -39,8 +48,19 @@ const formattedDate = date.toLocaleDateString("en-US", {
 ---
 
 <article
-  class={`flex min-w-[280px] max-w-[280px] flex-col rounded-xl border-t-[3px] ${typeBorderClass} bg-white p-6 shadow-sm ring-1 ring-slate-200 ${isPast ? "opacity-75" : ""}`}
+  class={`flex min-w-[280px] max-w-[280px] flex-col overflow-hidden rounded-xl border-t-[3px] ${typeBorderClass} bg-white shadow-sm ring-1 ring-slate-200 ${isPast ? "opacity-75" : ""}`}
 >
+  {
+    featuredImage && (
+      <img
+        src={featuredImage}
+        alt={title}
+        loading="lazy"
+        class="h-[160px] w-full object-cover"
+      />
+    )
+  }
+  <div class="flex flex-1 flex-col p-6">
   <div class="mb-3 flex items-center justify-between">
     <span class="inline-flex items-center gap-2 text-xs font-medium text-slate-text">
       <span class={`h-2 w-2 rounded-full ${statusDotClass}`} aria-hidden="true"
@@ -91,5 +111,6 @@ const formattedDate = date.toLocaleDateString("en-US", {
         </a>
       )
     }
+  </div>
   </div>
 </article>
