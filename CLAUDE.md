@@ -32,15 +32,21 @@ Microsoft Fabric Planning knowledge hub owned by Khaled Chowdhury ("The Fabric W
 
 ## Git workflow
 
-- Feature branches off `main`
-- **All merges go through Pull Requests** — never push directly to `main`
-- Descriptive commit messages
-- Netlify generates a deploy preview for every PR
+- **`main`** = production. Deploys to **fabricplanning.io**.
+- **`develop`** = staging. Deploys to **dev.fabricplanning.io**.
+- All work happens on **feature branches created from `develop`**.
+- Feature branches merge into `develop` via PR. Verify the change at **dev.fabricplanning.io**.
+- When `develop` is verified and ready, merge `develop` into `main` via PR. The change goes live at **fabricplanning.io**.
+- **Never push directly to `main` or `develop`.**
+- Descriptive commit messages.
+- Netlify generates a deploy preview for every PR.
 
 ## Deployment
 
-- Netlify auto-deploys from the `main` branch
+- **Production:** fabricplanning.io — auto-deploys from `main`
+- **Staging:** dev.fabricplanning.io — auto-deploys from `develop`
 - Deploy previews on every PR
+- All feature work is verified on staging before going to production
 
 ## Content
 
