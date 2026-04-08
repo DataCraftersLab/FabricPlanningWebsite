@@ -1,0 +1,48 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-forest text-white">
+  <div class="mx-auto max-w-[1200px] px-6 py-12">
+    <div
+      class="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between"
+    >
+      <p class="text-sm text-white">
+        Sponsored by{" "}
+        <a
+          href="https://datacrafters.io"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-semibold text-dc-green hover:underline"
+        >
+          Data Crafters
+        </a>
+      </p>
+
+      <a
+        href="https://substack.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-white hover:bg-white/10"
+      >
+        Subscribe on Substack
+      </a>
+    </div>
+  </div>
+
+  <!-- Multi-color accent stripe (DC globe colors) -->
+  <div class="flex h-1 w-full" aria-hidden="true">
+    <div class="flex-1 bg-dc-amber"></div>
+    <div class="flex-1 bg-dc-red"></div>
+    <div class="flex-1 bg-dc-blue"></div>
+    <div class="flex-1 bg-medium-green"></div>
+  </div>
+
+  <div class="bg-forest">
+    <div class="mx-auto max-w-[1200px] px-6 py-4">
+      <p class="text-center text-xs text-white/70">
+        &copy; {year} Fabric Planning. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>

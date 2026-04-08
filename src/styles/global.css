@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+/* Plus Jakarta Sans (headings + body) */
+@import "@fontsource/plus-jakarta-sans/400.css";
+@import "@fontsource/plus-jakarta-sans/500.css";
+@import "@fontsource/plus-jakarta-sans/600.css";
+@import "@fontsource/plus-jakarta-sans/700.css";
+
+/* JetBrains Mono (code) */
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/500.css";
+
+@theme {
+  /* ---------- Primary: Fabric IQ greens (dominant) ---------- */
+  --color-forest: #0f2b1e;
+  --color-deep-green: #1b7a50;
+  --color-medium-green: #3ba776;
+  --color-mint-teal: #7dd3a8;
+  --color-mint-wash: #f0fdf4;
+
+  /* ---------- Secondary: Fabric Planning purple ---------- */
+  --color-deep-purple: #5b3f9e;
+  --color-fabric-purple: #7b61b8;
+  --color-light-purple: #a78bdb;
+  --color-purple-wash: #f5f3ff;
+
+  /* ---------- Accent: Data Crafters globe colors ---------- */
+  --color-dc-blue: #2563eb;
+  --color-dc-red: #dc2626;
+  --color-dc-amber: #e5a019;
+  --color-dc-green: #4ade80;
+
+  /* ---------- Neutrals ---------- */
+  --color-slate-text: #334155;
+  --color-gray-muted: #64748b;
+  --color-gray-bg: #f8fafc;
+
+  /* ---------- Typography ---------- */
+  --font-sans:
+    "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", Menlo, Monaco, monospace;
+
+  /* ---------- Layout ---------- */
+  --container-site: 1200px;
+}
+
+html {
+  font-family: var(--font-sans);
+  color: var(--color-slate-text);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  background-color: #ffffff;
+}
+
+code,
+pre {
+  font-family: var(--font-mono);
+}
