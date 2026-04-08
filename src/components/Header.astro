@@ -1,15 +1,14 @@
 ---
 import MobileMenu from "./MobileMenu.tsx";
 
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+const resourceLinks = [
+  { href: "/resources/events", label: "Events" },
+  { href: "/resources/blog", label: "Blog" },
+  { href: "/resources/social-media", label: "Social Media" },
 ];
 ---
 
-<header class="relative bg-forest text-white">
+<header class="relative z-30 bg-forest text-white">
   <div
     class="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-4"
   >
@@ -22,18 +21,82 @@ const links = [
 
     <nav class="hidden md:block">
       <ul class="flex items-center gap-8">
-        {
-          links.map((link) => (
-            <li>
-              <a
-                href={link.href}
-                class="text-sm font-medium text-white hover:text-mint-teal"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))
-        }
+        <li>
+          <a
+            href="/"
+            class="text-sm font-medium text-white hover:text-mint-teal"
+          >
+            Home
+          </a>
+        </li>
+        <li>
+          <a
+            href="/faq"
+            class="text-sm font-medium text-white hover:text-mint-teal"
+          >
+            FAQ
+          </a>
+        </li>
+
+        <li class="group relative">
+          <button
+            type="button"
+            aria-haspopup="true"
+            class="inline-flex items-center gap-1 text-sm font-medium text-white hover:text-mint-teal focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+          >
+            Resources
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </button>
+          <!-- Hover/focus dropdown panel. pt-3 leaves a hover-safe gap. -->
+          <div
+            class="invisible absolute left-1/2 top-full z-40 -translate-x-1/2 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
+          >
+            <div
+              class="min-w-[200px] rounded-xl border border-mint-teal/20 bg-white py-2 shadow-md"
+            >
+              {
+                resourceLinks.map((link) => (
+                  <a
+                    href={link.href}
+                    class="block px-4 py-2 text-sm font-medium text-slate-text hover:bg-mint-wash hover:text-deep-green"
+                  >
+                    {link.label}
+                  </a>
+                ))
+              }
+            </div>
+          </div>
+        </li>
+
+        <li>
+          <a
+            href="/about"
+            class="text-sm font-medium text-white hover:text-mint-teal"
+          >
+            About
+          </a>
+        </li>
+        <li>
+          <a
+            href="/contact"
+            class="text-sm font-medium text-white hover:text-mint-teal"
+          >
+            Contact
+          </a>
+        </li>
       </ul>
     </nav>
 
