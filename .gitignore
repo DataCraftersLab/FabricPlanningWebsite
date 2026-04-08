@@ -26,3 +26,7 @@ Thumbs.db
 
 # astro
 .astro/
+
+# tina (generated)
+tina/__generated__/
+public/admin/
