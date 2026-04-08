@@ -47,7 +47,9 @@ const socialPosts = (await getCollection("socialMedia")).sort(
         Fabric Planning. Built by practitioners, for practitioners.
       </p>
       <a
-        href="#"
+        href="https://fabricplanning.substack.com"
+        target="_blank"
+        rel="noopener noreferrer"
         class="inline-flex items-center justify-center rounded-lg px-8 py-4 text-base font-semibold text-white shadow-md transition hover:shadow-lg"
         style="background: linear-gradient(135deg, #7B61B8 0%, #5B3F9E 100%);"
       >
@@ -239,8 +241,6 @@ const socialPosts = (await getCollection("socialMedia")).sort(
                   url={post.data.url}
                   date={post.data.date}
                   excerpt={post.data.excerpt}
-                  likes={post.data.likes}
-                  comments={post.data.comments}
                   image={post.data.image}
                 />
               </div>
@@ -317,7 +317,9 @@ const socialPosts = (await getCollection("socialMedia")).sort(
           No spam, just insights.
         </p>
         <a
-          href="#"
+          href="https://fabricplanning.substack.com"
+          target="_blank"
+          rel="noopener noreferrer"
           class="inline-flex items-center justify-center rounded-lg bg-white px-8 py-4 text-base font-semibold text-fabric-purple shadow-md transition hover:shadow-lg"
         >
           Subscribe on Substack

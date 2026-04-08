@@ -99,7 +99,7 @@ Three tiers: **Primary** (Fabric IQ greens — dominant), **Secondary** (Fabric 
 ## Deployment
 
 - **Production:** fabricplanning.io — deploys from the `main` branch
-- **Staging:** dev.fabricplanning.io — deploys from the `develop` branch
+- **Staging:** develop--fabricplanning.netlify.app — deploys from the `develop` branch
 - **Deploy previews:** generated for every PR on Netlify
 - All feature work is verified on staging before going to production
 
