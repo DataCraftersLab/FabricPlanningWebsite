@@ -1,0 +1,15 @@
+# Fabric Planning
+> The knowledge hub for Microsoft Fabric Planning -- budgeting, forecasting, and financial planning powered by Microsoft Fabric.
+
+Fabric Planning is an emerging capability within Microsoft Fabric that brings planning, budgeting, and forecasting natively into the Microsoft data stack. This site provides educational content, FAQs, knowledge base articles, and community resources for finance and data professionals exploring Fabric Planning.
+
+## Main Pages
+- [Home](https://fabricplanning.io/): Overview of Fabric Planning and what this knowledge hub offers ([markdown](https://fabricplanning.io/md/home.md))
+- [FAQ](https://fabricplanning.io/faq/): Common questions about Microsoft Fabric Planning ([markdown](https://fabricplanning.io/md/faq.md))
+- [About](https://fabricplanning.io/about/): About Khaled Chowdhury and Data Crafters, the team behind the Fabric Planning knowledge hub ([markdown](https://fabricplanning.io/md/about.md))
+
+## Optional
+- [Fabric Planning: What, So What, and Now What?](https://fabricplanning.io/resources/events/): Join Khaled Chowdhury (Principal, Data Crafters) and Gopal Krishnamurthy (Founder & CEO, Lumel) for a first look at Microsoft Fabric Planning. We'll cover what it is, why it matters for FP&A teams, and what to do next. ([markdown](https://fabricplanning.io/md/events/fabric-planning-what-so-what-now-what.md))
+- [Writeback with Fabric Planning](https://fabricplanning.io/resources/events/): Join Khaled Chowdhury (The Fabric Whisperer) and host Reid Havens for a deep dive into writeback capabilities in Microsoft Fabric Planning. Hosted by Reid Havens (https://www.linkedin.com/in/reidhavens/). ([markdown](https://fabricplanning.io/md/events/writeback-with-fabric-planning.md))
+- [Data Crafters](https://fabricplanning.io/resources/social-media/): Planning has officially gone native in Microsoft Fabric. Join Khaled Chowdhury and Gopal Krishnamurthy for a LinkedIn Live session on April 8th to explore what Fabric Planning means for FP&A teams. ([markdown](https://fabricplanning.io/md/social-media/datacrafters-fabric-planning-native.md))
+- [Khaled Chowdhury](https://fabricplanning.io/resources/social-media/): First look at turning on Fabric Planning in Microsoft Fabric. The planning capability is now available as a preview feature. Here's how to enable it and what you'll see. ([markdown](https://fabricplanning.io/md/social-media/khaled-turning-on-fabric-planning.md))
