@@ -1,6 +1,8 @@
 import { defineConfig } from "tinacms";
 
-const branch = "main";
+// Resolve at build time so deploy previews / develop / main all index correctly.
+// Netlify exposes the current branch as HEAD or BRANCH; fall back to main.
+const branch = process.env.HEAD || process.env.BRANCH || "main";
 
 const authorFields = [
   { type: "string" as const, name: "name", label: "Name", required: true },
