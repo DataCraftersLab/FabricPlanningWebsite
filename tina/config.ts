@@ -165,6 +165,38 @@ export default defineConfig({
       },
 
       {
+        name: "socialMedia",
+        label: "Social Media",
+        path: "content/social-media",
+        format: "md",
+        fields: [
+          {
+            type: "string",
+            name: "author",
+            label: "Author",
+            isTitle: true,
+            required: true,
+          },
+          {
+            type: "string",
+            name: "platform",
+            label: "Platform",
+            options: ["linkedin", "reddit", "twitter"],
+          },
+          { type: "string", name: "url", label: "URL" },
+          { type: "datetime", name: "date", label: "Date" },
+          {
+            type: "string",
+            name: "excerpt",
+            label: "Excerpt",
+            ui: { component: "textarea" },
+          },
+          { type: "number", name: "likes", label: "Likes" },
+          { type: "number", name: "comments", label: "Comments" },
+        ],
+      },
+
+      {
         name: "knowledgeBase",
         label: "Knowledge Base",
         path: "content/knowledge-base",

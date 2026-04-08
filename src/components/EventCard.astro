@@ -1,0 +1,95 @@
+---
+interface Props {
+  title: string;
+  date: Date;
+  time: string;
+  location?: string;
+  type: "virtual" | "in-person" | "webinar";
+  registrationUrl?: string;
+  isPast: boolean;
+}
+
+const { title, date, time, location, type, registrationUrl, isPast } =
+  Astro.props;
+
+const typeBorderClass = isPast
+  ? "border-t-gray-muted"
+  : type === "virtual"
+    ? "border-t-medium-green"
+    : type === "in-person"
+      ? "border-t-dc-blue"
+      : "border-t-dc-red";
+
+const typeLabel =
+  type === "virtual"
+    ? "Virtual"
+    : type === "in-person"
+      ? "In-person"
+      : "Webinar";
+
+const statusLabel = isPast ? "Past" : "Upcoming";
+const statusDotClass = isPast ? "bg-gray-muted" : "bg-medium-green";
+
+const formattedDate = date.toLocaleDateString("en-US", {
+  weekday: "short",
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
+---
+
+<article
+  class={`flex min-w-[280px] max-w-[280px] flex-col rounded-xl border-t-[3px] ${typeBorderClass} bg-white p-6 shadow-sm ring-1 ring-slate-200 ${isPast ? "opacity-75" : ""}`}
+>
+  <div class="mb-3 flex items-center justify-between">
+    <span class="inline-flex items-center gap-2 text-xs font-medium text-slate-text">
+      <span class={`h-2 w-2 rounded-full ${statusDotClass}`} aria-hidden="true"
+      ></span>
+      {statusLabel}
+    </span>
+    <span class="text-xs font-semibold uppercase tracking-wide text-gray-muted">
+      {typeLabel}
+    </span>
+  </div>
+
+  <h3 class="mb-3 text-base font-bold leading-snug text-forest">
+    {title}
+  </h3>
+
+  <div class="mb-4 space-y-1 text-sm">
+    <p class="font-semibold text-slate-text">{formattedDate}</p>
+    <p class="text-gray-muted">{time}</p>
+    {
+      location && type === "in-person" && (
+        <p class="text-gray-muted">{location}</p>
+      )
+    }
+  </div>
+
+  <div class="mt-auto flex items-center justify-between">
+    {
+      isPast ? (
+        <>
+          <a
+            href={registrationUrl ?? "#"}
+            class="text-sm font-semibold text-fabric-purple hover:underline"
+          >
+            Watch recording &rarr;
+          </a>
+          <span class="rounded-full bg-purple-wash px-2 py-0.5 text-xs font-semibold text-deep-purple">
+            Recording
+          </span>
+        </>
+      ) : (
+        <a
+          href={registrationUrl ?? "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm font-semibold text-deep-green hover:underline"
+        >
+          Register &rarr;
+        </a>
+      )
+    }
+  </div>
+</article>

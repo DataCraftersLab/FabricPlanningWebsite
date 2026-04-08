@@ -1,0 +1,90 @@
+---
+interface Props {
+  author: string;
+  platform: "linkedin" | "reddit" | "twitter";
+  url: string;
+  date: Date;
+  excerpt: string;
+  likes: number;
+  comments: number;
+}
+
+const { author, platform, url, date, excerpt, likes, comments } = Astro.props;
+
+const platformLabel =
+  platform === "linkedin"
+    ? "LinkedIn"
+    : platform === "reddit"
+      ? "Reddit"
+      : "Twitter";
+
+const avatarBg =
+  platform === "linkedin"
+    ? "bg-dc-blue"
+    : platform === "reddit"
+      ? "bg-dc-red"
+      : "bg-slate-700";
+
+const avatarText =
+  platform === "linkedin" ? "in" : platform === "reddit" ? "r/" : "x";
+
+const linkColor =
+  platform === "linkedin"
+    ? "text-dc-blue"
+    : platform === "reddit"
+      ? "text-dc-red"
+      : "text-slate-700";
+
+// Time ago, very simple
+const now = new Date();
+const diffMs = now.getTime() - date.getTime();
+const diffDays = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
+const timeAgo =
+  diffDays === 0
+    ? "today"
+    : diffDays === 1
+      ? "1 day ago"
+      : diffDays < 7
+        ? `${diffDays} days ago`
+        : diffDays < 30
+          ? `${Math.floor(diffDays / 7)}w ago`
+          : `${Math.floor(diffDays / 30)}mo ago`;
+---
+
+<article
+  class="flex min-w-[300px] max-w-[300px] flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+>
+  <div class="mb-4 flex items-center gap-3">
+    <div
+      class={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white ${avatarBg}`}
+      aria-hidden="true"
+    >
+      {avatarText}
+    </div>
+    <div class="min-w-0">
+      <p class="truncate text-sm font-semibold text-forest">{author}</p>
+      <p class="text-xs text-gray-muted">{platformLabel} &middot; {timeAgo}</p>
+    </div>
+  </div>
+
+  <p class="mb-4 line-clamp-4 text-sm leading-relaxed text-slate-text">
+    &ldquo;{excerpt}&rdquo;
+  </p>
+
+  <div
+    class="mt-auto flex items-center justify-between border-t border-slate-100 pt-3"
+  >
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class={`text-sm font-semibold ${linkColor} hover:underline`}
+    >
+      Read on {platformLabel} &rarr;
+    </a>
+    <div class="flex items-center gap-3 text-xs text-gray-muted">
+      <span>♥ {likes}</span>
+      <span>💬 {comments}</span>
+    </div>
+  </div>
+</article>
