@@ -1,18 +1,345 @@
 ---
+import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
+import EventCard from "../components/EventCard.astro";
+import SocialCard from "../components/SocialCard.astro";
+
+const events = (await getCollection("events")).sort((a, b) => {
+  // Upcoming first (chronological), then past (most recent first)
+  if (a.data.isPast !== b.data.isPast) return a.data.isPast ? 1 : -1;
+  if (a.data.isPast) return b.data.date.getTime() - a.data.date.getTime();
+  return a.data.date.getTime() - b.data.date.getTime();
+});
+
+const socialPosts = (await getCollection("socialMedia")).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
 ---
 
 <Layout
-  title="Fabric Planning - Coming Soon"
-  description="The Microsoft Fabric planning knowledge hub. Coming soon."
+  title="Fabric Planning — The Microsoft Fabric Knowledge Hub"
+  description="Everything you need to understand, evaluate, and implement Microsoft Fabric Planning. Built by practitioners, for practitioners."
 >
+  {/* ============================================================ */}
+  {/* Section 1: Hero */}
+  {/* ============================================================ */}
   <section
-    class="flex min-h-[60vh] items-center justify-center px-6 py-20 text-center"
+    class="relative w-full text-white"
+    style="background: linear-gradient(135deg, #0f2b1e 0%, #1a1035 50%, #0f2b1e 100%);"
   >
-    <h1
-      class="text-4xl font-bold tracking-tight text-forest md:text-5xl lg:text-6xl"
+    <div
+      class="mx-auto flex max-w-[1200px] flex-col items-center px-6 py-24 text-center md:py-32"
     >
-      Fabric Planning &mdash; Coming Soon
-    </h1>
+      <p
+        class="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-light-purple"
+      >
+        Microsoft Fabric Knowledge Hub
+      </p>
+      <h1
+        class="mb-6 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl"
+      >
+        The knowledge hub for Microsoft Fabric Planning
+      </h1>
+      <p
+        class="mb-10 max-w-2xl text-lg leading-relaxed text-[#94a3b8] md:text-xl"
+      >
+        Everything you need to understand, evaluate, and implement Microsoft
+        Fabric Planning. Built by practitioners, for practitioners.
+      </p>
+      <a
+        href="#"
+        class="inline-flex items-center justify-center rounded-lg px-8 py-4 text-base font-semibold text-white shadow-md transition hover:shadow-lg"
+        style="background: linear-gradient(135deg, #7B61B8 0%, #5B3F9E 100%);"
+      >
+        Subscribe for updates
+      </a>
+    </div>
+  </section>
+
+  {/* ============================================================ */}
+  {/* Section 2: What is Fabric Planning? */}
+  {/* ============================================================ */}
+  <section class="bg-purple-wash">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <div class="mx-auto max-w-[680px] text-center">
+        <h2
+          class="mb-4 text-3xl font-bold tracking-tight text-forest md:text-4xl"
+        >
+          What is Fabric Planning?
+        </h2>
+        <div
+          class="mx-auto mb-10 h-1 w-24 rounded-full"
+          style="background: linear-gradient(90deg, #7B61B8 0%, #3BA776 100%);"
+          aria-hidden="true"
+        >
+        </div>
+        <div class="space-y-6 text-left text-base leading-relaxed text-slate-text md:text-lg">
+          <p>
+            Microsoft Fabric Planning is a new capability within the Microsoft
+            Fabric platform that brings budgeting, forecasting, and financial
+            planning directly into the unified analytics environment. For the
+            first time, finance teams can build planning models alongside
+            their existing Power BI reports and Fabric data pipelines.
+          </p>
+          <p>
+            This represents a potential shift away from standalone EPM tools
+            and Excel-based planning toward an integrated, cloud-native
+            approach. Fabric Planning is still evolving, and this knowledge
+            hub exists to help finance and data professionals navigate what
+            it can do today, where the gaps are, and how to get started.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ============================================================ */}
+  {/* Section 3: Events (horizontal scroll) */}
+  {/* ============================================================ */}
+  <section class="bg-white">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <div
+        class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+      >
+        <div>
+          <h2 class="text-3xl font-bold tracking-tight text-forest md:text-4xl">
+            Events
+          </h2>
+          <p class="mt-2 text-base text-gray-muted">
+            Upcoming sessions, past recordings, and community meetups
+          </p>
+        </div>
+        <div class="flex items-center gap-4">
+          <a
+            href="/resources/events"
+            class="text-sm font-semibold text-deep-green hover:underline"
+          >
+            View all events &rarr;
+          </a>
+          <div class="flex gap-2">
+            <button
+              type="button"
+              data-scroll="events"
+              data-direction="-1"
+              aria-label="Scroll events left"
+              class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-forest hover:border-medium-green hover:text-deep-green focus:outline-none focus-visible:ring-2 focus-visible:ring-medium-green"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button
+              type="button"
+              data-scroll="events"
+              data-direction="1"
+              aria-label="Scroll events right"
+              class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-forest hover:border-medium-green hover:text-deep-green focus:outline-none focus-visible:ring-2 focus-visible:ring-medium-green"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {
+        events.length === 0 ? (
+          <p class="text-base text-gray-muted">
+            No events scheduled right now. Check back soon.
+          </p>
+        ) : (
+          <div
+            id="events-scroll"
+            class="-mx-6 flex snap-x snap-mandatory justify-start gap-6 overflow-x-auto scroll-smooth px-6 pb-2"
+            style="scrollbar-width: thin;"
+          >
+            {events.map((event) => (
+              <div class="shrink-0 snap-start">
+                <EventCard
+                  title={event.data.title}
+                  date={event.data.date}
+                  time={event.data.time}
+                  location={event.data.location}
+                  type={event.data.type}
+                  registrationUrl={event.data.registrationUrl}
+                  isPast={event.data.isPast}
+                  featuredImage={event.data.featuredImage}
+                />
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  {/* ============================================================ */}
+  {/* Section 4: From the community (horizontal scroll) */}
+  {/* ============================================================ */}
+  <section class="bg-[#f8fafc]">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <div
+        class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+      >
+        <div>
+          <h2 class="text-3xl font-bold tracking-tight text-forest md:text-4xl">
+            From the community
+          </h2>
+          <p class="mt-2 text-base text-gray-muted">
+            Discussions, insights, and updates from across social media
+          </p>
+        </div>
+        <a
+          href="/resources/social-media"
+          class="text-sm font-semibold text-deep-green hover:underline"
+        >
+          View all &rarr;
+        </a>
+      </div>
+
+      {
+        socialPosts.length === 0 ? (
+          <p class="text-base text-gray-muted">
+            No community posts yet. Check back soon.
+          </p>
+        ) : (
+          <div
+            id="social-scroll"
+            class="-mx-6 flex snap-x snap-mandatory justify-start gap-6 overflow-x-auto scroll-smooth px-6 pb-2"
+            style="scrollbar-width: thin;"
+          >
+            {socialPosts.map((post) => (
+              <div class="shrink-0 snap-start">
+                <SocialCard
+                  author={post.data.author}
+                  platform={post.data.platform}
+                  url={post.data.url}
+                  date={post.data.date}
+                  excerpt={post.data.excerpt}
+                  likes={post.data.likes}
+                  comments={post.data.comments}
+                  image={post.data.image}
+                />
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  {/* ============================================================ */}
+  {/* Section 5: Finance Fabric User Group */}
+  {/* ============================================================ */}
+  <section class="bg-forest text-white">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <div class="grid items-center gap-12 md:grid-cols-2">
+        <div>
+          <p
+            class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-mint-teal"
+          >
+            Community
+          </p>
+          <h2
+            class="mb-6 text-3xl font-bold tracking-tight text-white md:text-4xl"
+          >
+            Join the Finance Fabric User Group
+          </h2>
+          <p class="mb-8 max-w-xl text-base leading-relaxed text-white/80">
+            A free monthly user group for finance professionals exploring
+            Microsoft Fabric Planning. Hosted by Khaled Chowdhury and Alex
+            McPherson, each session covers a real-world topic — from modeling
+            patterns to migration stories — followed by open Q&amp;A with the
+            community.
+          </p>
+          <div class="flex flex-wrap items-center gap-4">
+            <a
+              href="https://www.meetup.com/finance-fabric-user-group/"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-semibold text-white shadow-md transition hover:shadow-lg"
+              style="background: linear-gradient(135deg, #3BA776 0%, #1B7A50 100%);"
+            >
+              Join on Meetup
+            </a>
+            <span class="text-sm text-white/70">Free to join</span>
+          </div>
+        </div>
+
+        <div class="flex justify-center md:justify-end">
+          <img
+            src="https://media.fabricplanning.io/branding/Finance%20Fabric%20User%20Group.png"
+            alt="Finance Fabric User Group - Where Finance Meets Fabric"
+            loading="lazy"
+            class="w-full max-w-[280px] rounded-xl object-cover"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ============================================================ */}
+  {/* Section 6: Newsletter CTA */}
+  {/* ============================================================ */}
+  <section style="background-color: #7B61B8;">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <div class="mx-auto flex max-w-2xl flex-col items-center text-center">
+        <h2
+          class="mb-4 text-3xl font-bold tracking-tight text-white md:text-4xl"
+        >
+          Stay in the loop
+        </h2>
+        <p class="mb-8 text-base text-white/85 md:text-lg">
+          Get the latest on Microsoft Fabric Planning delivered to your inbox.
+          No spam, just insights.
+        </p>
+        <a
+          href="#"
+          class="inline-flex items-center justify-center rounded-lg bg-white px-8 py-4 text-base font-semibold text-fabric-purple shadow-md transition hover:shadow-lg"
+        >
+          Subscribe on Substack
+        </a>
+      </div>
+    </div>
   </section>
 </Layout>
+
+<script>
+  // Horizontal scroll arrow buttons (Events section)
+  document.querySelectorAll<HTMLButtonElement>("button[data-scroll]").forEach(
+    (btn) => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.dataset.scroll;
+        const direction = Number(btn.dataset.direction ?? "1");
+        if (!targetId) return;
+        const container = document.getElementById(`${targetId}-scroll`);
+        if (!container) return;
+        const amount = Math.min(container.clientWidth * 0.8, 600);
+        container.scrollBy({ left: amount * direction, behavior: "smooth" });
+      });
+    },
+  );
+</script>

@@ -4,11 +4,13 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
+    "dev": "tinacms dev -c \"astro dev\"",
+    "start": "tinacms dev -c \"astro dev\"",
+    "build": "tinacms build && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "tina:dev": "tinacms dev",
+    "tina:build": "tinacms build"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.3",
@@ -20,14 +22,25 @@
     "lucide-react": "^0.469.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tailwindcss": "^4.0.0"
+    "tailwindcss": "^4.0.0",
+    "tinacms": "^2.7.0"
   },
   "devDependencies": {
+    "@tinacms/cli": "^1.9.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "typescript": "^5.7.0"
   },
   "overrides": {
-    "vite": "^7"
+    "astro": {
+      "vite": "^7"
+    },
+    "@astrojs/react": {
+      "vite": "^7"
+    },
+    "@tailwindcss/vite": {
+      "vite": "^7"
+    },
+    "better-sqlite3": "^12.0.0"
   }
 }

@@ -5,28 +5,46 @@ const year = new Date().getFullYear();
 <footer class="bg-forest text-white">
   <div class="mx-auto max-w-[1200px] px-6 py-12">
     <div
-      class="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between"
+      class="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between"
     >
-      <p class="text-sm text-white">
-        Sponsored by{" "}
+      <!-- Left: brand + sponsor -->
+      <div class="flex flex-col gap-2">
+        <p class="text-xl font-bold tracking-tight text-white">
+          Fabric Planning
+        </p>
+        <p class="text-sm text-white/80">
+          Sponsored by{" "}
+          <a
+            href="https://datacrafters.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-semibold text-dc-green hover:underline"
+          >
+            Data Crafters
+          </a>
+        </p>
+      </div>
+
+      <!-- Right: social links -->
+      <div class="flex items-center gap-3">
         <a
-          href="https://datacrafters.io"
+          href="#"
           target="_blank"
           rel="noopener noreferrer"
-          class="font-semibold text-dc-green hover:underline"
+          class="inline-flex items-center rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-white hover:bg-white/10"
+          aria-label="LinkedIn"
         >
-          Data Crafters
+          LinkedIn
         </a>
-      </p>
-
-      <a
-        href="https://substack.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-white hover:bg-white/10"
-      >
-        Subscribe on Substack
-      </a>
+        <a
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-white hover:bg-white/10"
+        >
+          Subscribe on Substack
+        </a>
+      </div>
     </div>
   </div>
 

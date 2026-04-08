@@ -1,0 +1,87 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import EventCard from "../../components/EventCard.astro";
+
+const all = await getCollection("events");
+
+const upcoming = all
+  .filter((e) => !e.data.isPast)
+  .sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
+
+const past = all
+  .filter((e) => e.data.isPast)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<Layout
+  title="Events — Fabric Planning"
+  description="Upcoming sessions, past recordings, and community meetups for Microsoft Fabric Planning."
+>
+  <section class="bg-white">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <header class="mb-12 text-center">
+        <p
+          class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-fabric-purple"
+        >
+          Resources
+        </p>
+        <h1
+          class="mb-4 text-4xl font-bold tracking-tight text-forest md:text-5xl"
+        >
+          Events
+        </h1>
+        <p class="mx-auto max-w-2xl text-base text-gray-muted md:text-lg">
+          Upcoming sessions, past recordings, and community meetups for finance
+          and data professionals working with Microsoft Fabric Planning.
+        </p>
+      </header>
+
+      <h2 class="mb-6 text-2xl font-bold text-forest">Upcoming events</h2>
+      {
+        upcoming.length === 0 ? (
+          <p class="mb-12 text-base text-gray-muted">
+            No upcoming events scheduled right now. Check back soon.
+          </p>
+        ) : (
+          <div class="mb-16 grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {upcoming.map((event) => (
+              <EventCard
+                title={event.data.title}
+                date={event.data.date}
+                time={event.data.time}
+                location={event.data.location}
+                type={event.data.type}
+                registrationUrl={event.data.registrationUrl}
+                isPast={event.data.isPast}
+                featuredImage={event.data.featuredImage}
+              />
+            ))}
+          </div>
+        )
+      }
+
+      <h2 class="mb-6 text-2xl font-bold text-forest">Past events</h2>
+      {
+        past.length === 0 ? (
+          <p class="text-base text-gray-muted">No past events yet.</p>
+        ) : (
+          <div class="grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {past.map((event) => (
+              <EventCard
+                title={event.data.title}
+                date={event.data.date}
+                time={event.data.time}
+                location={event.data.location}
+                type={event.data.type}
+                registrationUrl={event.data.registrationUrl}
+                isPast={event.data.isPast}
+                featuredImage={event.data.featuredImage}
+              />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Layout>
