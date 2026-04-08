@@ -27,6 +27,7 @@ Thumbs.db
 # astro
 .astro/
 
-# tina (generated)
-tina/__generated__/
+# tina (generated) — keep tina-lock.json so TinaCloud can index branches
+tina/__generated__/*
+!tina/__generated__/tina-lock.json
 public/admin/
