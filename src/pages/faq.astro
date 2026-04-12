@@ -114,6 +114,99 @@ const faqs: Faq[] = [
       <p>If you have a Fabric trial available, start there. It worked for me on trial capacity. That gives you a risk-free way to understand the consumption profile before committing any production capacity to it.</p>
     `,
   },
+  {
+    question: "Do I need Power BI Pro licenses to use Fabric Planning?",
+    answer: `
+      <p>No. Fabric Planning does not require any Power BI Pro license. The planners, stakeholders, and viewers working inside Fabric Planning are using Fabric artifacts, not Power BI artifacts.</p>
+      <p>A note on semantic models: if you are connecting Fabric Planning to a Power BI semantic model, the original author of that semantic model would need a Power BI Pro license to build and maintain it. That is a Power BI requirement, not a Fabric Planning one.</p>
+      <p>Fabric Planning runs on Fabric capacity. That is where you pay.</p>
+    `,
+  },
+  {
+    question: "Can I start from Excel?",
+    answer: `
+      <p>Yes. Fabric Planning supports Excel as a starting point in two ways.</p>
+      <p>In PowerTables (Data Management), you can upload an Excel spreadsheet and load it directly into a table. This is useful for getting reference data, chart of accounts, or any structured data into Fabric quickly.</p>
+      <p>In Planning sheets, you can use an Excel file as your starting point for building a plan. You also have the option to import from an existing Power BI semantic model instead, which lets you build on top of data your organization has already invested in.</p>
+      <p>To be clear: this is not a bi-directional sync with Excel. You can start from Excel, but the entire idea is that you move the data entry into Fabric where it happens in a fully audited manner. Once you have uploaded your starting point, the planning work lives in Fabric. You can absolutely link Excel back to see the final numbers through Fabric mirroring and connections to pull updated data back into Excel, but the data entry moves up into a governed, auditable environment. That is the upgrade.</p>
+    `,
+  },
+  {
+    question: "Does Fabric Planning have an audit trail?",
+    answer: `
+      <p>Yes. Fabric Planning comes with a full built-in audit trail at the cell level, row level, and column level. You can see who changed what and when without writing any code or going behind the application.</p>
+      <p>This is not something you configure or build yourself. It is part of the product. Every change is logged automatically. For anyone who has ever sat in a board meeting and heard &ldquo;I did not put that number in,&rdquo; this is the answer.</p>
+      <p>This was one of the reasons Lumel&rsquo;s offerings became popular in the Power BI ecosystem compared to other writeback solutions. The audit history was built in from the start, and it carries forward into Fabric Planning.</p>
+    `,
+  },
+  {
+    question: "How does security work in Fabric Planning?",
+    answer: `
+      <p>Fabric Planning inherits row-level security (RLS) from your Power BI semantic model. If you have already set up RLS on your semantic model, you do not have to configure it again. Fabric Planning respects it automatically.</p>
+      <p>On the data layer side, the Fabric SQL database that stores your planning data should sit in a separate workspace with its own security controls. Business users should not have direct access to Fabric SQL, the same way you would not give business users direct access to your ERP or CRM database. They interact with the application layer. The data layer is governed separately.</p>
+      <p>OneLake security is not yet fully applicable to this scenario. As of today, it only works with Lakehouses at GA. This is something to watch as it matures, but it does not block you from securing your planning environment today using RLS and workspace-level controls.</p>
+    `,
+  },
+  {
+    question: "Is it called Fabric Planning or Fabric Plan?",
+    answer: `
+      <p>Both, and yes, we know. Microsoft naming strikes again.</p>
+      <p><strong>Fabric Planning</strong> is the name of the capability. It is the marketing term for the overall planning experience inside Microsoft Fabric. When people say &ldquo;Fabric Planning,&rdquo; they are talking about the ability to do budgeting, forecasting, and scenario modeling natively in Fabric. This is what I call it.</p>
+      <p><strong>Fabric Plan</strong> is the name of the actual Fabric item, the technical artifact you create inside a workspace. When you click &ldquo;New&rdquo; in a Fabric workspace and see &ldquo;Plan&rdquo; in the list, that is the Fabric Plan item. It is the container that holds your Planning sheets, Intelligence sheets, and Data Management (PowerTable) sheets.</p>
+      <p>In Microsoft documentation, you will see &ldquo;Plan (preview)&rdquo; when referring to the artifact and &ldquo;Planning in Fabric IQ&rdquo; when referring to the capability.</p>
+    `,
+  },
+  {
+    question: "Which regions support Fabric Planning?",
+    answer: `
+      <p>Fabric Planning (Plan preview) is available in most Fabric regions but not all. Some regions do not yet support it during preview.</p>
+      <p>For the current list of supported and unsupported regions, see the official <a href="https://learn.microsoft.com/en-us/fabric/iq/plan/overview-regions" target="_blank" rel="noopener noreferrer">Region availability for Plan (preview)</a> page on Microsoft Learn.</p>
+      <p>If your capacity is in a region where Plan is not yet available, you will not see the option to create a Plan item in your workspace. Microsoft has indicated that all billing meters will be available by June 2026, which suggests broader regional availability is coming.</p>
+      <p>If you do not see Fabric Plan in a supported region, make sure the preview feature is turned on from the tenant admin center. That is the most common reason it does not appear, even in regions where it is available.</p>
+    `,
+  },
+  {
+    question:
+      "Can I use Fabric Planning for specific use cases like cost forecasting or workforce planning?",
+    answer: `
+      <p>Yes. Fabric Planning is a horizontal product. Whatever you can plan in Excel, you can plan in Fabric Planning. Headcount forecasting, cost forecasting, revenue planning, capital planning, scenario modeling, all of it.</p>
+      <p>The important thing to understand is that Fabric Planning gives you the canvas and the tools, not a pre-built solution for any specific use case. Think of it the way you think about Excel: it does not come with your budget already built. It gives you the capabilities to build whatever you need.</p>
+      <p>This means you get the flexibility to design your planning models the way your business actually works, but it also means you are starting from a blank canvas at this point. We are going to be rolling out accelerators soon to help with common use cases, but for now, you get to leverage the planning capabilities as you see fit.</p>
+      <p>The right move is to start simple. Pick a use case where your data is well understood, prove out the workflow, and build from there.</p>
+    `,
+  },
+  {
+    question:
+      "Can multiple people work on the same plan at the same time?",
+    answer: `
+      <p>Yes. Concurrency is supported in Fabric Planning. Multiple people can be in the same plan working at the same time, just like Excel.</p>
+      <p>The thing to understand is that, also like Excel, the last person to edit a cell wins. If two people update the same cell, the most recent change takes precedence. The good news is that Fabric Planning has a robust cell-level audit trail, so if a collision happens, you can see exactly who changed what and revert if needed.</p>
+      <p>Best practice is to implement row-level security (RLS) to reduce the chance of collisions in the first place. Give people access to the parts of the plan they own, and concurrency conflicts largely take care of themselves.</p>
+    `,
+  },
+  {
+    question: "Where does the writeback data go?",
+    answer: `
+      <p>Fabric Planning writes back to Fabric SQL. That is the destination by design.</p>
+      <p>This makes sense because Fabric Planning is built natively on the Microsoft Fabric backbone. Fabric SQL is the natural target inside that ecosystem, and it supports automatic mirroring to OneLake, which means your planning data is immediately available across other Fabric items.</p>
+      <p>If you need the data outside of Fabric, like in an external data warehouse, Snowflake, or another platform, you use the standard Fabric capabilities to move it. Microsoft provides interoperability for these scenarios. You do not need to push data out of Fabric Planning directly, because once it lands in Fabric SQL, it is already part of the broader Fabric ecosystem you can share from.</p>
+    `,
+  },
+  {
+    question: "Can Fabric Planning be embedded outside of Fabric?",
+    answer: `
+      <p>No. Fabric Plan is not embeddable outside of Fabric at this time. It lives inside the Fabric experience.</p>
+      <p>There are other elements of Fabric IQ that can be consumed outside of Fabric (for example, Fabric Data Agents can be used in Copilot Studio), but the planning workload itself requires the Fabric environment.</p>
+    `,
+  },
+  {
+    question: "How are formulas stored in Fabric Planning?",
+    answer: `
+      <p>When you enter data into a Fabric Planning cell, you can use formulas during data entry. However, the formula itself is not stored in the cell. It is converted into a value at the time of entry, and that value is what gets saved.</p>
+      <p>This is by design. Planning data is meant to be a stable, auditable record of what you decided, not a live calculation that changes as context shifts. Once a value lands in a cell, it represents a deliberate planning decision, and the audit trail tracks that value.</p>
+      <p>If you need ongoing calculations, those happen at the model level, not in individual cells.</p>
+    `,
+  },
 ];
 
 const slugify = (s: string): string =>
