@@ -1,0 +1,58 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  url: string;
+  coverImage?: string;
+  featured?: boolean;
+}
+
+const { title, description, pubDate, url, coverImage, featured = false } =
+  Astro.props;
+
+const formattedDate = pubDate.toLocaleDateString("en-US", {
+  month: "short",
+  day: "numeric",
+  year: "numeric",
+});
+
+const defaultImage =
+  "https://media.fabricplanning.io/branding/substack-default.png";
+---
+
+<article
+  class={`flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm ${featured ? "sm:flex-row" : ""}`}
+  style={featured ? "min-height: 240px;" : "min-width: 280px; max-width: 280px;"}
+>
+  <img
+    src={coverImage ?? defaultImage}
+    alt={title}
+    loading="lazy"
+    class={featured
+      ? "h-[200px] w-full object-cover sm:h-auto sm:w-[320px]"
+      : "h-[160px] w-full object-cover"}
+  />
+  <div class="flex flex-1 flex-col p-6">
+    <p class="mb-2 text-xs font-medium text-gray-muted">{formattedDate}</p>
+    <h3
+      class={`mb-2 font-bold leading-snug text-forest ${featured ? "text-lg" : "text-base"}`}
+    >
+      {title}
+    </h3>
+    <p class="mb-4 line-clamp-3 text-sm leading-relaxed text-slate-text">
+      {description}
+    </p>
+    <div class="mt-auto border-t border-slate-100 pt-3">
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-sm font-semibold hover:underline"
+        style="color: #FF6719;"
+      >
+        Read on Substack &rarr;
+      </a>
+    </div>
+  </div>
+</article>

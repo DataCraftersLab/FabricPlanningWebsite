@@ -2,18 +2,35 @@
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import EventCard from "../components/EventCard.astro";
+import BlogCard from "../components/BlogCard.astro";
 import SocialCard from "../components/SocialCard.astro";
+import { getEventStatus } from "../utils/eventStatus";
+import { fetchSubstackPosts } from "../utils/substackFeed";
+import blogStickyConfig from "../content/config/blog-sticky.json";
 
-const events = (await getCollection("events")).sort((a, b) => {
-  // Upcoming first (chronological), then past (most recent first)
-  if (a.data.isPast !== b.data.isPast) return a.data.isPast ? 1 : -1;
-  if (a.data.isPast) return b.data.date.getTime() - a.data.date.getTime();
-  return a.data.date.getTime() - b.data.date.getTime();
-});
+const allEvents = await getCollection("events");
+const upcomingEvents = allEvents
+  .filter((e) => getEventStatus(e.data.date) === "upcoming")
+  .sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
 
 const socialPosts = (await getCollection("socialMedia")).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
+
+// Blog: Substack RSS
+const allPosts = await fetchSubstackPosts();
+const stickyUrl = blogStickyConfig.stickyPostUrl;
+const stickyPost = stickyUrl
+  ? allPosts.find((p) => p.url === stickyUrl)
+  : undefined;
+const nonStickyPosts = allPosts
+  .filter((p) => p.url !== stickyUrl)
+  .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime())
+  .slice(0, 4);
+const blogPosts = [
+  ...(stickyPost ? [stickyPost] : []),
+  ...nonStickyPosts,
+];
 ---
 
 <Layout
@@ -168,9 +185,9 @@ const socialPosts = (await getCollection("socialMedia")).sort(
       </div>
 
       {
-        events.length === 0 ? (
+        upcomingEvents.length === 0 ? (
           <p class="text-base text-gray-muted">
-            No events scheduled right now. Check back soon.
+            No upcoming events scheduled. Check back soon.
           </p>
         ) : (
           <div
@@ -178,7 +195,7 @@ const socialPosts = (await getCollection("socialMedia")).sort(
             class="-mx-6 flex snap-x snap-mandatory justify-start gap-6 overflow-x-auto scroll-smooth px-6 pb-2"
             style="scrollbar-width: thin;"
           >
-            {events.map((event) => (
+            {upcomingEvents.map((event) => (
               <div class="shrink-0 snap-start">
                 <EventCard
                   title={event.data.title}
@@ -187,7 +204,6 @@ const socialPosts = (await getCollection("socialMedia")).sort(
                   location={event.data.location}
                   type={event.data.type}
                   registrationUrl={event.data.registrationUrl}
-                  isPast={event.data.isPast}
                   featuredImage={event.data.featuredImage}
                 />
               </div>
@@ -199,7 +215,131 @@ const socialPosts = (await getCollection("socialMedia")).sort(
   </section>
 
   {/* ============================================================ */}
-  {/* Section 4: From the community (horizontal scroll) */}
+  {/* Section 4: From the Blog (two-column) */}
+  {/* ============================================================ */}
+  <section class="bg-[#f8fafc]">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <div
+        class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+      >
+        <h2 class="text-3xl font-bold tracking-tight text-forest md:text-4xl">
+          From the Blog
+        </h2>
+        <a
+          href="/resources/blog"
+          class="text-sm font-semibold text-deep-green hover:underline"
+        >
+          View all &rarr;
+        </a>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2">
+        {/* LEFT: Fabric Planning on Substack */}
+        <div class="flex flex-col">
+          <h3 class="mb-1 text-xl font-bold text-forest">
+            <span style="color: #FF6719;">&#9632;</span> Fabric Planning on Substack
+          </h3>
+          <p class="mb-6 text-sm text-gray-muted">
+            Articles and insights from our publication
+          </p>
+
+          {
+            blogPosts.length === 0 ? (
+              <p class="mb-6 text-sm text-gray-muted">
+                Coming soon. Subscribe to be notified when we publish our first article.
+              </p>
+            ) : (
+              <div
+                id="blog-scroll"
+                class="-mx-2 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-2 pb-2"
+                style="scrollbar-width: thin;"
+              >
+                {blogPosts.map((post) => (
+                  <div class="shrink-0 snap-start">
+                    <BlogCard
+                      title={post.title}
+                      description={post.description}
+                      pubDate={post.pubDate}
+                      url={post.url}
+                      coverImage={post.coverImage}
+                    />
+                  </div>
+                ))}
+              </div>
+            )
+          }
+
+          <div class="mt-auto pt-6">
+            <a
+              href="https://fabricplanning.substack.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:shadow-lg"
+              style="background-color: #FF6719;"
+            >
+              Subscribe on Substack
+            </a>
+          </div>
+        </div>
+
+        {/* Divider (visible on desktop only) */}
+        <div class="hidden md:block md:border-l md:border-slate-200 md:pl-8">
+          {/* RIGHT: Other Community Blogs */}
+          <h3 class="mb-1 text-xl font-bold text-forest">
+            Other Community Blogs
+          </h3>
+          <p class="mb-6 text-sm text-gray-muted">
+            Curated posts from across the Fabric Planning community
+          </p>
+
+          <div class="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+            <p class="mb-2 text-base font-semibold text-forest">Coming soon</p>
+            <p class="max-w-sm text-sm text-gray-muted">
+              We're building a curated collection of the best Fabric Planning
+              content from across the community. Check back soon.
+            </p>
+          </div>
+
+          <div class="mt-6">
+            <span
+              class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 px-6 py-3 text-sm font-semibold text-gray-muted"
+            >
+              Coming soon
+            </span>
+          </div>
+        </div>
+
+        {/* Mobile: right column content without the border */}
+        <div class="md:hidden">
+          <h3 class="mb-1 text-xl font-bold text-forest">
+            Other Community Blogs
+          </h3>
+          <p class="mb-6 text-sm text-gray-muted">
+            Curated posts from across the Fabric Planning community
+          </p>
+
+          <div class="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+            <p class="mb-2 text-base font-semibold text-forest">Coming soon</p>
+            <p class="max-w-sm text-sm text-gray-muted">
+              We're building a curated collection of the best Fabric Planning
+              content from across the community. Check back soon.
+            </p>
+          </div>
+
+          <div class="mt-6">
+            <span
+              class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 px-6 py-3 text-sm font-semibold text-gray-muted"
+            >
+              Coming soon
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ============================================================ */}
+  {/* Section 5: From the community (horizontal scroll) */}
   {/* ============================================================ */}
   <section class="bg-[#f8fafc]">
     <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
@@ -252,7 +392,7 @@ const socialPosts = (await getCollection("socialMedia")).sort(
   </section>
 
   {/* ============================================================ */}
-  {/* Section 5: Finance Fabric User Group */}
+  {/* Section 6: Finance Fabric User Group */}
   {/* ============================================================ */}
   <section class="bg-forest text-white">
     <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
@@ -302,7 +442,7 @@ const socialPosts = (await getCollection("socialMedia")).sort(
   </section>
 
   {/* ============================================================ */}
-  {/* Section 6: Newsletter CTA */}
+  {/* Section 7: Newsletter CTA */}
   {/* ============================================================ */}
   <section style="background-color: #7B61B8;">
     <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
