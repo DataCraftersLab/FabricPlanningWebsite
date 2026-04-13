@@ -1,38 +1,113 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import BlogCard from "../../components/BlogCard.astro";
+import { fetchSubstackPosts } from "../../utils/substackFeed";
+import blogStickyConfig from "../../content/config/blog-sticky.json";
+
+const allPosts = await fetchSubstackPosts();
+const stickyUrl = blogStickyConfig.stickyPostUrl;
+const stickyPost = stickyUrl
+  ? allPosts.find((p) => p.url === stickyUrl)
+  : undefined;
+const otherPosts = allPosts
+  .filter((p) => p.url !== stickyUrl)
+  .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
 ---
 
 <Layout
   title="Blog — Fabric Planning"
-  description="The Fabric Planning blog is coming soon. Subscribe to the newsletter to be notified when we publish."
+  description="Articles, insights, and community content about Microsoft Fabric Planning."
 >
-  <section class="bg-purple-wash">
-    <div
-      class="mx-auto flex min-h-[60vh] max-w-[1200px] flex-col items-center justify-center px-6 py-24 text-center"
-    >
-      <p
-        class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-fabric-purple"
-      >
-        Blog
-      </p>
-      <h1
-        class="mb-6 text-4xl font-bold tracking-tight text-forest md:text-5xl"
-      >
-        Coming soon
-      </h1>
-      <p class="mb-10 max-w-xl text-base leading-relaxed text-slate-text md:text-lg">
-        The Fabric Planning blog is coming soon. Subscribe to our newsletter to
-        be notified when we publish our first articles.
-      </p>
-      <a
-        href="https://fabricplanning.substack.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center justify-center rounded-lg px-8 py-4 text-base font-semibold text-white shadow-md transition hover:shadow-lg"
-        style="background: linear-gradient(135deg, #7B61B8 0%, #5B3F9E 100%);"
-      >
-        Subscribe on Substack
-      </a>
+  <section class="bg-white">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <header class="mb-12 text-center">
+        <p
+          class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-fabric-purple"
+        >
+          Resources
+        </p>
+        <h1
+          class="mb-4 text-4xl font-bold tracking-tight text-forest md:text-5xl"
+        >
+          Blog
+        </h1>
+        <p class="mx-auto max-w-2xl text-base text-gray-muted md:text-lg">
+          Articles, insights, and community content about Microsoft Fabric
+          Planning.
+        </p>
+      </header>
+
+      {/* ---- Fabric Planning on Substack ---- */}
+      <div class="mb-16">
+        <h2 class="mb-6 text-2xl font-bold text-forest">
+          <span style="color: #FF6719;">&#9632;</span> Fabric Planning on Substack
+        </h2>
+
+        {
+          allPosts.length === 0 ? (
+            <div class="rounded-xl border border-dashed border-slate-300 bg-[#f8fafc] px-6 py-12 text-center">
+              <p class="mb-4 text-base font-semibold text-forest">
+                Blog coming soon
+              </p>
+              <p class="mb-6 max-w-md mx-auto text-sm text-gray-muted">
+                Subscribe on Substack to be notified when we publish our first
+                articles.
+              </p>
+              <a
+                href="https://fabricplanning.substack.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:shadow-lg"
+                style="background-color: #FF6719;"
+              >
+                Subscribe on Substack
+              </a>
+            </div>
+          ) : (
+            <>
+              {stickyPost && (
+                <div class="mb-8">
+                  <BlogCard
+                    title={stickyPost.title}
+                    description={stickyPost.description}
+                    pubDate={stickyPost.pubDate}
+                    url={stickyPost.url}
+                    coverImage={stickyPost.coverImage}
+                    featured
+                  />
+                </div>
+              )}
+              <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {otherPosts.map((post) => (
+                  <BlogCard
+                    title={post.title}
+                    description={post.description}
+                    pubDate={post.pubDate}
+                    url={post.url}
+                    coverImage={post.coverImage}
+                  />
+                ))}
+              </div>
+            </>
+          )
+        }
+      </div>
+
+      {/* ---- Other Community Blogs ---- */}
+      <div>
+        <h2 class="mb-6 text-2xl font-bold text-forest">
+          Other Community Blogs
+        </h2>
+        <div
+          class="rounded-xl border border-dashed border-slate-300 bg-[#f8fafc] px-6 py-12 text-center"
+        >
+          <p class="mb-2 text-base font-semibold text-forest">Coming soon</p>
+          <p class="mx-auto max-w-md text-sm text-gray-muted">
+            We're building a curated collection of the best Fabric Planning
+            content from across the community. Check back soon.
+          </p>
+        </div>
+      </div>
     </div>
   </section>
 </Layout>

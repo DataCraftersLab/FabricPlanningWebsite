@@ -3,9 +3,9 @@ import { ChevronDown, Menu, X } from "lucide-react";
 
 type NavLink = { href: string; label: string };
 
-// Blog intentionally omitted until articles are published.
 const resourceLinks: NavLink[] = [
   { href: "/resources/events", label: "Events" },
+  { href: "/resources/blog", label: "Blog" },
   { href: "/resources/social-media", label: "Social Media" },
 ];
 
