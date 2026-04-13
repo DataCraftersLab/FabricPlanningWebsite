@@ -1,4 +1,6 @@
 ---
+import { getEventStatus } from "../utils/eventStatus";
+
 interface Props {
   title: string;
   date: Date;
@@ -6,7 +8,6 @@ interface Props {
   location?: string;
   type: "virtual" | "in-person" | "webinar";
   registrationUrl?: string;
-  isPast: boolean;
   featuredImage?: string;
 }
 
@@ -17,9 +18,10 @@ const {
   location,
   type,
   registrationUrl,
-  isPast,
   featuredImage,
 } = Astro.props;
+
+const isPast = getEventStatus(date) === "past";
 
 const typeBorderClass = isPast
   ? "border-t-gray-muted"

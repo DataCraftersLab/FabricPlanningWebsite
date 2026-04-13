@@ -102,7 +102,6 @@ export default defineConfig({
             name: "registrationUrl",
             label: "Registration URL",
           },
-          { type: "boolean", name: "isPast", label: "Is Past" },
           {
             type: "string",
             name: "featuredImage",
