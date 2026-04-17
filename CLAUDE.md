@@ -48,6 +48,15 @@ Microsoft Fabric Planning knowledge hub owned by Khaled Chowdhury ("The Fabric W
 - Deploy previews on every PR
 - All feature work is verified on staging before going to production
 
+### Merge-to-main workflow (MUST follow)
+
+1. Merge the feature branch into `develop` via PR.
+2. Provide the staging link (**develop--fabricplanning.netlify.app**) to the user.
+3. **STOP and wait for explicit user confirmation.** Do NOT proceed until the user reviews and approves.
+4. Only after the user confirms, create a PR from `develop` → `main` and merge it.
+
+**Never merge to `main` without user approval on the staging preview first.**
+
 ## Content
 
 - Authored as Markdown in `content/` and managed via Tina CMS (TinaCloud)

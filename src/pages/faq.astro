@@ -202,9 +202,10 @@ const faqs: Faq[] = [
   {
     question: "How are formulas stored in Fabric Planning?",
     answer: `
-      <p>When you enter data into a Fabric Planning cell, you can use formulas during data entry. However, the formula itself is not stored in the cell. It is converted into a value at the time of entry, and that value is what gets saved.</p>
-      <p>This is by design. Planning data is meant to be a stable, auditable record of what you decided, not a live calculation that changes as context shifts. Once a value lands in a cell, it represents a deliberate planning decision, and the audit trail tracks that value.</p>
-      <p>If you need ongoing calculations, those happen at the model level, not in individual cells.</p>
+      <p>Just like Excel. When you enter a formula into a cell, Fabric Planning stores the formula in the application, not the resolved value. Click on a cell, and you see the formula or the value you entered, exactly as you would expect.</p>
+      <p>This is what makes the planning experience powerful. When the underlying actuals refresh, formulas you have built on top of them refresh live too. You are not stuck with stale calculations the moment your source data updates.</p>
+      <p>A note on inputs: scaled numbers (anything you type as a millions or billions abbreviation, for example) are taken as plain inputs, not interpreted as formulas. Formulas are formulas, values are values, and the application keeps the distinction clean.</p>
+      <p>The best way to understand this is to play with the application yourself. Once you do, the behavior feels familiar to anyone who has worked in Excel.</p>
     `,
   },
 ];
