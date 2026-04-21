@@ -6,5 +6,5 @@ location: "LinkedIn Live"
 type: "virtual"
 description: "Change desc. later"
 registrationUrl: "https://lumel.com/webinars/fabric-planning-powertable-data-management/"
-featuredImage: "https://media.fabricplanning.io/events/Fabric%20Plainng%20Hands-On-apr%2027%202026.png"
+featuredImage: "https://media.fabricplanning.io/events/Fabric%20Planning%20PowerTable%20Data%20Management-apr%2030%202026.png"
 ---
