@@ -1,97 +1,140 @@
 ---
 import MobileMenu from "./MobileMenu.tsx";
 
-const resourceLinks = [
+const navLinks = [
+  { href: "/", label: "Home" },
   { href: "/resources/events", label: "Events" },
   { href: "/resources/blog", label: "Blog" },
-  { href: "/resources/social-media", label: "Social Media" },
+  { href: "/resources/social-media", label: "Community" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/about", label: "About" },
 ];
 ---
 
-<header class="relative z-30 bg-forest text-white">
-  <div
-    class="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-4"
-  >
-    <a
-      href="/"
-      class="text-xl font-bold tracking-tight text-white hover:text-mint-teal"
-    >
-      Fabric Planning
+<header class="site-header">
+  <div class="bar">
+    <a href="/" class="brand">
+      <span class="brand-mark" aria-hidden="true">F</span>
+      <span class="brand-name">
+        Fabric Planning<span class="brand-sub">.io</span>
+      </span>
     </a>
 
-    <nav class="hidden md:block">
-      <ul class="flex items-center gap-8">
-        <li>
-          <a
-            href="/"
-            class="text-sm font-medium text-white hover:text-mint-teal"
-          >
-            Home
+    <nav class="desktop-nav" aria-label="Main navigation">
+      {
+        navLinks.map((link) => (
+          <a href={link.href} class="nav-link">
+            {link.label}
           </a>
-        </li>
-        <li>
-          <a
-            href="/faq"
-            class="text-sm font-medium text-white hover:text-mint-teal"
-          >
-            FAQ
-          </a>
-        </li>
-
-        <li class="group relative">
-          <button
-            type="button"
-            aria-haspopup="true"
-            class="inline-flex items-center gap-1 text-sm font-medium text-white hover:text-mint-teal focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-          >
-            Resources
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </button>
-          <!-- Hover/focus dropdown panel. pt-3 leaves a hover-safe gap. -->
-          <div
-            class="invisible absolute left-1/2 top-full z-40 -translate-x-1/2 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
-          >
-            <div
-              class="min-w-[200px] rounded-xl border border-mint-teal/20 bg-white py-2 shadow-md"
-            >
-              {
-                resourceLinks.map((link) => (
-                  <a
-                    href={link.href}
-                    class="block px-4 py-2 text-sm font-medium text-slate-text hover:bg-mint-wash hover:text-deep-green"
-                  >
-                    {link.label}
-                  </a>
-                ))
-              }
-            </div>
-          </div>
-        </li>
-
-        <li>
-          <a
-            href="/about"
-            class="text-sm font-medium text-white hover:text-mint-teal"
-          >
-            About
-          </a>
-        </li>
-      </ul>
+        ))
+      }
     </nav>
+
+    <a
+      href="https://fabricplanning.substack.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="nav-cta hidden md:inline-flex"
+    >
+      Subscribe →
+    </a>
 
     <MobileMenu client:load />
   </div>
 </header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: color-mix(in oklab, var(--bg-0) 82%, transparent);
+    backdrop-filter: saturate(140%) blur(10px);
+    -webkit-backdrop-filter: saturate(140%) blur(10px);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .bar {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--fg);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+  }
+
+  .brand-mark {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--teal-400) 0%, var(--teal-700) 100%);
+    color: var(--accent-ink);
+    display: inline-grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .brand-name {
+    font-size: 16px;
+  }
+
+  .brand-sub {
+    color: var(--fg-muted);
+    font-weight: 500;
+    margin-left: 2px;
+  }
+
+  .desktop-nav {
+    display: none;
+    align-items: center;
+    gap: 28px;
+  }
+
+  @media (min-width: 768px) {
+    .desktop-nav {
+      display: flex;
+    }
+  }
+
+  .nav-link {
+    font-size: 14px;
+    color: var(--fg-soft);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .nav-link:hover {
+    color: var(--accent);
+  }
+
+  .nav-cta {
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.2s;
+  }
+
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(94, 234, 212, 0.35);
+  }
+</style>

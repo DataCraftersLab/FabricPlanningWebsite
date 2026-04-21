@@ -5,13 +5,14 @@
 @import "@fontsource/plus-jakarta-sans/500.css";
 @import "@fontsource/plus-jakarta-sans/600.css";
 @import "@fontsource/plus-jakarta-sans/700.css";
+@import "@fontsource/plus-jakarta-sans/800.css";
 
 /* JetBrains Mono (code) */
 @import "@fontsource/jetbrains-mono/400.css";
 @import "@fontsource/jetbrains-mono/500.css";
 
 @theme {
-  /* ---------- Primary: Fabric IQ greens (dominant) ---------- */
+  /* ---------- Primary: Fabric IQ greens (kept for non-homepage pages) ---------- */
   --color-forest: #0f2b1e;
   --color-deep-green: #1b7a50;
   --color-medium-green: #3ba776;
@@ -44,19 +45,79 @@
   --container-site: 1200px;
 }
 
+/* ---------- Dark mode design system ---------- */
+:root {
+  --bg-0: #07100d;
+  --bg-1: #0b1814;
+  --bg-2: #10211b;
+  --bg-3: #163028;
+  --rule: rgba(125, 211, 197, 0.12);
+  --rule-strong: rgba(125, 211, 197, 0.22);
+
+  --fg: #eaf4f0;
+  --fg-soft: #c4d4ce;
+  --fg-muted: #8ea09a;
+  --fg-faint: #5d6c66;
+
+  --teal-300: #99f6e4;
+  --teal-400: #5eead4;
+  --teal-500: #2dd4bf;
+  --teal-600: #14b8a6;
+  --teal-700: #0d9488;
+  --teal-wash: rgba(45, 212, 191, 0.12);
+
+  --dc-badge-blue: #60a5fa;
+  --dc-badge-red: #f87171;
+  --dc-badge-amber: #fbbf24;
+
+  --accent: #5eead4;
+  --accent-weak: rgba(94, 234, 212, 0.14);
+  --accent-ink: #04110e;
+
+  --card-radius: 14px;
+  --card-bg: var(--bg-1);
+  --card-border: var(--rule);
+}
+
 html {
   font-family: var(--font-sans);
-  color: var(--color-slate-text);
+  color: var(--fg-soft);
   font-size: 16px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background-color: #ffffff;
+  background-color: var(--bg-0);
 }
 
 code,
 pre {
   font-family: var(--font-mono);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Ambient glow behind content */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(
+      900px 520px at 80% -10%,
+      rgba(94, 234, 212, 0.1) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      700px 420px at 10% 10%,
+      rgba(20, 184, 166, 0.07) 0%,
+      transparent 60%
+    );
 }
