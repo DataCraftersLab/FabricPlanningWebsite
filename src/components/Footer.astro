@@ -2,260 +2,65 @@
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
-  <div class="footer-container">
-    <div class="footer-top">
-      <!-- About -->
-      <div class="footer-about">
-        <h3 class="footer-brand">
-          <span class="brand-mark" aria-hidden="true">F</span>
+<footer class="bg-forest text-white">
+  <div class="mx-auto max-w-[1200px] px-6 py-12">
+    <div
+      class="flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between"
+    >
+      <!-- Left: brand + sponsor -->
+      <div class="flex flex-col gap-2">
+        <p class="text-xl font-bold tracking-tight text-white">
           Fabric Planning
-        </h3>
-        <p class="footer-desc">
-          A Microsoft Fabric Planning knowledge hub, independently authored by
-          Khaled Chowdhury. Sponsored by{" "}
+        </p>
+        <p class="text-sm text-white/80">
+          Sponsored by{" "}
           <a
             href="https://datacrafters.io"
             target="_blank"
             rel="noopener noreferrer"
-            class="footer-sponsor-link"
+            class="font-semibold text-dc-green hover:underline"
           >
             Data Crafters
           </a>
-          , a Microsoft Fabric Featured Partner. Not affiliated with Microsoft.
         </p>
-        <span class="footer-domain">fabricplanning.io</span>
       </div>
 
-      <!-- Explore -->
-      <div>
-        <h4 class="footer-col-heading">Explore</h4>
-        <ul class="footer-links">
-          <li><a href="/resources/events">Events</a></li>
-          <li><a href="/resources/blog">Blog</a></li>
-          <li><a href="/resources/social-media">Social</a></li>
-          <li><a href="/faq">FAQ</a></li>
-        </ul>
-      </div>
-
-      <!-- Community -->
-      <div>
-        <h4 class="footer-col-heading">Community</h4>
-        <ul class="footer-links">
-          <li>
-            <a
-              href="https://www.meetup.com/finance-fabric-user-group/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Finance Fabric User Group
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://fabricplanning.substack.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Substack
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://www.linkedin.com/in/khaledchowdhury/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              LinkedIn
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <!-- About -->
-      <div>
-        <h4 class="footer-col-heading">About</h4>
-        <ul class="footer-links">
-          <li><a href="/about">About the hub</a></li>
-          <li><a href="/about">Contributors</a></li>
-          <li>
-            <a
-              href="https://datacrafters.io"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Data Crafters
-            </a>
-          </li>
-        </ul>
+      <!-- Right: social links -->
+      <div class="flex items-center gap-3">
+        <a
+          href="https://www.linkedin.com/in/khaledchowdhury/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-white hover:bg-white/10"
+          aria-label="LinkedIn"
+        >
+          LinkedIn
+        </a>
+        <a
+          href="https://fabricplanning.substack.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-white hover:bg-white/10"
+        >
+          Subscribe on Substack
+        </a>
       </div>
     </div>
+  </div>
 
-    <!-- Accent stripe -->
-    <div class="footer-stripe" aria-hidden="true">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
+  <!-- Multi-color accent stripe (DC globe colors) -->
+  <div class="flex h-1 w-full" aria-hidden="true">
+    <div class="flex-1 bg-dc-amber"></div>
+    <div class="flex-1 bg-dc-red"></div>
+    <div class="flex-1 bg-dc-blue"></div>
+    <div class="flex-1 bg-medium-green"></div>
+  </div>
 
-    <div class="footer-bottom">
-      <div>© {year} Fabric Planning · Independently published</div>
-      <div>Set in Plus Jakarta Sans</div>
+  <div class="bg-forest">
+    <div class="mx-auto max-w-[1200px] px-6 py-4">
+      <p class="text-center text-xs text-white/70">
+        &copy; {year} Fabric Planning. All rights reserved.
+      </p>
     </div>
   </div>
 </footer>
-
-<style>
-  .site-footer {
-    background: var(--bg-0);
-    border-top: 1px solid var(--rule);
-    padding: 5rem 0 2rem;
-  }
-
-  .footer-container {
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
-
-  .footer-top {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 48px;
-    padding-bottom: 48px;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  @media (max-width: 900px) {
-    .footer-top {
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-    }
-  }
-
-  @media (max-width: 560px) {
-    .footer-top {
-      grid-template-columns: 1fr;
-      gap: 24px;
-    }
-  }
-
-  .footer-about {}
-
-  .footer-brand {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--fg);
-    margin: 0 0 12px;
-    letter-spacing: -0.02em;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .brand-mark {
-    width: 24px;
-    height: 24px;
-    border-radius: 6px;
-    background: linear-gradient(135deg, var(--teal-400) 0%, var(--teal-700) 100%);
-    color: var(--accent-ink);
-    display: inline-grid;
-    place-items: center;
-    font-weight: 800;
-    font-size: 12px;
-    flex-shrink: 0;
-  }
-
-  .footer-desc {
-    font-size: 14px;
-    color: var(--fg-muted);
-    max-width: 42ch;
-    margin: 0 0 16px;
-    line-height: 1.65;
-  }
-
-  .footer-sponsor-link {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 500;
-  }
-
-  .footer-sponsor-link:hover {
-    text-decoration: underline;
-  }
-
-  .footer-domain {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--fg-faint);
-    font-weight: 600;
-  }
-
-  .footer-col-heading {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    margin: 0 0 16px;
-    font-weight: 700;
-  }
-
-  .footer-links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    gap: 10px;
-    font-size: 14px;
-  }
-
-  .footer-links a {
-    color: var(--fg-soft);
-    text-decoration: none;
-    transition: color 0.15s;
-  }
-
-  .footer-links a:hover {
-    color: var(--accent);
-  }
-
-  .footer-stripe {
-    height: 3px;
-    margin: 28px 0 24px;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    border-radius: 2px;
-    overflow: hidden;
-  }
-
-  .footer-stripe span:nth-child(1) {
-    background: var(--teal-400);
-  }
-  .footer-stripe span:nth-child(2) {
-    background: var(--dc-badge-amber);
-  }
-  .footer-stripe span:nth-child(3) {
-    background: var(--dc-badge-blue);
-  }
-  .footer-stripe span:nth-child(4) {
-    background: var(--dc-badge-red);
-  }
-
-  .footer-bottom {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    color: var(--fg-muted);
-  }
-
-  @media (max-width: 560px) {
-    .footer-bottom {
-      flex-direction: column;
-      gap: 8px;
-      text-align: center;
-    }
-  }
-</style>

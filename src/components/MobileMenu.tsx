@@ -1,19 +1,22 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, Menu, X } from "lucide-react";
 
-const navLinks = [
-  { href: "/", label: "Home" },
+type NavLink = { href: string; label: string };
+
+const resourceLinks: NavLink[] = [
   { href: "/resources/events", label: "Events" },
   { href: "/resources/blog", label: "Blog" },
-  { href: "/resources/social-media", label: "Community" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/about", label: "About" },
+  { href: "/resources/social-media", label: "Social Media" },
 ];
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
 
-  const close = () => setOpen(false);
+  const close = () => {
+    setOpen(false);
+    setResourcesOpen(false);
+  };
 
   return (
     <div className="md:hidden">
@@ -22,102 +25,64 @@ export default function MobileMenu() {
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "44px",
-          height: "44px",
-          borderRadius: "8px",
-          color: "var(--fg)",
-          background: "transparent",
-          border: "none",
-          cursor: "pointer",
-          transition: "background 0.15s",
-        }}
+        className="inline-flex h-11 w-11 items-center justify-center rounded-md text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/40"
       >
-        {open ? <X size={22} /> : <Menu size={22} />}
+        {open ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {open && (
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            top: "100%",
-            zIndex: 40,
-            background: "var(--bg-1)",
-            borderBottom: "1px solid var(--rule)",
-            boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
-          }}
-        >
-          <nav
-            style={{
-              maxWidth: "1240px",
-              margin: "0 auto",
-              padding: "1rem 2rem",
-              display: "flex",
-              flexDirection: "column",
-              gap: "4px",
-            }}
-          >
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={close}
-                style={{
-                  padding: "12px",
-                  borderRadius: "8px",
-                  fontSize: "15px",
-                  fontWeight: 500,
-                  color: "var(--fg-soft)",
-                  textDecoration: "none",
-                  transition: "background 0.15s, color 0.15s",
-                }}
-                onMouseEnter={(e) => {
-                  (e.target as HTMLAnchorElement).style.background =
-                    "var(--bg-3)";
-                  (e.target as HTMLAnchorElement).style.color = "var(--accent)";
-                }}
-                onMouseLeave={(e) => {
-                  (e.target as HTMLAnchorElement).style.background =
-                    "transparent";
-                  (e.target as HTMLAnchorElement).style.color = "var(--fg-soft)";
-                }}
-              >
-                {link.label}
-              </a>
-            ))}
-            <div
-              style={{
-                marginTop: "12px",
-                paddingTop: "12px",
-                borderTop: "1px solid var(--rule)",
-              }}
+        <div className="absolute left-0 right-0 top-full z-40 border-t border-white/10 bg-forest shadow-lg">
+          <nav className="mx-auto flex max-w-[1200px] flex-col px-6 py-4">
+            <a
+              href="/"
+              className="rounded-md px-3 py-3 text-base font-medium text-white hover:bg-white/10"
+              onClick={close}
             >
-              <a
-                href="https://fabricplanning.substack.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={close}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "10px 16px",
-                  borderRadius: "999px",
-                  background: "var(--accent)",
-                  color: "var(--accent-ink)",
-                  fontWeight: 600,
-                  fontSize: "14px",
-                  textDecoration: "none",
-                }}
-              >
-                Subscribe →
-              </a>
-            </div>
+              Home
+            </a>
+            <a
+              href="/faq"
+              className="rounded-md px-3 py-3 text-base font-medium text-white hover:bg-white/10"
+              onClick={close}
+            >
+              FAQ
+            </a>
+
+            <button
+              type="button"
+              aria-expanded={resourcesOpen}
+              onClick={() => setResourcesOpen((v) => !v)}
+              className="flex items-center justify-between rounded-md px-3 py-3 text-left text-base font-medium text-white hover:bg-white/10"
+            >
+              <span>Resources</span>
+              <ChevronDown
+                size={18}
+                className={`transition-transform ${resourcesOpen ? "rotate-180" : ""}`}
+                aria-hidden="true"
+              />
+            </button>
+            {resourcesOpen && (
+              <div className="ml-3 flex flex-col border-l border-white/10 pl-3">
+                {resourceLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="rounded-md px-3 py-2 text-sm font-medium text-white/90 hover:bg-white/10"
+                    onClick={close}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            )}
+
+            <a
+              href="/about"
+              className="rounded-md px-3 py-3 text-base font-medium text-white hover:bg-white/10"
+              onClick={close}
+            >
+              About
+            </a>
           </nav>
         </div>
       )}

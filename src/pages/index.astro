@@ -1,6 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
+import EventCard from "../components/EventCard.astro";
+import BlogCard from "../components/BlogCard.astro";
 import SocialCard from "../components/SocialCard.astro";
 import { getEventStatus } from "../utils/eventStatus";
 import { fetchSubstackPosts } from "../utils/substackFeed";
@@ -18,477 +20,346 @@ const socialPosts = (await getCollection("socialMedia")).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
 
+// Blog: Substack RSS
 const allPosts = await fetchSubstackPosts();
 const stickyUrl = blogStickyConfig.stickyPostUrl;
-const stickyPost = stickyUrl ? allPosts.find((p) => p.url === stickyUrl) : undefined;
-const featuredPost = stickyPost ?? (allPosts.length > 0 ? allPosts[0] : undefined);
-const listedPosts = allPosts
-  .filter((p) => !featuredPost || p.url !== featuredPost.url)
+const stickyPost = stickyUrl
+  ? allPosts.find((p) => p.url === stickyUrl)
+  : undefined;
+const nonStickyPosts = allPosts
+  .filter((p) => p.url !== stickyUrl)
   .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime())
   .slice(0, 4);
-
-const nextEvent = upcomingEvents[0];
-const daysUntil = nextEvent
-  ? Math.max(0, Math.ceil((nextEvent.data.date.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
-  : null;
-const daysLabel =
-  daysUntil === null
-    ? null
-    : daysUntil === 0
-      ? "Today"
-      : daysUntil === 1
-        ? "Tomorrow"
-        : `In ${daysUntil} days`;
-
-function fmtDay(d: Date) {
-  return d.getDate().toString().padStart(2, "0");
-}
-function fmtMon(d: Date) {
-  return d.toLocaleDateString("en-US", { month: "short" });
-}
-function fmtEventDate(d: Date) {
-  return d.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    weekday: "short",
-  });
-}
-function fmtPostDate(d: Date) {
-  return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-}
-function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
-  return type === "virtual"
-    ? "Virtual"
-    : type === "in-person"
-      ? "In-person"
-      : "Webinar";
-}
-function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
-  return type === "virtual"
-    ? "var(--accent)"
-    : type === "in-person"
-      ? "var(--dc-badge-blue)"
-      : "var(--dc-badge-red)";
-}
+const blogPosts = [
+  ...(stickyPost ? [stickyPost] : []),
+  ...nonStickyPosts,
+];
 ---
 
 <Layout
   title="Fabric Planning — The Microsoft Fabric Knowledge Hub"
   description="Everything you need to understand, evaluate, and implement Microsoft Fabric Planning. Built by practitioners, for practitioners."
 >
-  <!-- ============ HERO ============ -->
-  <section class="hero">
-    <div class="container hero-inner">
-      <!-- Left: headline + CTAs -->
-      <div class="hero-main">
-        <span class="eyebrow">Microsoft Fabric knowledge hub</span>
-        <h1>
-          Planning, now <span class="mark">native</span><br />to the fabric of
-          your data.
-        </h1>
-        <p class="hero-sub">
-          A working archive for finance and data teams adopting Microsoft Fabric
-          Planning — built by practitioners, updated weekly. No vendor spin, no
-          50-page decks. Just what works, what doesn't, and what to do next.
-        </p>
-        <div class="hero-actions">
-          <a
-            class="btn btn-primary"
-            href="https://fabricplanning.substack.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read the latest issue <span class="arr">→</span>
-          </a>
-          <a
-            class="btn btn-ghost"
-            href="https://fabricplanning.substack.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Subscribe on Substack
-          </a>
-          {allPosts.length > 0 && <span class="pill">Updated recently</span>}
-        </div>
-      </div>
+  {/* ============================================================ */}
+  {/* Section 1: Hero */}
+  {/* ============================================================ */}
+  <section
+    class="relative w-full text-white"
+    style="background: linear-gradient(135deg, #0f2b1e 0%, #1a1035 50%, #0f2b1e 100%);"
+  >
+    <div
+      class="mx-auto flex max-w-[1200px] flex-col items-center px-6 py-24 text-center md:py-32"
+    >
+      <p
+        class="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-light-purple"
+      >
+        Microsoft Fabric Knowledge Hub
+      </p>
+      <h1
+        class="mb-6 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl"
+      >
+        The knowledge hub for Microsoft Fabric Planning
+      </h1>
+      <p
+        class="mb-10 max-w-2xl text-lg leading-relaxed text-[#94a3b8] md:text-xl"
+      >
+        Everything you need to understand, evaluate, and implement Microsoft
+        Fabric Planning. Built by practitioners, for practitioners.
+      </p>
+      <a
+        href="https://fabricplanning.substack.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center justify-center rounded-lg px-8 py-4 text-base font-semibold text-white shadow-md transition hover:shadow-lg"
+        style="background: linear-gradient(135deg, #7B61B8 0%, #5B3F9E 100%);"
+      >
+        Subscribe for updates
+      </a>
+    </div>
+  </section>
 
-      <!-- Right: next event card -->
-      {
-        nextEvent ? (
-          <aside class="hero-side">
-            <div class="hero-side-label">
-              <span>Next event</span>
-              {daysLabel && <span class="live-badge">{daysLabel}</span>}
-            </div>
-            <div class="hero-side-title">{nextEvent.data.title}</div>
-            <div class="hero-side-meta">
-              <div>
-                <div class="meta-k">Date</div>
-                <div class="meta-v">{fmtEventDate(nextEvent.data.date)}</div>
-              </div>
-              <div>
-                <div class="meta-k">Time</div>
-                <div class="meta-v">{nextEvent.data.time}</div>
-              </div>
-              <div>
-                <div class="meta-k">Format</div>
-                <div class="meta-v">
-                  {getTypeLabel(nextEvent.data.type)}
-                </div>
-              </div>
-              {nextEvent.data.location && (
-                <div>
-                  <div class="meta-k">Location</div>
-                  <div class="meta-v">{nextEvent.data.location}</div>
-                </div>
-              )}
-            </div>
-            <a
-              class="hero-side-cta"
-              href={nextEvent.data.registrationUrl ?? "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span>Register free</span>
-              <span>→</span>
-            </a>
-          </aside>
-        ) : (
-          <aside class="hero-side hero-side-empty">
-            <div class="hero-side-label">
-              <span>Events</span>
-            </div>
-            <div class="hero-side-title">
-              No upcoming events scheduled right now.
-            </div>
-            <p class="hero-side-sub">
-              Check back soon — new sessions are added regularly.
-            </p>
-            <a
-              class="hero-side-cta"
-              href="/resources/events"
-            >
-              <span>Browse recordings</span>
-              <span>→</span>
-            </a>
-          </aside>
-        )
-      }
-
-      <!-- Stats strip -->
-      <div class="hero-stats" style="grid-column: 1 / -1;">
-        <div class="stat-cell">
-          <div class="stat-k">Articles published</div>
-          <div class="stat-v">
-            {allPosts.length > 0 ? allPosts.length : "—"}<span class="stat-u"
-              >.</span
-            >
-          </div>
+  {/* ============================================================ */}
+  {/* Section 2: What is Fabric Planning? */}
+  {/* ============================================================ */}
+  <section class="bg-purple-wash">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <div class="mx-auto max-w-[680px] text-center">
+        <h2
+          class="mb-4 text-3xl font-bold tracking-tight text-forest md:text-4xl"
+        >
+          What is Fabric Planning?
+        </h2>
+        <div
+          class="mx-auto mb-10 h-1 w-24 rounded-full"
+          style="background: linear-gradient(90deg, #7B61B8 0%, #3BA776 100%);"
+          aria-hidden="true"
+        >
         </div>
-        <div class="stat-cell">
-          <div class="stat-k">Events &amp; recordings</div>
-          <div class="stat-v">
-            {allEvents.length > 0 ? allEvents.length : "—"}<span class="stat-u"
-              >.</span
-            >
-          </div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-k">User group members</div>
-          <div class="stat-v">412<span class="stat-u">.</span></div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-k">Not affiliated with</div>
-          <div class="stat-v">Microsoft<span class="stat-u">.</span></div>
+        <div class="space-y-6 text-left text-base leading-relaxed text-slate-text md:text-lg">
+          <p>
+            Microsoft Fabric Planning is a new capability within the Microsoft
+            Fabric platform that brings budgeting, forecasting, and financial
+            planning directly into the unified analytics environment. For the
+            first time, finance teams can build planning models alongside
+            their existing Power BI reports and Fabric data pipelines.
+          </p>
+          <p>
+            This represents a potential shift away from standalone EPM tools
+            and Excel-based planning toward an integrated, cloud-native
+            approach. Fabric Planning is still evolving, and this knowledge
+            hub exists to help finance and data professionals navigate what
+            it can do today, where the gaps are, and how to get started.
+          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ EXPLAINER ============ -->
-  <section class="slab">
-    <div class="container">
-      <div class="section-head">
+  {/* ============================================================ */}
+  {/* Section 3: Events (two-column: Upcoming | Past) */}
+  {/* ============================================================ */}
+  <section class="bg-white">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <div
+        class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+      >
         <div>
-          <span class="eyebrow">§ 01 · Primer</span>
-          <h2>
-            What, exactly, is <span class="mark">Fabric Planning</span>?
+          <h2 class="text-3xl font-bold tracking-tight text-forest md:text-4xl">
+            Events
           </h2>
-          <p class="section-sub">
-            The short version, for finance leaders deciding whether to pay
-            attention.
-          </p>
-        </div>
-        <a class="section-link" href="/faq">Start here →</a>
-      </div>
-
-      <div class="explainer">
-        <div class="explainer-lede">
-          A new capability inside Microsoft Fabric that brings budgeting,
-          forecasting, and financial planning <span class="mark">alongside</span
-          > the Power BI reports and data pipelines you already run.
-        </div>
-        <div class="explainer-body">
-          <p>
-            For the first time, finance teams can build planning models in the
-            same environment their data engineers build in. That single fact has
-            large implications — for EPM vendors, for the Excel-heavy status
-            quo, and for how finance organises itself against the rest of the
-            business.
-          </p>
-          <p>
-            Fabric Planning is still early. The product changes monthly.
-            Capabilities that shipped at Ignite look meaningfully different by
-            April. This hub exists to help practitioners navigate the moving
-            target — what it can do today, where the gaps are, and how to get
-            started without betting the roadmap.
-          </p>
-          <div class="pull-stats">
-            <div>
-              <div class="pull-k">Launched</div>
-              <div class="pull-v">Ignite 2025</div>
-            </div>
-            <div>
-              <div class="pull-k">Built on</div>
-              <div class="pull-v">Microsoft Fabric</div>
-            </div>
-            <div>
-              <div class="pull-k">Replaces</div>
-              <div class="pull-v">Some of Excel</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ EVENTS ============ -->
-  <section class="slab slab-elevated">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">§ 02 · Calendar</span>
-          <h2>Events &amp; <span class="mark">recordings</span>.</h2>
-          <p class="section-sub">
-            Upcoming sessions, past recordings, and community meetups.
-          </p>
-        </div>
-        <a class="section-link" href="/resources/events">All events →</a>
-      </div>
-
-      <div class="events-grid">
-        <!-- Upcoming -->
-        <div class="events-col">
-          <h3 class="events-col-heading events-col-upcoming">
-            <span class="events-col-dot"></span> Upcoming
-          </h3>
-          {
-            upcomingEvents.length === 0 ? (
-              <p class="events-empty">
-                No upcoming events scheduled. Check back soon.
-              </p>
-            ) : (
-              upcomingEvents.map((event) => (
-                <div class="event-row" data-type={event.data.type}>
-                  <div class="event-date">
-                    <span class="event-day">{fmtDay(event.data.date)}</span>
-                    <span class="event-mon">{fmtMon(event.data.date)}</span>
-                  </div>
-                  <div class="event-meta">
-                    <div class="event-type">
-                      <span
-                        class="event-type-dot"
-                        style={`background: ${getTypeDotColor(event.data.type)}`}
-                      />
-                      {getTypeLabel(event.data.type)}
-                      {event.data.time ? ` · ${event.data.time}` : ""}
-                    </div>
-                    <div class="event-title">{event.data.title}</div>
-                    {event.data.location && (
-                      <div class="event-loc">{event.data.location}</div>
-                    )}
-                  </div>
-                  <a
-                    class="event-cta"
-                    href={event.data.registrationUrl ?? "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Register →
-                  </a>
-                </div>
-              ))
-            )
-          }
-        </div>
-
-        <!-- Recordings -->
-        <div class="events-col events-col-past">
-          <h3 class="events-col-heading">
-            <span class="events-col-dot events-col-dot-muted"></span> Recordings
-          </h3>
-          {
-            pastEvents.length === 0 ? (
-              <p class="events-empty">No recordings yet.</p>
-            ) : (
-              pastEvents.map((event) => (
-                <div class="event-row event-row-past" data-type={event.data.type}>
-                  <div class="event-date event-date-past">
-                    <span class="event-day">{fmtDay(event.data.date)}</span>
-                    <span class="event-mon">{fmtMon(event.data.date)}</span>
-                  </div>
-                  <div class="event-meta">
-                    <div class="event-type">
-                      <span
-                        class="event-type-dot"
-                        style="background: var(--fg-faint)"
-                      />
-                      {getTypeLabel(event.data.type)}
-                      {event.data.time ? ` · ${event.data.time}` : ""}
-                    </div>
-                    <div class="event-title">{event.data.title}</div>
-                    {event.data.location && (
-                      <div class="event-loc">{event.data.location}</div>
-                    )}
-                  </div>
-                  <a
-                    class="event-cta"
-                    href={event.data.registrationUrl ?? "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Watch →
-                  </a>
-                </div>
-              ))
-            )
-          }
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ BLOG ============ -->
-  <section class="slab">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">§ 03 · From the publication</span>
-          <h2>Recent <span class="mark">writing</span>.</h2>
-          <p class="section-sub">
-            Articles from the Fabric Planning Substack.
+          <p class="mt-2 text-base text-gray-muted">
+            Upcoming sessions, past recordings, and community meetups
           </p>
         </div>
         <a
-          class="section-link"
-          href="https://fabricplanning.substack.com"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="/resources/events"
+          class="text-sm font-semibold text-deep-green hover:underline"
         >
-          Archive →
+          View all events &rarr;
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        {/* LEFT: Upcoming Events */}
+        <div class="flex flex-col pr-0 md:pr-8">
+          <h3 class="mb-4 text-xl font-bold text-forest">
+            <span class="mr-1 inline-block h-3 w-3 rounded-sm bg-medium-green" aria-hidden="true"></span>
+            Upcoming Events
+          </h3>
+          {
+            upcomingEvents.length === 0 ? (
+              <p class="text-sm text-gray-muted">
+                No upcoming events scheduled. Check back soon.
+              </p>
+            ) : (
+              <div
+                id="events-upcoming-scroll"
+                class="-mx-2 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-2 pb-2"
+                style="scrollbar-width: thin;"
+              >
+                {upcomingEvents.map((event) => (
+                  <div class="shrink-0 snap-start">
+                    <EventCard
+                      title={event.data.title}
+                      date={event.data.date}
+                      time={event.data.time}
+                      location={event.data.location}
+                      type={event.data.type}
+                      registrationUrl={event.data.registrationUrl}
+                      featuredImage={event.data.featuredImage}
+                    />
+                  </div>
+                ))}
+              </div>
+            )
+          }
+        </div>
+
+        {/* Mobile divider */}
+        <div class="my-8 border-t md:hidden" style="border-color: #cbd5e1;"></div>
+
+        {/* Desktop divider + RIGHT: Past Events */}
+        <div class="flex flex-col pl-0 md:border-l md:pl-8" style="--tw-border-opacity:1; border-color: #cbd5e1;">
+          <h3 class="mb-4 text-xl font-bold text-forest">
+            <span class="mr-1 inline-block h-3 w-3 rounded-sm bg-gray-muted" aria-hidden="true"></span>
+            Past Events
+          </h3>
+          {
+            pastEvents.length === 0 ? (
+              <p class="text-sm text-gray-muted">No past events yet.</p>
+            ) : (
+              <div
+                id="events-past-scroll"
+                class="-mx-2 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-2 pb-2"
+                style="scrollbar-width: thin;"
+              >
+                {pastEvents.map((event) => (
+                  <div class="shrink-0 snap-start">
+                    <EventCard
+                      title={event.data.title}
+                      date={event.data.date}
+                      time={event.data.time}
+                      location={event.data.location}
+                      type={event.data.type}
+                      registrationUrl={event.data.registrationUrl}
+                      featuredImage={event.data.featuredImage}
+                    />
+                  </div>
+                ))}
+              </div>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ============================================================ */}
+  {/* Section 4: From the Blog (two-column) */}
+  {/* ============================================================ */}
+  <section class="bg-[#f8fafc]">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <div
+        class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+      >
+        <h2 class="text-3xl font-bold tracking-tight text-forest md:text-4xl">
+          From the Blog
+        </h2>
+        <a
+          href="/resources/blog"
+          class="text-sm font-semibold text-deep-green hover:underline"
+        >
+          View all &rarr;
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2">
+        {/* LEFT: Fabric Planning on Substack */}
+        <div class="flex flex-col pr-0 md:pr-8">
+          <h3 class="mb-1 text-xl font-bold text-forest">
+            <span style="color: #FF6719;">&#9632;</span> Fabric Planning on Substack
+          </h3>
+          <p class="mb-6 text-sm text-gray-muted">
+            Articles and insights from our publication
+          </p>
+
+          {
+            blogPosts.length === 0 ? (
+              <p class="mb-6 text-sm text-gray-muted">
+                Coming soon. Subscribe to be notified when we publish our first article.
+              </p>
+            ) : (
+              <div
+                id="blog-scroll"
+                class="-mx-2 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-2 pb-2"
+                style="scrollbar-width: thin;"
+              >
+                {blogPosts.map((post) => (
+                  <div class="shrink-0 snap-start">
+                    <BlogCard
+                      title={post.title}
+                      description={post.description}
+                      pubDate={post.pubDate}
+                      url={post.url}
+                      coverImage={post.coverImage}
+                    />
+                  </div>
+                ))}
+              </div>
+            )
+          }
+
+          <div class="mt-auto pt-6">
+            <a
+              href="https://fabricplanning.substack.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:shadow-lg"
+              style="background-color: #FF6719;"
+            >
+              Subscribe on Substack
+            </a>
+          </div>
+        </div>
+
+        {/* Mobile divider */}
+        <div class="my-8 border-t md:hidden" style="border-color: #cbd5e1;"></div>
+
+        {/* Desktop divider + RIGHT: Other Community Blogs */}
+        <div class="flex flex-col pl-0 md:border-l md:pl-8" style="--tw-border-opacity:1; border-color: #cbd5e1;">
+          <h3 class="mb-1 text-xl font-bold text-forest">
+            Other Community Blogs
+          </h3>
+          <p class="mb-6 text-sm text-gray-muted">
+            Curated posts from across the Fabric Planning community
+          </p>
+
+          <div class="flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-white px-6 py-12 text-center">
+            <p class="mb-2 text-base font-semibold text-forest">Coming soon</p>
+            <p class="max-w-sm text-sm text-gray-muted">
+              We're building a curated collection of the best Fabric Planning
+              content from across the community. Check back soon.
+            </p>
+          </div>
+
+          <div class="mt-6">
+            <span
+              class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-slate-50 px-6 py-3 text-sm font-semibold text-gray-muted"
+            >
+              Coming soon
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ============================================================ */}
+  {/* Section 5: From the community (horizontal scroll) */}
+  {/* ============================================================ */}
+  <section class="bg-white">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <div
+        class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
+      >
+        <div>
+          <h2 class="text-3xl font-bold tracking-tight text-forest md:text-4xl">
+            From the community
+          </h2>
+          <p class="mt-2 text-base text-gray-muted">
+            Discussions, insights, and updates from across social media
+          </p>
+        </div>
+        <a
+          href="/resources/social-media"
+          class="text-sm font-semibold text-deep-green hover:underline"
+        >
+          View all &rarr;
         </a>
       </div>
 
       {
-        allPosts.length === 0 ? (
-          <p class="events-empty">
-            No articles yet. <a href="https://fabricplanning.substack.com" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">Subscribe to be first to know.</a>
-          </p>
-        ) : (
-          <div class="blog-grid">
-            <!-- Featured post -->
-            {featuredPost && (
-              <a
-                class="featured-post"
-                href={featuredPost.url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <div class="featured-cover">
-                  {featuredPost.coverImage ? (
-                    <img
-                      src={featuredPost.coverImage}
-                      alt={featuredPost.title}
-                      loading="lazy"
-                      class="featured-cover-img"
-                    />
-                  ) : (
-                    <>
-                      <span class="featured-tag">Featured</span>
-                      <span class="featured-placeholder">
-                        [ cover · fabric.pattern ]
-                      </span>
-                    </>
-                  )}
-                </div>
-                <div class="featured-body">
-                  <div class="featured-kicker">
-                    {fmtPostDate(featuredPost.pubDate)}
-                  </div>
-                  <h3 class="featured-title">{featuredPost.title}</h3>
-                  {featuredPost.description && (
-                    <p class="featured-desc">{featuredPost.description}</p>
-                  )}
-                  <div class="featured-byline">
-                    <span>By Khaled Chowdhury</span>
-                    <span class="byline-dot">·</span>
-                    <span>The Fabric Whisperer</span>
-                  </div>
-                </div>
-              </a>
-            )}
-
-            <!-- Post list -->
-            <div class="post-list">
-              {listedPosts.map((post, i) => (
-                <a class="post-item" href={post.url} target="_blank" rel="noopener noreferrer">
-                  <div class="post-num">0{i + 1}</div>
-                  <div class="post-content">
-                    <h4 class="post-title">{post.title}</h4>
-                    <div class="post-meta">
-                      <span>{fmtPostDate(post.pubDate)}</span>
-                    </div>
-                  </div>
-                  <span class="post-arr">→</span>
-                </a>
-              ))}
-            </div>
-          </div>
-        )
-      }
-    </div>
-  </section>
-
-  <!-- ============ COMMUNITY ============ -->
-  <section class="slab slab-elevated">
-    <div class="container">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">§ 04 · Field reports</span>
-          <h2>What people <span class="mark">are saying</span>.</h2>
-          <p class="section-sub">
-            Discussions, insights, and updates from across social media.
-          </p>
-        </div>
-        <a class="section-link" href="/resources/social-media">All posts →</a>
-      </div>
-
-      {
         socialPosts.length === 0 ? (
-          <p class="events-empty">No community posts yet. Check back soon.</p>
+          <p class="text-base text-gray-muted">
+            No community posts yet. Check back soon.
+          </p>
         ) : (
-          <div class="community-rail">
+          <div
+            id="social-scroll"
+            class="-mx-6 flex snap-x snap-mandatory justify-start gap-6 overflow-x-auto scroll-smooth px-6 pb-2"
+            style="scrollbar-width: thin;"
+          >
             {socialPosts.map((post) => (
-              <SocialCard
-                author={post.data.author}
-                platform={post.data.platform}
-                url={post.data.url}
-                date={post.data.date}
-                excerpt={post.data.excerpt}
-                image={post.data.image}
-                likes={post.data.likes}
-                comments={post.data.comments}
-              />
+              <div class="shrink-0 snap-start">
+                <SocialCard
+                  author={post.data.author}
+                  platform={post.data.platform}
+                  url={post.data.url}
+                  date={post.data.date}
+                  excerpt={post.data.excerpt}
+                  image={post.data.image}
+                />
+              </div>
             ))}
           </div>
         )
@@ -496,1004 +367,97 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
     </div>
   </section>
 
-  <!-- ============ USER GROUP ============ -->
-  <section class="slab">
-    <div class="container">
-      <div class="ug-layout">
-        <div class="ug-body">
-          <span class="eyebrow">§ 05 · Community</span>
-          <h2 class="ug-heading">
-            Join the <span class="mark">Finance Fabric</span> User Group.
+  {/* ============================================================ */}
+  {/* Section 6: Finance Fabric User Group */}
+  {/* ============================================================ */}
+  <section class="bg-forest text-white">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <div class="grid items-center gap-12 md:grid-cols-2">
+        <div>
+          <p
+            class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-mint-teal"
+          >
+            Community
+          </p>
+          <h2
+            class="mb-6 text-3xl font-bold tracking-tight text-white md:text-4xl"
+          >
+            Join the Finance Fabric User Group
           </h2>
-          <p class="ug-desc">
+          <p class="mb-8 max-w-xl text-base leading-relaxed text-white/80">
             A free monthly user group for finance professionals exploring
             Microsoft Fabric Planning. Hosted by Khaled Chowdhury and Alex
-            McPherson. Each session covers one real-world topic — modeling
-            patterns, migration stories, writeback, security — followed by open
-            Q&amp;A.
+            McPherson, each session covers a real-world topic — from modeling
+            patterns to migration stories — followed by open Q&amp;A with the
+            community.
           </p>
-          <div class="ug-actions">
+          <div class="flex flex-wrap items-center gap-4">
             <a
-              class="btn btn-primary"
               href="https://www.meetup.com/finance-fabric-user-group/"
               target="_blank"
               rel="noopener noreferrer"
+              class="inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-semibold text-white shadow-md transition hover:shadow-lg"
+              style="background: linear-gradient(135deg, #3BA776 0%, #1B7A50 100%);"
             >
-              Join on Meetup <span class="arr">→</span>
+              Join on Meetup
             </a>
-            <span class="pill">Free · monthly · virtual</span>
+            <span class="text-sm text-white/70">Free to join</span>
           </div>
         </div>
 
-        <div class="ug-art">
-          <div class="ug-art-tag">FFUG · Est. 2026</div>
-          <div class="ug-art-headline">
-            Where finance meets <span class="mark">fabric</span>.
-          </div>
-          <div class="ug-art-stats">
-            <div>
-              <div class="ug-stat-k">Members</div>
-              <div class="ug-stat-v">412</div>
-            </div>
-            <div>
-              <div class="ug-stat-k">Sessions</div>
-              <div class="ug-stat-v">
-                {allEvents.filter((e) => e.data.isPast).length || 7}
-              </div>
-            </div>
-            <div>
-              <div class="ug-stat-k">Cost</div>
-              <div class="ug-stat-v">$0</div>
-            </div>
-          </div>
+        <div class="flex justify-center md:justify-end">
+          <img
+            src="https://media.fabricplanning.io/branding/Finance%20Fabric%20User%20Group.png"
+            alt="Finance Fabric User Group - Where Finance Meets Fabric"
+            loading="lazy"
+            class="w-full max-w-[440px] rounded-xl object-cover"
+          />
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ NEWSLETTER ============ -->
-  <section class="newsletter">
-    <div class="container newsletter-inner">
-      <div>
-        <span class="eyebrow">§ 06 · Subscribe</span>
-        <h2 class="newsletter-heading">
-          Delivered <span class="mark">weekly</span>. No spam, ever.
+  {/* ============================================================ */}
+  {/* Section 7: Newsletter CTA */}
+  {/* ============================================================ */}
+  <section style="background-color: #7B61B8;">
+    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
+      <div class="mx-auto flex max-w-2xl flex-col items-center text-center">
+        <h2
+          class="mb-4 text-3xl font-bold tracking-tight text-white md:text-4xl"
+        >
+          Stay in the loop
         </h2>
-        <p class="newsletter-lead">
-          One email every Monday with what moved in Fabric Planning last week.
-          Archived on Substack. One-click unsubscribe, always.
+        <p class="mb-8 text-base text-white/85 md:text-lg">
+          Get the latest on Microsoft Fabric Planning delivered to your inbox.
+          No spam, just insights.
         </p>
+        <a
+          href="https://fabricplanning.substack.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center rounded-lg bg-white px-8 py-4 text-base font-semibold text-fabric-purple shadow-md transition hover:shadow-lg"
+        >
+          Subscribe on Substack
+        </a>
       </div>
-      <form
-        class="newsletter-form"
-        name="newsletter"
-        method="POST"
-        data-netlify="true"
-      >
-        <input type="hidden" name="form-name" value="newsletter" />
-        <div class="newsletter-form-row">
-          <input
-            type="email"
-            name="email"
-            placeholder="you@company.com"
-            required
-            class="newsletter-input"
-          />
-          <button type="submit" class="btn btn-primary">Subscribe</button>
-        </div>
-        <small class="newsletter-note">
-          Published by Khaled Chowdhury · archived on Substack · one-click
-          unsubscribe.
-        </small>
-      </form>
     </div>
   </section>
 </Layout>
 
-<style>
-  /* ============ LAYOUT ============ */
-  .container {
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
-
-  /* ============ SHARED ATOMS ============ */
-  .eyebrow {
-    font-size: 11.5px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .eyebrow::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 4px var(--accent-weak);
-    flex-shrink: 0;
-  }
-
-  .mark {
-    color: var(--accent);
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 13px 20px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 14px;
-    letter-spacing: -0.005em;
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    font-family: inherit;
-    text-decoration: none;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: var(--accent-ink);
-  }
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 10px 28px rgba(94, 234, 212, 0.35);
-  }
-  .btn-ghost {
-    background: transparent;
-    color: var(--fg);
-    border-color: var(--rule-strong);
-  }
-  .btn-ghost:hover {
-    background: var(--bg-2);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .btn .arr {
-    transition: transform 0.15s;
-  }
-  .btn:hover .arr {
-    transform: translateX(3px);
-  }
-
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--fg-muted);
-  }
-  .pill::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--teal-400);
-    box-shadow: 0 0 8px var(--teal-400);
-    animation: pulse 2.2s ease-in-out infinite;
-    flex-shrink: 0;
-  }
-  @keyframes pulse {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.35;
-    }
-  }
-
-  /* ============ HERO ============ */
-  .hero {
-    border-bottom: 1px solid var(--rule);
-    overflow: hidden;
-  }
-  .hero-inner {
-    padding: 96px 0 88px;
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 64px;
-    align-items: end;
-  }
-  .hero-main h1 {
-    font-weight: 700;
-    font-size: clamp(44px, 6vw, 88px);
-    line-height: 1.02;
-    letter-spacing: -0.035em;
-    color: var(--fg);
-    margin: 20px 0 0;
-    max-width: 16ch;
-  }
-  .hero-sub {
-    margin-top: 28px;
-    max-width: 58ch;
-    font-size: 18px;
-    line-height: 1.6;
-    color: var(--fg-soft);
-  }
-  .hero-actions {
-    margin-top: 36px;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 14px;
-  }
-
-  /* Hero side card */
-  .hero-side {
-    background: var(--bg-1);
-    border: 1px solid var(--rule);
-    border-radius: 16px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-side::before {
-    content: "";
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
-  }
-  .hero-side-label {
-    font-size: 11.5px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .live-badge {
-    color: var(--teal-400);
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .live-badge::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--teal-400);
-    box-shadow: 0 0 8px var(--teal-400);
-    animation: pulse 2.2s ease-in-out infinite;
-    flex-shrink: 0;
-  }
-  .hero-side-title {
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.018em;
-    color: var(--fg);
-    line-height: 1.2;
-  }
-  .hero-side-sub {
-    font-size: 14px;
-    color: var(--fg-muted);
-    line-height: 1.5;
-    margin: 0;
-  }
-  .hero-side-meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--rule);
-  }
-  .meta-k {
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    margin-bottom: 4px;
-  }
-  .meta-v {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--fg);
-  }
-  .hero-side-cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    border-radius: 10px;
-    background: var(--accent-weak);
-    color: var(--accent);
-    font-weight: 600;
-    font-size: 14px;
-    text-decoration: none;
-    transition: background 0.15s;
-  }
-  .hero-side-cta:hover {
-    background: rgba(94, 234, 212, 0.22);
-  }
-
-  /* Hero stats */
-  .hero-stats {
-    margin-top: 64px;
-    padding-top: 28px;
-    border-top: 1px solid var(--rule);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 32px;
-  }
-  .stat-k {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-  }
-  .stat-v {
-    margin-top: 10px;
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--fg);
-  }
-  .stat-u {
-    color: var(--accent);
-  }
-
-  /* ============ SECTIONS ============ */
-  .slab {
-    padding: 7rem 0;
-    border-bottom: 1px solid var(--rule);
-  }
-  .slab-elevated {
-    background: var(--bg-1);
-  }
-
-  .section-head {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: end;
-    gap: 24px;
-    margin-bottom: 56px;
-  }
-  .section-head h2 {
-    margin: 14px 0 0;
-    font-weight: 700;
-    font-size: clamp(32px, 4vw, 52px);
-    line-height: 1.04;
-    letter-spacing: -0.028em;
-    color: var(--fg);
-    max-width: 22ch;
-  }
-  .section-sub {
-    margin: 10px 0 0;
-    color: var(--fg-muted);
-    font-size: 15px;
-    max-width: 48ch;
-  }
-  .section-link {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--accent);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    border-radius: 10px;
-    background: var(--accent-weak);
-    text-decoration: none;
-    transition: background 0.15s;
-    white-space: nowrap;
-  }
-  .section-link:hover {
-    background: rgba(94, 234, 212, 0.22);
-  }
-
-  /* ============ EXPLAINER ============ */
-  .explainer {
-    display: grid;
-    grid-template-columns: 5fr 7fr;
-    gap: 64px;
-    align-items: start;
-  }
-  .explainer-lede {
-    font-size: clamp(22px, 2.4vw, 32px);
-    font-weight: 600;
-    line-height: 1.25;
-    letter-spacing: -0.02em;
-    color: var(--fg);
-  }
-  .explainer-body {
-    font-size: 17px;
-    line-height: 1.7;
-    color: var(--fg-soft);
-    display: grid;
-    gap: 18px;
-  }
-  .explainer-body p {
-    margin: 0;
-  }
-  .pull-stats {
-    margin-top: 16px;
-    padding: 24px;
-    border: 1px solid var(--rule);
-    border-radius: var(--card-radius);
-    background: var(--card-bg);
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-  .pull-k {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-  }
-  .pull-v {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.015em;
-    margin-top: 6px;
-    color: var(--fg);
-  }
-
-  /* ============ EVENTS ============ */
-  .events-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 32px;
-  }
-  .events-col-heading {
-    font-size: 13px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    margin: 0 0 20px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .events-col-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 4px var(--accent-weak);
-    flex-shrink: 0;
-  }
-  .events-col-dot-muted {
-    background: var(--fg-faint);
-    box-shadow: none;
-  }
-  .events-empty {
-    font-size: 14px;
-    color: var(--fg-muted);
-  }
-
-  .event-row {
-    display: grid;
-    grid-template-columns: 88px 1fr auto;
-    gap: 20px;
-    padding: 22px;
-    margin-bottom: 12px;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--card-radius);
-    align-items: center;
-    transition: border-color 0.15s, transform 0.15s;
-  }
-  .event-row:hover {
-    border-color: var(--accent);
-    transform: translateY(-1px);
-  }
-  .event-row-past {
-    opacity: 0.7;
-  }
-  .event-row-past:hover {
-    opacity: 0.9;
-  }
-
-  .event-date {
-    text-align: center;
-    padding: 12px 8px;
-    border-radius: 10px;
-    background: var(--accent-weak);
-    color: var(--accent);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .event-date-past {
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--fg-muted);
-  }
-  .event-day {
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -0.02em;
-    display: block;
-    margin-bottom: 4px;
-  }
-  .event-mon {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-  .event-type {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    margin-bottom: 8px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-  }
-  .event-type-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .event-title {
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.25;
-    color: var(--fg);
-    letter-spacing: -0.015em;
-  }
-  .event-loc {
-    margin-top: 6px;
-    font-size: 13px;
-    color: var(--fg-muted);
-  }
-  .event-cta {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--accent);
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--rule);
-    text-decoration: none;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .event-cta:hover {
-    background: var(--accent);
-    color: var(--accent-ink);
-    border-color: var(--accent);
-  }
-
-  /* Past events column compact sizing */
-  .events-col-past .event-row {
-    padding: 16px;
-  }
-  .events-col-past .event-day {
-    font-size: 20px;
-  }
-  .events-col-past .event-title {
-    font-size: 14px;
-  }
-
-  /* ============ BLOG ============ */
-  .blog-grid {
-    display: grid;
-    grid-template-columns: 7fr 5fr;
-    gap: 32px;
-    align-items: start;
-  }
-  .featured-post {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--card-radius);
-    overflow: hidden;
-    text-decoration: none;
-    display: block;
-    transition: border-color 0.15s, transform 0.15s;
-  }
-  .featured-post:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
-  }
-  .featured-cover {
-    aspect-ratio: 16 / 9;
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(
-      135deg,
-      color-mix(in oklab, var(--accent) 20%, var(--bg-2)) 0%,
-      var(--bg-2) 100%
-    );
-    display: flex;
-    align-items: flex-end;
-    justify-content: flex-end;
-  }
-  .featured-cover::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(to right, var(--rule) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
-    background-size: 28px 28px;
-    opacity: 0.6;
-  }
-  .featured-cover-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    inset: 0;
-  }
-  .featured-tag {
-    position: absolute;
-    top: 18px;
-    left: 18px;
-    background: var(--accent);
-    color: var(--accent-ink);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    font-weight: 700;
-    padding: 6px 10px;
-    border-radius: 999px;
-    z-index: 2;
-  }
-  .featured-placeholder {
-    position: relative;
-    z-index: 2;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    padding: 16px;
-  }
-  .featured-body {
-    padding: 28px 28px 30px;
-  }
-  .featured-kicker {
-    font-size: 12px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    font-weight: 600;
-  }
-  .featured-title {
-    margin: 12px 0 14px;
-    font-size: clamp(22px, 2.2vw, 30px);
-    font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: -0.025em;
-    color: var(--fg);
-  }
-  .featured-desc {
-    font-size: 15px;
-    color: var(--fg-soft);
-    margin: 0 0 20px;
-    line-height: 1.6;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .featured-byline {
-    font-size: 12px;
-    color: var(--fg-muted);
-    display: flex;
-    gap: 10px;
-    padding-top: 16px;
-    border-top: 1px solid var(--rule);
-    font-weight: 500;
-  }
-  .byline-dot {
-    color: var(--fg-faint);
-  }
-
-  .post-list {
-    display: grid;
-    gap: 10px;
-  }
-  .post-item {
-    display: grid;
-    grid-template-columns: 40px 1fr auto;
-    gap: 16px;
-    padding: 18px 20px;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--card-radius);
-    align-items: center;
-    text-decoration: none;
-    transition: border-color 0.15s, transform 0.15s;
-  }
-  .post-item:hover {
-    border-color: var(--accent);
-    transform: translateY(-1px);
-  }
-  .post-num {
-    font-size: 12px;
-    color: var(--fg-muted);
-    font-weight: 600;
-    letter-spacing: 0.05em;
-  }
-  .post-title {
-    margin: 0 0 6px;
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 1.25;
-    color: var(--fg);
-    letter-spacing: -0.015em;
-  }
-  .post-meta {
-    font-size: 12px;
-    color: var(--fg-muted);
-    display: flex;
-    gap: 8px;
-    font-weight: 500;
-  }
-  .post-arr {
-    color: var(--accent);
-    opacity: 0.5;
-    font-size: 14px;
-    transition: opacity 0.15s, transform 0.15s;
-  }
-  .post-item:hover .post-arr {
-    opacity: 1;
-    transform: translateX(3px);
-  }
-
-  /* ============ COMMUNITY RAIL ============ */
-  .community-rail {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 320px;
-    gap: 20px;
-    overflow-x: auto;
-    padding-bottom: 12px;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: thin;
-    scrollbar-color: var(--rule-strong) transparent;
-  }
-  .community-rail::-webkit-scrollbar {
-    height: 6px;
-  }
-  .community-rail::-webkit-scrollbar-thumb {
-    background: var(--rule-strong);
-    border-radius: 4px;
-  }
-
-  /* ============ USER GROUP ============ */
-  .ug-layout {
-    display: grid;
-    grid-template-columns: 6fr 5fr;
-    gap: 48px;
-    align-items: center;
-  }
-  .ug-heading {
-    font-weight: 700;
-    font-size: clamp(32px, 4vw, 52px);
-    line-height: 1.04;
-    letter-spacing: -0.028em;
-    color: var(--fg);
-    margin: 14px 0 20px;
-    max-width: 16ch;
-  }
-  .ug-desc {
-    color: var(--fg-soft);
-    font-size: 16px;
-    line-height: 1.65;
-    max-width: 56ch;
-    margin: 0 0 28px;
-  }
-  .ug-actions {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 14px;
-  }
-  .ug-art {
-    aspect-ratio: 5 / 4;
-    background:
-      radial-gradient(
-        500px 340px at 70% 20%,
-        rgba(94, 234, 212, 0.22) 0%,
-        transparent 65%
-      ),
-      linear-gradient(135deg, var(--bg-2) 0%, var(--bg-1) 100%);
-    border: 1px solid var(--rule);
-    border-radius: var(--card-radius);
-    padding: 32px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    position: relative;
-    overflow: hidden;
-  }
-  .ug-art::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(to right, var(--rule) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
-    background-size: 36px 36px;
-    mask-image: radial-gradient(circle at center, #000 20%, transparent 70%);
-    pointer-events: none;
-  }
-  .ug-art-tag {
-    position: relative;
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    font-weight: 600;
-  }
-  .ug-art-headline {
-    position: relative;
-    font-size: clamp(28px, 3.5vw, 48px);
-    font-weight: 800;
-    line-height: 1.02;
-    color: var(--fg);
-    letter-spacing: -0.03em;
-  }
-  .ug-art-stats {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-    padding-top: 20px;
-    border-top: 1px solid var(--rule);
-  }
-  .ug-stat-k {
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    font-weight: 600;
-  }
-  .ug-stat-v {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--fg);
-    margin-top: 4px;
-  }
-
-  /* ============ NEWSLETTER ============ */
-  .newsletter {
-    padding: 7rem 0;
-    background:
-      radial-gradient(
-        700px 380px at 85% 50%,
-        rgba(94, 234, 212, 0.14) 0%,
-        transparent 65%
-      ),
-      var(--bg-1);
-    border-bottom: 1px solid var(--rule);
-  }
-  .newsletter-inner {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 48px;
-    align-items: center;
-  }
-  .newsletter-heading {
-    font-weight: 700;
-    font-size: clamp(32px, 5vw, 56px);
-    line-height: 1.02;
-    letter-spacing: -0.03em;
-    color: var(--fg);
-    margin: 14px 0 14px;
-    max-width: 14ch;
-  }
-  .newsletter-lead {
-    color: var(--fg-soft);
-    font-size: 16px;
-    max-width: 48ch;
-    margin: 0;
-  }
-  .newsletter-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 24px;
-    background: var(--bg-2);
-    border: 1px solid var(--rule-strong);
-    border-radius: var(--card-radius);
-  }
-  .newsletter-form-row {
-    display: flex;
-    gap: 8px;
-  }
-  .newsletter-input {
-    flex: 1;
-    padding: 13px 16px;
-    background: var(--bg-0);
-    border: 1px solid var(--rule-strong);
-    border-radius: 10px;
-    font: inherit;
-    font-size: 14px;
-    color: var(--fg);
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .newsletter-input:focus {
-    border-color: var(--accent);
-  }
-  .newsletter-input::placeholder {
-    color: var(--fg-faint);
-  }
-  .newsletter-note {
-    font-size: 12px;
-    color: var(--fg-muted);
-  }
-
-  /* ============ RESPONSIVE ============ */
-  @media (max-width: 1000px) {
-    .hero-inner {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-    .hero-stats {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-    }
-    .explainer {
-      grid-template-columns: 1fr;
-      gap: 32px;
-    }
-    .events-grid,
-    .blog-grid,
-    .ug-layout,
-    .newsletter-inner {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-    .section-head {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 620px) {
-    .container {
-      padding: 0 1.25rem;
-    }
-    .hero-inner {
-      padding: 72px 0 56px;
-    }
-    .slab {
-      padding: 4rem 0;
-    }
-    .section-head {
-      margin-bottom: 36px;
-    }
-    .event-row {
-      grid-template-columns: 72px 1fr;
-      padding: 16px;
-    }
-    .event-cta {
-      grid-column: 1 / -1;
-      justify-self: start;
-    }
-    .pull-stats {
-      grid-template-columns: 1fr;
-    }
-    .hero-stats {
-      grid-template-columns: 1fr 1fr;
-    }
-    .newsletter-form-row {
-      flex-direction: column;
-    }
-    .newsletter {
-      padding: 4rem 0;
-    }
-  }
-</style>
+<script>
+  // Horizontal scroll arrow buttons (Events section)
+  document.querySelectorAll<HTMLButtonElement>("button[data-scroll]").forEach(
+    (btn) => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.dataset.scroll;
+        const direction = Number(btn.dataset.direction ?? "1");
+        if (!targetId) return;
+        const container = document.getElementById(`${targetId}-scroll`);
+        if (!container) return;
+        const amount = Math.min(container.clientWidth * 0.8, 600);
+        container.scrollBy({ left: amount * direction, behavior: "smooth" });
+      });
+    },
+  );
+</script>
