@@ -57,18 +57,7 @@ function fmtPostDate(d: Date) {
   return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
-  return type === "virtual"
-    ? "Virtual"
-    : type === "in-person"
-      ? "In-person"
-      : "Webinar";
-}
-function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
-  return type === "virtual"
-    ? "var(--accent)"
-    : type === "in-person"
-      ? "var(--dc-badge-blue)"
-      : "var(--dc-badge-red)";
+  return type === "virtual" ? "Virtual" : type === "in-person" ? "In-person" : "Webinar";
 }
 ---
 
@@ -81,15 +70,14 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
     <div class="container hero-inner">
       <!-- Left: headline + CTAs -->
       <div class="hero-main">
-        <span class="eyebrow">Microsoft Fabric knowledge hub</span>
+        <span class="eyebrow"><span class="section-no">00</span> Microsoft Fabric knowledge hub</span>
         <h1>
-          Planning, now <span class="mark">native</span><br />to the fabric of
+          Planning, now <span class="italic">native</span><br />to the fabric of
           your data.
         </h1>
         <p class="hero-sub">
-          A working archive for finance and data teams adopting Microsoft Fabric
-          Planning — built by practitioners, updated weekly. No vendor spin, no
-          50-page decks. Just what works, what doesn't, and what to do next.
+          Everything you need to understand, evaluate, and implement Microsoft
+          Fabric Planning. Built by practitioners, for practitioners.
         </p>
         <div class="hero-actions">
           <a
@@ -98,17 +86,8 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Read the latest issue <span class="arr">→</span>
+            Subscribe on Substack <span class="arr">→</span>
           </a>
-          <a
-            class="btn btn-ghost"
-            href="https://fabricplanning.substack.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Subscribe on Substack
-          </a>
-          {allPosts.length > 0 && <span class="pill">Updated recently</span>}
         </div>
       </div>
 
@@ -120,6 +99,15 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
               <span>Next event</span>
               {daysLabel && <span class="live-badge">{daysLabel}</span>}
             </div>
+            {nextEvent.data.featuredImage && (
+              <div class="hero-side-thumb">
+                <img
+                  src={nextEvent.data.featuredImage}
+                  alt={nextEvent.data.title}
+                  loading="lazy"
+                />
+              </div>
+            )}
             <div class="hero-side-title">{nextEvent.data.title}</div>
             <div class="hero-side-meta">
               <div>
@@ -132,9 +120,7 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
               </div>
               <div>
                 <div class="meta-k">Format</div>
-                <div class="meta-v">
-                  {getTypeLabel(nextEvent.data.type)}
-                </div>
+                <div class="meta-v">{getTypeLabel(nextEvent.data.type)}</div>
               </div>
               {nextEvent.data.location && (
                 <div>
@@ -164,10 +150,7 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
             <p class="hero-side-sub">
               Check back soon — new sessions are added regularly.
             </p>
-            <a
-              class="hero-side-cta"
-              href="/resources/events"
-            >
+            <a class="hero-side-cta" href="/resources/events">
               <span>Browse recordings</span>
               <span>→</span>
             </a>
@@ -175,33 +158,6 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
         )
       }
 
-      <!-- Stats strip -->
-      <div class="hero-stats" style="grid-column: 1 / -1;">
-        <div class="stat-cell">
-          <div class="stat-k">Articles published</div>
-          <div class="stat-v">
-            {allPosts.length > 0 ? allPosts.length : "—"}<span class="stat-u"
-              >.</span
-            >
-          </div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-k">Events &amp; recordings</div>
-          <div class="stat-v">
-            {allEvents.length > 0 ? allEvents.length : "—"}<span class="stat-u"
-              >.</span
-            >
-          </div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-k">User group members</div>
-          <div class="stat-v">412<span class="stat-u">.</span></div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-k">Not affiliated with</div>
-          <div class="stat-v">Microsoft<span class="stat-u">.</span></div>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -210,9 +166,9 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
     <div class="container">
       <div class="section-head">
         <div>
-          <span class="eyebrow">§ 01 · Primer</span>
+          <span class="eyebrow"><span class="section-no">01</span> Primer</span>
           <h2>
-            What, exactly, is <span class="mark">Fabric Planning</span>?
+            What, exactly, is <span class="italic">Fabric Planning?</span>
           </h2>
           <p class="section-sub">
             The short version, for finance leaders deciding whether to pay
@@ -225,50 +181,29 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
       <div class="explainer">
         <div class="explainer-lede">
           A new capability inside Microsoft Fabric that brings budgeting,
-          forecasting, and financial planning <span class="mark">alongside</span
+          forecasting, and financial planning <span class="italic">alongside</span
           > the Power BI reports and data pipelines you already run.
         </div>
         <div class="explainer-body">
           <p>
-            For the first time, finance teams can build planning models in the
-            same environment their data engineers build in. That single fact has
-            large implications — for EPM vendors, for the Excel-heavy status
-            quo, and for how finance organises itself against the rest of the
-            business.
+            This represents a potential shift away from standalone EPM tools and
+            Excel-based planning toward an integrated, cloud-native approach.
+            Fabric Planning is still evolving, and this knowledge hub exists to
+            help finance and data professionals navigate what it can do today,
+            where the gaps are, and how to get started.
           </p>
-          <p>
-            Fabric Planning is still early. The product changes monthly.
-            Capabilities that shipped at Ignite look meaningfully different by
-            April. This hub exists to help practitioners navigate the moving
-            target — what it can do today, where the gaps are, and how to get
-            started without betting the roadmap.
-          </p>
-          <div class="pull-stats">
-            <div>
-              <div class="pull-k">Launched</div>
-              <div class="pull-v">Ignite 2025</div>
-            </div>
-            <div>
-              <div class="pull-k">Built on</div>
-              <div class="pull-v">Microsoft Fabric</div>
-            </div>
-            <div>
-              <div class="pull-k">Replaces</div>
-              <div class="pull-v">Some of Excel</div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ============ EVENTS ============ -->
-  <section class="slab slab-elevated">
+  <section class="slab slab-elev">
     <div class="container">
       <div class="section-head">
         <div>
-          <span class="eyebrow">§ 02 · Calendar</span>
-          <h2>Events &amp; <span class="mark">recordings</span>.</h2>
+          <span class="eyebrow"><span class="section-no">02</span> Calendar</span>
+          <h2>Events &amp; <span class="italic">recordings.</span></h2>
           <p class="section-sub">
             Upcoming sessions, past recordings, and community meetups.
           </p>
@@ -276,91 +211,125 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
         <a class="section-link" href="/resources/events">All events →</a>
       </div>
 
-      <div class="events-grid">
+      <div class="events-split">
         <!-- Upcoming -->
-        <div class="events-col">
-          <h3 class="events-col-heading events-col-upcoming">
+        <div class="events-panel">
+          <h3 class="events-group-head">
             <span class="events-col-dot"></span> Upcoming
+            {upcomingEvents.length > 0 && (
+              <span class="count">{upcomingEvents.length} scheduled</span>
+            )}
           </h3>
           {
             upcomingEvents.length === 0 ? (
-              <p class="events-empty">
-                No upcoming events scheduled. Check back soon.
-              </p>
+              <p class="events-empty">No upcoming events scheduled. Check back soon.</p>
             ) : (
-              upcomingEvents.map((event) => (
-                <div class="event-row" data-type={event.data.type}>
-                  <div class="event-date">
-                    <span class="event-day">{fmtDay(event.data.date)}</span>
-                    <span class="event-mon">{fmtMon(event.data.date)}</span>
-                  </div>
-                  <div class="event-meta">
-                    <div class="event-type">
-                      <span
-                        class="event-type-dot"
-                        style={`background: ${getTypeDotColor(event.data.type)}`}
-                      />
-                      {getTypeLabel(event.data.type)}
-                      {event.data.time ? ` · ${event.data.time}` : ""}
-                    </div>
-                    <div class="event-title">{event.data.title}</div>
-                    {event.data.location && (
-                      <div class="event-loc">{event.data.location}</div>
-                    )}
-                  </div>
+              <div class="events-rail">
+                {upcomingEvents.map((event) => (
                   <a
-                    class="event-cta"
+                    class="event-card"
                     href={event.data.registrationUrl ?? "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Register →
+                    <div class="event-thumb">
+                      {event.data.featuredImage && (
+                        <img
+                          src={event.data.featuredImage}
+                          alt={event.data.title}
+                          loading="lazy"
+                        />
+                      )}
+                      <span class="event-badge event-badge-live">
+                        {daysUntil === 0
+                          ? "Today"
+                          : daysUntil === 1
+                            ? "Tomorrow"
+                            : `Upcoming`}
+                      </span>
+                      <span class="event-date-chip">
+                        <span class="event-day">{fmtDay(event.data.date)}</span>
+                        <span class="event-mon">{fmtMon(event.data.date)}</span>
+                      </span>
+                    </div>
+                    <div class="event-body">
+                      <div class="event-meta-row">
+                        <span>{getTypeLabel(event.data.type)}</span>
+                        {event.data.location && (
+                          <>
+                            <span class="event-meta-sep">·</span>
+                            <span>{event.data.location}</span>
+                          </>
+                        )}
+                      </div>
+                      <h4 class="event-title">{event.data.title}</h4>
+                      <p class="event-loc">{event.data.description}</p>
+                      <div class="event-card-foot">
+                        <span class="event-card-time">{event.data.time}</span>
+                        <span class="event-card-arr">Register <span>→</span></span>
+                      </div>
+                    </div>
                   </a>
-                </div>
-              ))
+                ))}
+              </div>
             )
           }
         </div>
 
         <!-- Recordings -->
-        <div class="events-col events-col-past">
-          <h3 class="events-col-heading">
+        <div class="events-panel events-past">
+          <h3 class="events-group-head">
             <span class="events-col-dot events-col-dot-muted"></span> Recordings
+            {pastEvents.length > 0 && (
+              <span class="count">{pastEvents.length} available</span>
+            )}
           </h3>
           {
             pastEvents.length === 0 ? (
               <p class="events-empty">No recordings yet.</p>
             ) : (
-              pastEvents.map((event) => (
-                <div class="event-row event-row-past" data-type={event.data.type}>
-                  <div class="event-date event-date-past">
-                    <span class="event-day">{fmtDay(event.data.date)}</span>
-                    <span class="event-mon">{fmtMon(event.data.date)}</span>
-                  </div>
-                  <div class="event-meta">
-                    <div class="event-type">
-                      <span
-                        class="event-type-dot"
-                        style="background: var(--fg-faint)"
-                      />
-                      {getTypeLabel(event.data.type)}
-                      {event.data.time ? ` · ${event.data.time}` : ""}
-                    </div>
-                    <div class="event-title">{event.data.title}</div>
-                    {event.data.location && (
-                      <div class="event-loc">{event.data.location}</div>
-                    )}
-                  </div>
+              <div class="events-rail">
+                {pastEvents.map((event) => (
                   <a
-                    class="event-cta"
+                    class="event-card"
                     href={event.data.registrationUrl ?? "#"}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Watch →
+                    <div class="event-thumb">
+                      {event.data.featuredImage && (
+                        <img
+                          src={event.data.featuredImage}
+                          alt={event.data.title}
+                          loading="lazy"
+                        />
+                      )}
+                      <span class="event-badge event-badge-past">Recording</span>
+                      <span class="event-date-chip">
+                        <span class="event-day">{fmtDay(event.data.date)}</span>
+                        <span class="event-mon">{fmtMon(event.data.date)}</span>
+                      </span>
+                    </div>
+                    <div class="event-body">
+                      <div class="event-meta-row">
+                        <span>{getTypeLabel(event.data.type)}</span>
+                        {event.data.location && (
+                          <>
+                            <span class="event-meta-sep">·</span>
+                            <span>{event.data.location}</span>
+                          </>
+                        )}
+                      </div>
+                      <h4 class="event-title">{event.data.title}</h4>
+                      <p class="event-loc">{event.data.description}</p>
+                      <div class="event-card-foot">
+                        <span class="event-card-time">Recorded</span>
+                        <span class="event-card-arr">Watch <span>→</span></span>
+                      </div>
+                    </div>
                   </a>
-                </div>
-              ))
+                ))}
+              </div>
             )
           }
         </div>
@@ -373,8 +342,8 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
     <div class="container">
       <div class="section-head">
         <div>
-          <span class="eyebrow">§ 03 · From the publication</span>
-          <h2>Recent <span class="mark">writing</span>.</h2>
+          <span class="eyebrow"><span class="section-no">03</span> The Blog</span>
+          <h2>From the Blog</h2>
           <p class="section-sub">
             Articles from the Fabric Planning Substack.
           </p>
@@ -392,11 +361,18 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
       {
         allPosts.length === 0 ? (
           <p class="events-empty">
-            No articles yet. <a href="https://fabricplanning.substack.com" target="_blank" rel="noopener noreferrer" style="color: var(--accent);">Subscribe to be first to know.</a>
+            No articles yet.{" "}
+            <a
+              href="https://fabricplanning.substack.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              style="color: var(--cyan);"
+            >
+              Subscribe to be first to know.
+            </a>
           </p>
         ) : (
           <div class="blog-grid">
-            <!-- Featured post -->
             {featuredPost && (
               <a
                 class="featured-post"
@@ -415,16 +391,14 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
                   ) : (
                     <>
                       <span class="featured-tag">Featured</span>
-                      <span class="featured-placeholder">
-                        [ cover · fabric.pattern ]
-                      </span>
+                      <div class="featured-cover-placeholder">
+                        <span>[ cover · fabric.pattern ]</span>
+                      </div>
                     </>
                   )}
                 </div>
                 <div class="featured-body">
-                  <div class="featured-kicker">
-                    {fmtPostDate(featuredPost.pubDate)}
-                  </div>
+                  <div class="featured-kicker">{fmtPostDate(featuredPost.pubDate)}</div>
                   <h3 class="featured-title">{featuredPost.title}</h3>
                   {featuredPost.description && (
                     <p class="featured-desc">{featuredPost.description}</p>
@@ -438,10 +412,14 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
               </a>
             )}
 
-            <!-- Post list -->
             <div class="post-list">
               {listedPosts.map((post, i) => (
-                <a class="post-item" href={post.url} target="_blank" rel="noopener noreferrer">
+                <a
+                  class="post-item"
+                  href={post.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <div class="post-num">0{i + 1}</div>
                   <div class="post-content">
                     <h4 class="post-title">{post.title}</h4>
@@ -460,12 +438,12 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
   </section>
 
   <!-- ============ COMMUNITY ============ -->
-  <section class="slab slab-elevated">
+  <section class="slab slab-elev">
     <div class="container">
       <div class="section-head">
         <div>
-          <span class="eyebrow">§ 04 · Field reports</span>
-          <h2>What people <span class="mark">are saying</span>.</h2>
+          <span class="eyebrow"><span class="section-no">04</span> Field reports</span>
+          <h2>What people <span class="italic">are saying.</span></h2>
           <p class="section-sub">
             Discussions, insights, and updates from across social media.
           </p>
@@ -501,9 +479,9 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
     <div class="container">
       <div class="ug-layout">
         <div class="ug-body">
-          <span class="eyebrow">§ 05 · Community</span>
+          <span class="eyebrow"><span class="section-no">05</span> Community</span>
           <h2 class="ug-heading">
-            Join the <span class="mark">Finance Fabric</span> User Group.
+            Join the <span class="italic">Finance Fabric</span> User Group.
           </h2>
           <p class="ug-desc">
             A free monthly user group for finance professionals exploring
@@ -528,7 +506,7 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
         <div class="ug-art">
           <div class="ug-art-tag">FFUG · Est. 2026</div>
           <div class="ug-art-headline">
-            Where finance meets <span class="mark">fabric</span>.
+            Where finance meets <span class="italic">fabric.</span>
           </div>
           <div class="ug-art-stats">
             <div>
@@ -555,13 +533,13 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
   <section class="newsletter">
     <div class="container newsletter-inner">
       <div>
-        <span class="eyebrow">§ 06 · Subscribe</span>
+        <span class="eyebrow"><span class="section-no">06</span> Subscribe</span>
         <h2 class="newsletter-heading">
-          Delivered <span class="mark">weekly</span>. No spam, ever.
+          Stay in the <span class="italic">loop</span> →
         </h2>
         <p class="newsletter-lead">
-          One email every Monday with what moved in Fabric Planning last week.
-          Archived on Substack. One-click unsubscribe, always.
+          Get the latest on Microsoft Fabric Planning delivered to your inbox.
+          No spam, just insights.
         </p>
       </div>
       <form
@@ -571,19 +549,20 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
         data-netlify="true"
       >
         <input type="hidden" name="form-name" value="newsletter" />
+        <label for="nl-email"></label>
         <div class="newsletter-form-row">
           <input
+            id="nl-email"
             type="email"
             name="email"
             placeholder="you@company.com"
             required
             class="newsletter-input"
           />
-          <button type="submit" class="btn btn-primary">Subscribe</button>
+          <button type="submit">Subscribe</button>
         </div>
         <small class="newsletter-note">
-          Published by Khaled Chowdhury · archived on Substack · one-click
-          unsubscribe.
+          Published by Khaled Chowdhury · archived on Substack
         </small>
       </form>
     </div>
@@ -591,670 +570,686 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
 </Layout>
 
 <style>
-  /* ============ LAYOUT ============ */
-  .container {
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
-
-  /* ============ SHARED ATOMS ============ */
-  .eyebrow {
-    font-size: 11.5px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .eyebrow::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 4px var(--accent-weak);
-    flex-shrink: 0;
-  }
-
-  .mark {
-    color: var(--accent);
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 13px 20px;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 14px;
-    letter-spacing: -0.005em;
-    border: 1px solid transparent;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    font-family: inherit;
-    text-decoration: none;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: var(--accent-ink);
-  }
-  .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 10px 28px rgba(94, 234, 212, 0.35);
-  }
-  .btn-ghost {
-    background: transparent;
-    color: var(--fg);
-    border-color: var(--rule-strong);
-  }
-  .btn-ghost:hover {
-    background: var(--bg-2);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .btn .arr {
-    transition: transform 0.15s;
-  }
-  .btn:hover .arr {
-    transform: translateX(3px);
-  }
-
-  .pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--fg-muted);
-  }
-  .pill::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--teal-400);
-    box-shadow: 0 0 8px var(--teal-400);
-    animation: pulse 2.2s ease-in-out infinite;
-    flex-shrink: 0;
-  }
-  @keyframes pulse {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0.35;
-    }
-  }
-
-  /* ============ HERO ============ */
+  /* ── HERO ─────────────────────────────────────────────────────── */
   .hero {
-    border-bottom: 1px solid var(--rule);
+    position: relative;
     overflow: hidden;
+    border-bottom: 1px solid var(--rule);
   }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(to right, rgba(234, 246, 243, 0.035) 1px, transparent 1px);
+    background-size: calc(100% / 12) 100%;
+    pointer-events: none;
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 80%);
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    top: -30%;
+    right: -15%;
+    width: 65%;
+    height: 140%;
+    background: radial-gradient(closest-side, var(--cyan-haze), transparent 70%);
+    pointer-events: none;
+    filter: blur(10px);
+  }
+
   .hero-inner {
-    padding: 96px 0 88px;
+    position: relative;
+    z-index: 2;
+    padding: 128px 0 104px;
     display: grid;
     grid-template-columns: 1.4fr 1fr;
-    gap: 64px;
+    gap: 72px;
     align-items: end;
   }
+
   .hero-main h1 {
-    font-weight: 700;
-    font-size: clamp(44px, 6vw, 88px);
-    line-height: 1.02;
-    letter-spacing: -0.035em;
-    color: var(--fg);
-    margin: 20px 0 0;
-    max-width: 16ch;
-  }
-  .hero-sub {
+    font-weight: 500;
+    font-size: clamp(52px, 7vw, 104px);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
     margin-top: 28px;
+    max-width: 14ch;
+    color: var(--fg);
+  }
+  .hero-main h1 .italic {
+    font-size: 1.04em;
+    line-height: 0.9;
+  }
+
+  .hero-sub {
+    margin-top: 32px;
     max-width: 58ch;
     font-size: 18px;
     line-height: 1.6;
     color: var(--fg-soft);
   }
   .hero-actions {
-    margin-top: 36px;
+    margin-top: 44px;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 14px 20px;
   }
 
   /* Hero side card */
   .hero-side {
-    background: var(--bg-1);
-    border: 1px solid var(--rule);
-    border-radius: 16px;
-    padding: 24px;
+    position: relative;
+    background:
+      linear-gradient(180deg, rgba(0, 240, 209, 0.04) 0%, transparent 40%),
+      var(--bg-1);
+    padding: 28px 28px 24px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 14px;
+    min-width: 0;
+    box-shadow:
+      0 24px 60px -20px rgba(0, 0, 0, 0.8),
+      inset 0 0 60px -20px var(--cyan-glow);
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    position: relative;
-    overflow: hidden;
+    gap: 0;
   }
   .hero-side::before {
     content: "";
     position: absolute;
-    inset: 0 0 auto 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
   }
+
   .hero-side-label {
-    font-size: 11.5px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 18px;
   }
+
   .live-badge {
-    color: var(--teal-400);
+    color: var(--cyan);
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
+    font-weight: 500;
   }
   .live-badge::before {
     content: "";
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--teal-400);
-    box-shadow: 0 0 8px var(--teal-400);
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
     animation: pulse 2.2s ease-in-out infinite;
-    flex-shrink: 0;
   }
+
+  .hero-side-thumb {
+    margin-bottom: 18px;
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg-2);
+    border: 1px solid var(--rule);
+  }
+  .hero-side-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .hero-side-thumb::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(7, 10, 12, 0.5) 100%);
+    pointer-events: none;
+  }
+
   .hero-side-title {
+    font-weight: 500;
     font-size: 20px;
-    font-weight: 700;
-    letter-spacing: -0.018em;
-    color: var(--fg);
     line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    margin-bottom: 22px;
   }
+
+  .hero-side-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px 20px;
+    padding: 20px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 18px;
+  }
+  .meta-k {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    margin-bottom: 6px;
+  }
+  .meta-v {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fg);
+    line-height: 1.3;
+  }
+
+  .hero-side-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: var(--cyan-weak);
+    color: var(--cyan);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.18s;
+    border: 1px solid rgba(0, 240, 209, 0.25);
+  }
+  .hero-side-cta:hover {
+    background: var(--cyan);
+    color: var(--cyan-ink);
+    border-color: var(--cyan);
+    box-shadow: 0 8px 28px rgba(0, 240, 209, 0.35);
+  }
+
   .hero-side-sub {
     font-size: 14px;
     color: var(--fg-muted);
     line-height: 1.5;
-    margin: 0;
-  }
-  .hero-side-meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    padding-top: 16px;
-    border-top: 1px solid var(--rule);
-  }
-  .meta-k {
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    margin-bottom: 4px;
-  }
-  .meta-v {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--fg);
-  }
-  .hero-side-cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    border-radius: 10px;
-    background: var(--accent-weak);
-    color: var(--accent);
-    font-weight: 600;
-    font-size: 14px;
-    text-decoration: none;
-    transition: background 0.15s;
-  }
-  .hero-side-cta:hover {
-    background: rgba(94, 234, 212, 0.22);
+    margin: 0 0 18px;
   }
 
-  /* Hero stats */
-  .hero-stats {
-    margin-top: 64px;
-    padding-top: 28px;
-    border-top: 1px solid var(--rule);
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 32px;
-  }
-  .stat-k {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-  }
-  .stat-v {
-    margin-top: 10px;
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: var(--fg);
-  }
-  .stat-u {
-    color: var(--accent);
-  }
-
-  /* ============ SECTIONS ============ */
-  .slab {
-    padding: 7rem 0;
-    border-bottom: 1px solid var(--rule);
-  }
-  .slab-elevated {
-    background: var(--bg-1);
-  }
-
-  .section-head {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: end;
-    gap: 24px;
-    margin-bottom: 56px;
-  }
-  .section-head h2 {
-    margin: 14px 0 0;
-    font-weight: 700;
-    font-size: clamp(32px, 4vw, 52px);
-    line-height: 1.04;
-    letter-spacing: -0.028em;
-    color: var(--fg);
-    max-width: 22ch;
-  }
-  .section-sub {
-    margin: 10px 0 0;
-    color: var(--fg-muted);
-    font-size: 15px;
-    max-width: 48ch;
-  }
-  .section-link {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--accent);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 14px;
-    border-radius: 10px;
-    background: var(--accent-weak);
-    text-decoration: none;
-    transition: background 0.15s;
-    white-space: nowrap;
-  }
-  .section-link:hover {
-    background: rgba(94, 234, 212, 0.22);
-  }
-
-  /* ============ EXPLAINER ============ */
+  /* ── EXPLAINER ──────────────────────────────────────────────── */
   .explainer {
     display: grid;
     grid-template-columns: 5fr 7fr;
-    gap: 64px;
+    gap: 80px;
     align-items: start;
   }
   .explainer-lede {
-    font-size: clamp(22px, 2.4vw, 32px);
-    font-weight: 600;
-    line-height: 1.25;
-    letter-spacing: -0.02em;
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 500;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
     color: var(--fg);
   }
   .explainer-body {
     font-size: 17px;
     line-height: 1.7;
     color: var(--fg-soft);
-    display: grid;
-    gap: 18px;
   }
-  .explainer-body p {
-    margin: 0;
-  }
-  .pull-stats {
-    margin-top: 16px;
-    padding: 24px;
-    border: 1px solid var(--rule);
-    border-radius: var(--card-radius);
-    background: var(--card-bg);
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-  }
-  .pull-k {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-  }
-  .pull-v {
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.015em;
-    margin-top: 6px;
-    color: var(--fg);
-  }
+  .explainer-body p { margin: 0 0 20px; }
+  .explainer-body p:last-of-type { margin-bottom: 0; }
 
-  /* ============ EVENTS ============ */
-  .events-grid {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 32px;
-  }
-  .events-col-heading {
-    font-size: 13px;
-    letter-spacing: 0.08em;
+  /* ── EVENTS ─────────────────────────────────────────────────── */
+  .events-group-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin: 0 0 28px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule-strong);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--fg-muted);
-    margin: 0 0 20px;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
+    color: var(--fg);
+    font-weight: 500;
   }
   .events-col-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 0 4px var(--accent-weak);
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
     flex-shrink: 0;
   }
-  .events-col-dot-muted {
-    background: var(--fg-faint);
-    box-shadow: none;
-  }
-  .events-empty {
-    font-size: 14px;
-    color: var(--fg-muted);
-  }
+  .events-col-dot-muted { background: var(--fg-faint); box-shadow: none; }
+  .count { margin-left: auto; color: var(--fg-muted); font-weight: 400; }
+  .events-empty { font-size: 14px; color: var(--fg-muted); }
 
-  .event-row {
+  /* Side-by-side scroll panels */
+  .events-split {
     display: grid;
-    grid-template-columns: 88px 1fr auto;
-    gap: 20px;
-    padding: 22px;
-    margin-bottom: 12px;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--card-radius);
-    align-items: center;
-    transition: border-color 0.15s, transform 0.15s;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
   }
-  .event-row:hover {
-    border-color: var(--accent);
-    transform: translateY(-1px);
-  }
-  .event-row-past {
-    opacity: 0.7;
-  }
-  .event-row-past:hover {
-    opacity: 0.9;
+  .events-panel { min-width: 0; padding-right: 40px; }
+  .events-panel + .events-panel {
+    padding-right: 0;
+    padding-left: 40px;
+    border-left: 1px solid var(--rule-strong);
   }
 
-  .event-date {
-    text-align: center;
-    padding: 12px 8px;
-    border-radius: 10px;
-    background: var(--accent-weak);
-    color: var(--accent);
+  .events-rail {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 300px;
+    gap: 20px;
+    overflow-x: auto;
+    padding-top: 10px;
+    padding-bottom: 16px;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule-strong) transparent;
+  }
+  .events-rail::-webkit-scrollbar { height: 6px; }
+  .events-rail::-webkit-scrollbar-thumb { background: var(--rule-strong); border-radius: 4px; }
+  .events-rail::-webkit-scrollbar-track { background: var(--rule); border-radius: 4px; }
+  .events-rail .event-card { scroll-snap-align: start; }
+
+  /* Event card */
+  .event-card {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    background: var(--bg-1);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--fg);
+    transition: all 0.22s ease;
+    position: relative;
   }
-  .event-date-past {
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--fg-muted);
+  .event-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--cyan);
+    box-shadow: 0 24px 60px -24px rgba(0, 240, 209, 0.35);
   }
-  .event-day {
-    font-size: 28px;
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: -0.02em;
+  .event-card:hover .event-card-arr {
+    transform: translateX(4px);
+    color: var(--cyan-ink);
+    background: var(--cyan);
+  }
+
+  .event-thumb {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--bg-2);
+  }
+  .event-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
-    margin-bottom: 4px;
+    transition: transform 0.45s ease;
   }
-  .event-mon {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-weight: 600;
+  .event-card:hover .event-thumb img { transform: scale(1.04); }
+  .event-thumb::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(7, 10, 12, 0.65) 100%);
+    pointer-events: none;
   }
-  .event-type {
-    font-size: 11px;
-    letter-spacing: 0.1em;
+
+  /* Thumb placeholder when no image */
+  .event-thumb:not(:has(img)) {
+    background:
+      linear-gradient(135deg, rgba(0, 240, 209, 0.08) 0%, transparent 60%),
+      repeating-linear-gradient(45deg, rgba(0, 240, 209, 0.04) 0 2px, transparent 2px 14px),
+      var(--bg-2);
+  }
+
+  .event-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 2;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--fg-muted);
-    margin-bottom: 8px;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 999px;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    font-weight: 600;
+    gap: 7px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
-  .event-type-dot {
+  .event-badge-live {
+    background: var(--cyan);
+    color: var(--cyan-ink);
+    box-shadow: 0 4px 18px var(--cyan-glow);
+  }
+  .event-badge-live::before {
+    content: "";
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    flex-shrink: 0;
+    background: var(--cyan-ink);
+    animation: pulse 2.2s ease-in-out infinite;
   }
-  .event-title {
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.25;
+  .event-badge-past {
+    background: rgba(7, 10, 12, 0.72);
     color: var(--fg);
-    letter-spacing: -0.015em;
+    border: 1px solid var(--rule-strong);
+  }
+  .event-badge-past::before {
+    content: "▶";
+    font-size: 9px;
+    color: var(--cyan);
+    line-height: 1;
+  }
+
+  .event-date-chip {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    z-index: 2;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(7, 10, 12, 0.72);
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .event-day {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+  }
+  .event-mon {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    font-weight: 500;
+  }
+
+  .event-body {
+    padding: 22px 22px 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .event-meta-row {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+  }
+  .event-meta-sep { color: var(--fg-faint); }
+
+  .event-title {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    margin: 0 0 10px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .event-loc {
-    margin-top: 6px;
     font-size: 13px;
+    color: var(--fg-soft);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .event-card-foot {
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .event-card-time {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     color: var(--fg-muted);
+    font-weight: 500;
   }
-  .event-cta {
-    font-size: 13px;
+  .event-card-arr {
+    font-family: var(--font-mono);
+    font-size: 11px;
     font-weight: 600;
-    color: var(--accent);
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: 1px solid var(--rule);
-    text-decoration: none;
-    transition: all 0.15s;
-    white-space: nowrap;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg);
+    padding: 8px 14px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 6px;
+    background: rgba(234, 246, 243, 0.03);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.18s;
   }
-  .event-cta:hover {
-    background: var(--accent);
-    color: var(--accent-ink);
-    border-color: var(--accent);
+  .event-card-arr span { transition: transform 0.18s; }
+
+  .events-past .event-card { opacity: 0.92; }
+  .events-past .event-thumb::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(7, 10, 12, 0.25);
+    pointer-events: none;
   }
 
-  /* Past events column compact sizing */
-  .events-col-past .event-row {
-    padding: 16px;
-  }
-  .events-col-past .event-day {
-    font-size: 20px;
-  }
-  .events-col-past .event-title {
-    font-size: 14px;
-  }
-
-  /* ============ BLOG ============ */
+  /* ── BLOG ────────────────────────────────────────────────────── */
   .blog-grid {
     display: grid;
     grid-template-columns: 7fr 5fr;
-    gap: 32px;
+    gap: 40px;
     align-items: start;
   }
+
   .featured-post {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--card-radius);
-    overflow: hidden;
-    text-decoration: none;
     display: block;
-    transition: border-color 0.15s, transform 0.15s;
+    text-decoration: none;
+    color: var(--fg);
+    background: var(--bg-1);
+    border: 1px solid var(--rule);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.25s ease;
   }
   .featured-post:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
+    transform: translateY(-4px);
+    border-color: var(--cyan);
+    box-shadow: 0 30px 80px -30px rgba(0, 240, 209, 0.35);
   }
+
   .featured-cover {
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 3 / 2;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(
-      135deg,
-      color-mix(in oklab, var(--accent) 20%, var(--bg-2)) 0%,
-      var(--bg-2) 100%
-    );
+    background: var(--bg-2);
+  }
+  .featured-cover-img { width: 100%; height: 100%; object-fit: cover; }
+  .featured-cover-placeholder {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(135deg, rgba(0, 240, 209, 0.15) 0%, transparent 50%),
+      repeating-linear-gradient(45deg, rgba(0, 240, 209, 0.04) 0 2px, transparent 2px 14px),
+      linear-gradient(135deg, var(--bg-2) 0%, var(--bg-3) 100%);
     display: flex;
     align-items: flex-end;
-    justify-content: flex-end;
+    padding: 24px;
   }
-  .featured-cover::before {
+  .featured-cover-placeholder::before {
     content: "";
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(to right, var(--rule) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+      linear-gradient(to right, rgba(0, 240, 209, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 240, 209, 0.08) 1px, transparent 1px);
     background-size: 28px 28px;
-    opacity: 0.6;
+    mask-image: radial-gradient(circle at center, #000 30%, transparent 70%);
   }
-  .featured-cover-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    inset: 0;
+  .featured-cover-placeholder span {
+    font-family: var(--font-mono);
+    color: var(--fg-muted);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    position: relative;
   }
+
   .featured-tag {
     position: absolute;
     top: 18px;
     left: 18px;
-    background: var(--accent);
-    color: var(--accent-ink);
-    font-size: 11px;
-    letter-spacing: 0.1em;
+    z-index: 2;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    font-weight: 700;
+    font-weight: 500;
+    background: var(--cyan);
+    color: var(--cyan-ink);
     padding: 6px 10px;
     border-radius: 999px;
-    z-index: 2;
+    box-shadow: 0 4px 16px var(--cyan-glow);
   }
-  .featured-placeholder {
-    position: relative;
-    z-index: 2;
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    padding: 16px;
-  }
+
   .featured-body {
-    padding: 28px 28px 30px;
+    padding: 32px;
+    border-top: 1px solid var(--rule);
   }
   .featured-kicker {
-    font-size: 12px;
-    letter-spacing: 0.08em;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--fg-muted);
-    font-weight: 600;
+    font-weight: 500;
   }
   .featured-title {
-    margin: 12px 0 14px;
-    font-size: clamp(22px, 2.2vw, 30px);
-    font-weight: 700;
+    font-weight: 500;
+    font-size: clamp(22px, 2.4vw, 30px);
     line-height: 1.15;
     letter-spacing: -0.025em;
+    margin: 14px 0 16px;
     color: var(--fg);
   }
   .featured-desc {
     font-size: 15px;
+    line-height: 1.65;
     color: var(--fg-soft);
-    margin: 0 0 20px;
-    line-height: 1.6;
+    margin: 0 0 24px;
+    max-width: 52ch;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
   .featured-byline {
-    font-size: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     color: var(--fg-muted);
+    padding-top: 20px;
+    border-top: 1px solid var(--rule);
     display: flex;
     gap: 10px;
-    padding-top: 16px;
-    border-top: 1px solid var(--rule);
-    font-weight: 500;
   }
-  .byline-dot {
-    color: var(--fg-faint);
-  }
+  .byline-dot { color: var(--fg-faint); }
 
-  .post-list {
-    display: grid;
-    gap: 10px;
-  }
+  .post-list { display: grid; gap: 12px; }
   .post-item {
     display: grid;
     grid-template-columns: 40px 1fr auto;
-    gap: 16px;
-    padding: 18px 20px;
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--card-radius);
+    gap: 18px;
+    padding: 20px 22px;
+    background: var(--bg-1);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
     align-items: center;
     text-decoration: none;
-    transition: border-color 0.15s, transform 0.15s;
+    color: var(--fg);
+    transition: all 0.18s;
   }
   .post-item:hover {
-    border-color: var(--accent);
+    border-color: var(--cyan);
     transform: translateY(-1px);
+    box-shadow: 0 12px 28px -12px rgba(0, 240, 209, 0.25);
   }
+  .post-item:hover .post-arr { transform: translateX(4px); color: var(--cyan); }
+
   .post-num {
-    font-size: 12px;
-    color: var(--fg-muted);
-    font-weight: 600;
-    letter-spacing: 0.05em;
-  }
-  .post-title {
-    margin: 0 0 6px;
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 1.25;
-    color: var(--fg);
-    letter-spacing: -0.015em;
-  }
-  .post-meta {
-    font-size: 12px;
-    color: var(--fg-muted);
-    display: flex;
-    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--cyan);
     font-weight: 500;
   }
-  .post-arr {
-    color: var(--accent);
-    opacity: 0.5;
-    font-size: 14px;
-    transition: opacity 0.15s, transform 0.15s;
+  .post-title {
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    color: var(--fg);
+    margin: 0 0 6px;
   }
-  .post-item:hover .post-arr {
-    opacity: 1;
-    transform: translateX(3px);
+  .post-meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+  }
+  .post-arr {
+    font-family: var(--font-mono);
+    color: var(--fg-muted);
+    transition: transform 0.18s ease, color 0.15s;
   }
 
-  /* ============ COMMUNITY RAIL ============ */
+  /* ── COMMUNITY RAIL ─────────────────────────────────────────── */
   .community-rail {
     display: grid;
     grid-auto-flow: column;
-    grid-auto-columns: 320px;
+    grid-auto-columns: 360px;
     gap: 20px;
     overflow-x: auto;
     padding-bottom: 12px;
@@ -1262,238 +1257,250 @@ function getTypeDotColor(type: "virtual" | "in-person" | "webinar") {
     scrollbar-width: thin;
     scrollbar-color: var(--rule-strong) transparent;
   }
-  .community-rail::-webkit-scrollbar {
-    height: 6px;
-  }
-  .community-rail::-webkit-scrollbar-thumb {
-    background: var(--rule-strong);
-    border-radius: 4px;
-  }
+  .community-rail::-webkit-scrollbar { height: 6px; }
+  .community-rail::-webkit-scrollbar-thumb { background: var(--rule-strong); border-radius: 4px; }
 
-  /* ============ USER GROUP ============ */
+  /* ── USER GROUP ─────────────────────────────────────────────── */
   .ug-layout {
     display: grid;
     grid-template-columns: 6fr 5fr;
-    gap: 48px;
+    gap: 64px;
     align-items: center;
   }
   .ug-heading {
-    font-weight: 700;
-    font-size: clamp(32px, 4vw, 52px);
-    line-height: 1.04;
-    letter-spacing: -0.028em;
-    color: var(--fg);
-    margin: 14px 0 20px;
+    font-weight: 500;
+    font-size: clamp(40px, 5vw, 68px);
+    line-height: 1.0;
+    letter-spacing: -0.035em;
+    margin: 18px 0 24px;
     max-width: 16ch;
   }
   .ug-desc {
     color: var(--fg-soft);
-    font-size: 16px;
-    line-height: 1.65;
+    font-size: 17px;
+    line-height: 1.7;
     max-width: 56ch;
-    margin: 0 0 28px;
+    margin: 0 0 36px;
   }
   .ug-actions {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 14px;
+    gap: 14px 22px;
   }
+
   .ug-art {
     aspect-ratio: 5 / 4;
     background:
-      radial-gradient(
-        500px 340px at 70% 20%,
-        rgba(94, 234, 212, 0.22) 0%,
-        transparent 65%
-      ),
+      radial-gradient(600px 400px at 70% 20%, rgba(0, 240, 209, 0.14) 0%, transparent 65%),
       linear-gradient(135deg, var(--bg-2) 0%, var(--bg-1) 100%);
-    border: 1px solid var(--rule);
-    border-radius: var(--card-radius);
-    padding: 32px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 16px;
+    padding: 36px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.8);
   }
   .ug-art::after {
     content: "";
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(to right, var(--rule) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+      linear-gradient(to right, rgba(0, 240, 209, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 240, 209, 0.05) 1px, transparent 1px);
     background-size: 36px 36px;
-    mask-image: radial-gradient(circle at center, #000 20%, transparent 70%);
+    mask-image: radial-gradient(circle at 70% 30%, #000 20%, transparent 75%);
     pointer-events: none;
   }
+  .ug-art::before {
+    content: "";
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 14px;
+    height: 14px;
+    border-top: 2px solid var(--cyan);
+    border-right: 2px solid var(--cyan);
+    z-index: 1;
+  }
+
   .ug-art-tag {
-    position: relative;
+    font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--accent);
-    font-weight: 600;
+    color: var(--cyan);
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
   }
   .ug-art-headline {
-    position: relative;
+    font-weight: 500;
     font-size: clamp(28px, 3.5vw, 48px);
-    font-weight: 800;
     line-height: 1.02;
-    color: var(--fg);
     letter-spacing: -0.03em;
+    color: var(--fg);
+    position: relative;
+    z-index: 1;
   }
   .ug-art-stats {
-    position: relative;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 16px;
     padding-top: 20px;
     border-top: 1px solid var(--rule);
+    position: relative;
+    z-index: 1;
   }
   .ug-stat-k {
-    font-size: 11px;
-    letter-spacing: 0.08em;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--fg-muted);
-    font-weight: 600;
   }
   .ug-stat-v {
+    font-weight: 500;
     font-size: 22px;
-    font-weight: 700;
     letter-spacing: -0.02em;
     color: var(--fg);
     margin-top: 4px;
+    line-height: 1;
   }
 
-  /* ============ NEWSLETTER ============ */
+  /* ── NEWSLETTER ─────────────────────────────────────────────── */
   .newsletter {
-    padding: 7rem 0;
+    padding: 128px 0;
+    position: relative;
+    border-top: 1px solid var(--rule);
     background:
-      radial-gradient(
-        700px 380px at 85% 50%,
-        rgba(94, 234, 212, 0.14) 0%,
-        transparent 65%
-      ),
+      radial-gradient(700px 440px at 85% 50%, var(--cyan-haze) 0%, transparent 65%),
       var(--bg-1);
-    border-bottom: 1px solid var(--rule);
+    overflow: hidden;
   }
   .newsletter-inner {
+    position: relative;
     display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 48px;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 72px;
     align-items: center;
   }
   .newsletter-heading {
-    font-weight: 700;
-    font-size: clamp(32px, 5vw, 56px);
-    line-height: 1.02;
-    letter-spacing: -0.03em;
-    color: var(--fg);
-    margin: 14px 0 14px;
+    font-weight: 500;
+    font-size: clamp(40px, 5.2vw, 68px);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    margin: 18px 0 20px;
     max-width: 14ch;
   }
   .newsletter-lead {
     color: var(--fg-soft);
-    font-size: 16px;
+    font-size: 17px;
+    line-height: 1.6;
     max-width: 48ch;
     margin: 0;
   }
+
   .newsletter-form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 24px;
-    background: var(--bg-2);
+    padding: 32px;
+    background:
+      linear-gradient(180deg, rgba(0, 240, 209, 0.04) 0%, transparent 40%),
+      var(--bg-2);
     border: 1px solid var(--rule-strong);
-    border-radius: var(--card-radius);
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.7);
+  }
+  .newsletter-form::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+  }
+
+  .newsletter-form label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    margin-bottom: 14px;
   }
   .newsletter-form-row {
     display: flex;
-    gap: 8px;
+    gap: 0;
+    border: 1px solid var(--rule-strong);
+    border-radius: 10px;
+    background: var(--bg-0);
+    overflow: hidden;
   }
   .newsletter-input {
     flex: 1;
-    padding: 13px 16px;
-    background: var(--bg-0);
-    border: 1px solid var(--rule-strong);
-    border-radius: 10px;
+    padding: 16px 18px;
+    background: transparent;
+    border: 0;
     font: inherit;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--fg);
     outline: none;
-    transition: border-color 0.15s;
   }
-  .newsletter-input:focus {
-    border-color: var(--accent);
+  .newsletter-input::placeholder { color: var(--fg-faint); }
+
+  .newsletter-form button {
+    padding: 16px 24px;
+    background: var(--cyan);
+    color: var(--cyan-ink);
+    border: 0;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    box-shadow: 0 0 20px rgba(0, 240, 209, 0.35);
   }
-  .newsletter-input::placeholder {
-    color: var(--fg-faint);
+  .newsletter-form button:hover {
+    background: #33f5d9;
+    box-shadow: 0 0 28px rgba(0, 240, 209, 0.55);
   }
   .newsletter-note {
+    margin-top: 16px;
+    display: block;
     font-size: 12px;
     color: var(--fg-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
   }
 
-  /* ============ RESPONSIVE ============ */
-  @media (max-width: 1000px) {
-    .hero-inner {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-    .hero-stats {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-    }
-    .explainer {
-      grid-template-columns: 1fr;
-      gap: 32px;
-    }
-    .events-grid,
-    .blog-grid,
-    .ug-layout,
-    .newsletter-inner {
-      grid-template-columns: 1fr;
-      gap: 40px;
-    }
-    .section-head {
-      grid-template-columns: 1fr;
+  /* ── RESPONSIVE ──────────────────────────────────────────────── */
+  @media (max-width: 1100px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+    .explainer  { grid-template-columns: 1fr; gap: 40px; }
+    .blog-grid, .ug-layout, .newsletter-inner { grid-template-columns: 1fr; gap: 48px; }
+
+    .events-split { grid-template-columns: 1fr; gap: 48px; }
+    .events-panel { padding-right: 0; }
+    .events-panel + .events-panel {
+      padding-left: 0;
+      border-left: 0;
+      border-top: 1px solid var(--rule-strong);
+      padding-top: 48px;
     }
   }
 
-  @media (max-width: 620px) {
-    .container {
-      padding: 0 1.25rem;
-    }
-    .hero-inner {
-      padding: 72px 0 56px;
-    }
-    .slab {
-      padding: 4rem 0;
-    }
-    .section-head {
-      margin-bottom: 36px;
-    }
-    .event-row {
-      grid-template-columns: 72px 1fr;
-      padding: 16px;
-    }
-    .event-cta {
-      grid-column: 1 / -1;
-      justify-self: start;
-    }
-    .pull-stats {
-      grid-template-columns: 1fr;
-    }
-    .hero-stats {
-      grid-template-columns: 1fr 1fr;
-    }
-    .newsletter-form-row {
-      flex-direction: column;
-    }
-    .newsletter {
-      padding: 4rem 0;
-    }
+  @media (max-width: 640px) {
+    .hero-inner { padding: 80px 0 56px; }
+    .newsletter { padding: 80px 0; }
+    .newsletter-form { padding: 24px; }
+    .newsletter-form-row { flex-direction: column; }
+    .events-rail { grid-auto-columns: 280px; }
+    .community-rail { grid-auto-columns: 300px; }
   }
 </style>

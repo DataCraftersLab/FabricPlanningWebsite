@@ -17,142 +17,140 @@ const platformLabel =
     ? "LinkedIn"
     : platform === "reddit"
       ? "Reddit"
-      : "Twitter";
+      : "X / Twitter";
 
 const formattedDate = date.toLocaleDateString("en-US", {
   month: "short",
   day: "numeric",
 });
-
-const reactionCount = likes > 0 ? `${likes} reactions` : null;
 ---
 
-<article class="social-card">
-  <div class="card-header">
-    <span class="platform-label">{platformLabel}</span>
-    <span class="card-date">{formattedDate}</span>
+<a class="social-card" href={url} target="_blank" rel="noopener noreferrer">
+  <div class="social-head">
+    <span class="social-platform">{platformLabel}</span>
+    <span>{formattedDate}</span>
   </div>
 
-  <div class="card-author">{author}</div>
-
-  <blockquote class="card-quote">{excerpt}</blockquote>
+  <div class="social-body">
+    <h4 class="social-author">{author}</h4>
+    <p class="social-excerpt">{excerpt}</p>
+  </div>
 
   {
     image && (
-      <img
-        src={image}
-        alt={`Post by ${author}`}
-        loading="lazy"
-        class="card-image"
-      />
+      <div class="social-thumb">
+        <img
+          src={image}
+          alt=""
+          loading="lazy"
+          onerror="this.closest('.social-thumb').style.display='none'"
+        />
+      </div>
     )
   }
 
-  <div class="card-footer">
-    {reactionCount && <span>{reactionCount}</span>}
-    <a href={url} target="_blank" rel="noopener noreferrer" class="card-link">
-      Read →
-    </a>
+  <div class="social-foot">
+    <span class="social-readon">Read on {platformLabel} →</span>
   </div>
-</article>
+</a>
 
 <style>
   .social-card {
-    background: var(--card-bg);
-    border: 1px solid var(--card-border);
-    border-radius: var(--card-radius);
-    padding: 22px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    min-height: 240px;
-    min-width: 300px;
-    max-width: 340px;
+    padding: 0;
+    background: var(--bg-1);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    text-decoration: none;
+    color: var(--fg);
+    transition: all 0.18s;
     scroll-snap-align: start;
-    transition: border-color 0.15s, transform 0.15s;
   }
+
+  .social-card > .social-head,
+  .social-card > .social-body {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .social-card > .social-head { padding-top: 24px; }
 
   .social-card:hover {
-    border-color: var(--accent);
+    border-color: var(--cyan);
     transform: translateY(-2px);
+    box-shadow: 0 16px 40px -16px rgba(0, 240, 209, 0.25);
   }
+  .social-card:hover .social-thumb img { transform: scale(1.04); }
 
-  .card-header {
+  .social-head {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    font-size: 11.5px;
-    letter-spacing: 0.08em;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--fg-muted);
-    font-weight: 600;
+    margin-bottom: 16px;
   }
+  .social-platform { color: var(--cyan); font-weight: 500; }
 
-  .platform-label {
-    color: var(--accent);
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .platform-label::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    flex-shrink: 0;
-  }
-
-  .card-date {
-    color: var(--fg-muted);
-  }
-
-  .card-author {
+  .social-author {
+    font-weight: 500;
     font-size: 16px;
-    font-weight: 700;
     color: var(--fg);
-    letter-spacing: -0.01em;
+    margin: 0 0 10px;
+    letter-spacing: -0.015em;
   }
 
-  .card-quote {
-    margin: 0;
-    font-size: 15px;
-    line-height: 1.55;
+  .social-excerpt {
+    font-size: 14px;
+    line-height: 1.6;
     color: var(--fg-soft);
-    flex: 1;
+    margin: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
-  .card-image {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-
-  .card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    color: var(--fg-muted);
-    padding-top: 14px;
+  .social-thumb {
+    margin-top: 20px;
+    aspect-ratio: 16 / 9;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-2);
     border-top: 1px solid var(--rule);
-    font-weight: 500;
+  }
+  .social-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.45s ease;
+  }
+  .social-thumb::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(7, 10, 12, 0.55) 100%);
+    pointer-events: none;
   }
 
-  .card-link {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 600;
+  .social-foot {
+    padding: 16px 24px 22px;
+    border-top: 1px solid var(--rule);
+    margin-top: 4px;
+  }
+  .social-readon {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    font-weight: 500;
     transition: opacity 0.15s;
   }
-
-  .card-link:hover {
-    opacity: 0.8;
-  }
+  .social-card:hover .social-readon { opacity: 0.8; }
 </style>

@@ -31,12 +31,12 @@ export default function MobileMenu() {
           borderRadius: "8px",
           color: "var(--fg)",
           background: "transparent",
-          border: "none",
+          border: "1px solid var(--rule-strong)",
           cursor: "pointer",
-          transition: "background 0.15s",
+          transition: "background 0.15s, border-color 0.15s",
         }}
       >
-        {open ? <X size={22} /> : <Menu size={22} />}
+        {open ? <X size={20} /> : <Menu size={20} />}
       </button>
 
       {open && (
@@ -49,14 +49,14 @@ export default function MobileMenu() {
             zIndex: 40,
             background: "var(--bg-1)",
             borderBottom: "1px solid var(--rule)",
-            boxShadow: "0 20px 40px rgba(0,0,0,0.4)",
+            boxShadow: "0 24px 60px -20px rgba(0,0,0,0.8)",
           }}
         >
           <nav
             style={{
-              maxWidth: "1240px",
+              maxWidth: "var(--container)",
               margin: "0 auto",
-              padding: "1rem 2rem",
+              padding: "1rem 20px",
               display: "flex",
               flexDirection: "column",
               gap: "4px",
@@ -68,7 +68,7 @@ export default function MobileMenu() {
                 href={link.href}
                 onClick={close}
                 style={{
-                  padding: "12px",
+                  padding: "12px 14px",
                   borderRadius: "8px",
                   fontSize: "15px",
                   fontWeight: 500,
@@ -78,8 +78,8 @@ export default function MobileMenu() {
                 }}
                 onMouseEnter={(e) => {
                   (e.target as HTMLAnchorElement).style.background =
-                    "var(--bg-3)";
-                  (e.target as HTMLAnchorElement).style.color = "var(--accent)";
+                    "var(--cyan-weak)";
+                  (e.target as HTMLAnchorElement).style.color = "var(--cyan)";
                 }}
                 onMouseLeave={(e) => {
                   (e.target as HTMLAnchorElement).style.background =
@@ -106,13 +106,14 @@ export default function MobileMenu() {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: "8px",
-                  padding: "10px 16px",
-                  borderRadius: "999px",
-                  background: "var(--accent)",
-                  color: "var(--accent-ink)",
+                  padding: "12px 18px",
+                  borderRadius: "8px",
+                  background: "var(--cyan)",
+                  color: "var(--cyan-ink)",
                   fontWeight: 600,
                   fontSize: "14px",
                   textDecoration: "none",
+                  boxShadow: "0 4px 18px rgba(0,240,209,0.28)",
                 }}
               >
                 Subscribe →
