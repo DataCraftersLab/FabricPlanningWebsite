@@ -93,11 +93,11 @@ const faqs: Faq[] = [
     question: "How do I get started with Fabric Planning?",
     answer: `
       <p>Two steps:</p>
-      <ol class="ml-5 list-decimal space-y-2">
+      <ol>
         <li>Your Fabric admin enables Fabric Planning in the tenant admin center. This can be turned on for the entire organization or for specific users.</li>
         <li>Navigate to any workspace backed by Fabric capacity, and Fabric Planning is available.</li>
       </ol>
-      <p>For a simple walkthrough of how to turn it on, see <a href="https://www.linkedin.com/posts/khaledchowdhury_fabricplanning-activity-7442229311375478784-h0y3?utm_source=share&amp;utm_medium=member_desktop&amp;rcm=ACoAAAOgPv4B96tKfRGA5nLoihrDcl1UszNsQEA" target="_blank" rel="noopener noreferrer">this guide</a>.</p>
+      <p>For a simple walkthrough of how to turn it on, see <a href="https://www.linkedin.com/posts/khaledchowdhury_fabricplanning-activity-7442229311375478784-h0y3?utm_source=share&utm_medium=member_desktop&rcm=ACoAAAOgPv4B96tKfRGA5nLoihrDcl1UszNsQEA" target="_blank" rel="noopener noreferrer">this guide</a>.</p>
     `,
   },
   {
@@ -176,8 +176,7 @@ const faqs: Faq[] = [
     `,
   },
   {
-    question:
-      "Can multiple people work on the same plan at the same time?",
+    question: "Can multiple people work on the same plan at the same time?",
     answer: `
       <p>Yes. Concurrency is supported in Fabric Planning. Multiple people can be in the same plan working at the same time, just like Excel.</p>
       <p>The thing to understand is that, also like Excel, the last person to edit a cell wins. If two people update the same cell, the most recent change takes precedence. The good news is that Fabric Planning has a robust cell-level audit trail, so if a collision happens, you can see exactly who changed what and revert if needed.</p>
@@ -210,6 +209,8 @@ const faqs: Faq[] = [
   },
 ];
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
 const slugify = (s: string): string =>
   s
     .toLowerCase()
@@ -223,29 +224,14 @@ const slugify = (s: string): string =>
   title="FAQ — Fabric Planning"
   description="Answers to the most common questions about Microsoft Fabric Planning: pricing, components, how it differs from previous Power BI planning solutions, and how to get started."
 >
-  {/* ============================================================ */}
-  {/* Hero */}
-  {/* ============================================================ */}
-  <section
-    class="relative w-full text-white"
-    style="background: linear-gradient(135deg, #0f2b1e 0%, #1a1035 50%, #0f2b1e 100%);"
-  >
-    <div
-      class="mx-auto flex max-w-[1200px] flex-col items-center px-6 py-20 text-center md:py-28"
-    >
-      <p
-        class="mb-6 text-xs font-semibold uppercase tracking-[0.2em] text-light-purple"
-      >
-        Frequently Asked Questions
-      </p>
-      <h1
-        class="mb-6 max-w-3xl text-4xl font-bold leading-tight tracking-tight text-white md:text-5xl lg:text-6xl"
-      >
-        Fabric Planning, answered
-      </h1>
-      <p
-        class="max-w-2xl text-lg leading-relaxed text-[#94a3b8] md:text-xl"
-      >
+  <!-- ── Page hero ─────────────────────────────────────────────── -->
+  <section class="page-hero">
+    <div class="container page-hero-inner">
+      <span class="eyebrow">
+        <span class="section-no">§</span> Frequently Asked Questions
+      </span>
+      <h1>Fabric Planning, <span class="italic">answered</span></h1>
+      <p class="page-hero-sub">
         Pricing, components, how it differs from previous Power BI planning
         solutions, and how to get started &mdash; the questions we hear most,
         with straight answers.
@@ -253,105 +239,58 @@ const slugify = (s: string): string =>
     </div>
   </section>
 
-  {/* ============================================================ */}
-  {/* FAQ accordion */}
-  {/* ============================================================ */}
-  <section class="bg-white">
-    <div class="mx-auto max-w-[860px] px-6 py-20 md:py-24">
-      <ul class="space-y-4">
+  <!-- ── FAQ accordion ─────────────────────────────────────────── -->
+  <section class="slab" style="padding-top: 80px;">
+    <div class="container">
+      <div class="faq-list">
         {
           faqs.map((faq, i) => (
-            <li>
-              <details
-                id={slugify(faq.question)}
-                class="faq-item group rounded-xl border border-slate-200 bg-white shadow-sm transition hover:border-medium-green/40 open:border-medium-green/60 open:shadow-md"
-              >
-                <summary class="flex cursor-pointer list-none items-start justify-between gap-4 px-6 py-5 focus:outline-none focus-visible:ring-2 focus-visible:ring-medium-green focus-visible:ring-offset-2 rounded-xl">
-                  <span class="flex items-start gap-4">
-                    <span
-                      class="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-mint-wash text-xs font-semibold text-deep-green"
-                      aria-hidden="true"
-                    >
-                      {i + 1}
-                    </span>
-                    <span class="text-base font-semibold text-forest md:text-lg">
-                      {faq.question}
-                    </span>
-                  </span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="mt-1 shrink-0 text-deep-green transition-transform duration-200 group-open:rotate-180"
-                    aria-hidden="true"
-                  >
-                    <polyline points="6 9 12 15 18 9" />
-                  </svg>
-                </summary>
-                <div class="border-t border-slate-100 px-6 py-5">
-                  <div
-                    class="faq-answer space-y-4 text-base leading-relaxed text-slate-text"
-                    set:html={faq.answer}
-                  />
-                </div>
-              </details>
-            </li>
+            <details
+              id={slugify(faq.question)}
+              class="faq-item"
+              open={i === 0}
+            >
+              <summary>
+                <span class="faq-num">{pad(i + 1)}</span>
+                <span class="faq-q">{faq.question}</span>
+                <svg
+                  class="faq-chevron"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </summary>
+              <div class="faq-answer" set:html={faq.answer} />
+            </details>
           ))
         }
-      </ul>
+      </div>
     </div>
   </section>
 
-  {/* ============================================================ */}
-  {/* Closing CTA */}
-  {/* ============================================================ */}
-  <section class="bg-purple-wash">
-    <div class="mx-auto max-w-[1200px] px-6 py-16 md:py-20">
-      <div class="mx-auto flex max-w-2xl flex-col items-center text-center">
-        <h2
-          class="mb-4 text-2xl font-bold tracking-tight text-forest md:text-3xl"
-        >
-          Still have a question?
+  <!-- ── Closing CTA ───────────────────────────────────────────── -->
+  <section class="slab slab-elev">
+    <div class="container">
+      <div class="prose-center">
+        <h2 class="page-h2" style="justify-content: center;">
+          Still have a <span class="italic">question?</span>
         </h2>
-        <p class="mb-8 text-base text-slate-text md:text-lg">
-          If your question isn&rsquo;t answered here, get in touch and we&rsquo;ll
-          add it to the list.
+        <p>
+          If your question isn&rsquo;t answered here, get in touch and
+          we&rsquo;ll add it to the list.
         </p>
-        <a
-          href="/about"
-          class="inline-flex items-center justify-center rounded-lg px-8 py-4 text-base font-semibold text-white shadow-md transition hover:shadow-lg"
-          style="background: linear-gradient(135deg, #7B61B8 0%, #5B3F9E 100%);"
-        >
-          Get in touch
+        <a class="btn btn-primary" href="/about">
+          Get in touch <span class="arr">→</span>
         </a>
       </div>
     </div>
   </section>
 </Layout>
-
-<style is:global>
-  /* Hide default <summary> marker across browsers */
-  .faq-item > summary::-webkit-details-marker {
-    display: none;
-  }
-  .faq-item > summary {
-    list-style: none;
-  }
-
-  /* Style links inside answers */
-  .faq-answer a {
-    color: var(--color-deep-green);
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-  .faq-answer a:hover {
-    color: var(--color-medium-green);
-  }
-</style>

@@ -6,9 +6,7 @@ import blogStickyConfig from "../../content/config/blog-sticky.json";
 
 const allPosts = await fetchSubstackPosts();
 const stickyUrl = blogStickyConfig.stickyPostUrl;
-const stickyPost = stickyUrl
-  ? allPosts.find((p) => p.url === stickyUrl)
-  : undefined;
+const stickyPost = stickyUrl ? allPosts.find((p) => p.url === stickyUrl) : undefined;
 const otherPosts = allPosts
   .filter((p) => p.url !== stickyUrl)
   .sort((a, b) => b.pubDate.getTime() - a.pubDate.getTime());
@@ -18,96 +16,86 @@ const otherPosts = allPosts
   title="Blog — Fabric Planning"
   description="Articles, insights, and community content about Microsoft Fabric Planning."
 >
-  <section class="bg-white">
-    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
-      <header class="mb-12 text-center">
-        <p
-          class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-fabric-purple"
-        >
-          Resources
-        </p>
-        <h1
-          class="mb-4 text-4xl font-bold tracking-tight text-forest md:text-5xl"
-        >
-          Blog
-        </h1>
-        <p class="mx-auto max-w-2xl text-base text-gray-muted md:text-lg">
-          Articles, insights, and community content about Microsoft Fabric
-          Planning.
-        </p>
-      </header>
+  <section class="page-hero">
+    <div class="container page-hero-inner">
+      <span class="eyebrow"><span class="section-no">§</span> Resources</span>
+      <h1><span class="italic">Blog</span></h1>
+      <p class="page-hero-sub">
+        Articles, insights, and community content about Microsoft Fabric Planning.
+      </p>
+    </div>
+  </section>
 
-      {/* ---- Fabric Planning on Substack ---- */}
-      <div class="mb-16">
-        <h2 class="mb-6 text-2xl font-bold text-forest">
-          <span style="color: #FF6719;">&#9632;</span> Fabric Planning on Substack
+  <section class="slab" style="padding-top: 88px;">
+    <div class="container">
+
+      <!-- Substack -->
+      <div class="block">
+        <h2 class="page-h2">
+          <span class="substack-tag">■</span> Fabric Planning on Substack
         </h2>
-
         {
           allPosts.length === 0 ? (
-            <div class="rounded-xl border border-dashed border-slate-300 bg-[#f8fafc] px-6 py-12 text-center">
-              <p class="mb-4 text-base font-semibold text-forest">
-                Blog coming soon
-              </p>
-              <p class="mb-6 max-w-md mx-auto text-sm text-gray-muted">
-                Subscribe on Substack to be notified when we publish our first
-                articles.
-              </p>
-              <a
-                href="https://fabricplanning.substack.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center justify-center rounded-lg px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:shadow-lg"
-                style="background-color: #FF6719;"
-              >
+            <div class="soft-panel">
+              <h3>Blog coming soon</h3>
+              <p>Subscribe on Substack to be notified when we publish our first articles.</p>
+              <a class="btn btn-primary" href="https://fabricplanning.substack.com" target="_blank" rel="noopener noreferrer">
                 Subscribe on Substack
               </a>
             </div>
           ) : (
-            <>
+            <div class="blog-posts">
               {stickyPost && (
-                <div class="mb-8">
+                <div class="sticky-post">
                   <BlogCard
                     title={stickyPost.title}
                     description={stickyPost.description}
                     pubDate={stickyPost.pubDate}
                     url={stickyPost.url}
                     coverImage={stickyPost.coverImage}
-                    featured
                   />
                 </div>
               )}
-              <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {otherPosts.map((post) => (
-                  <BlogCard
-                    title={post.title}
-                    description={post.description}
-                    pubDate={post.pubDate}
-                    url={post.url}
-                    coverImage={post.coverImage}
-                  />
-                ))}
-              </div>
-            </>
+              {otherPosts.length > 0 && (
+                <div class="card-grid">
+                  {otherPosts.map((post) => (
+                    <BlogCard
+                      title={post.title}
+                      description={post.description}
+                      pubDate={post.pubDate}
+                      url={post.url}
+                      coverImage={post.coverImage}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           )
         }
       </div>
 
-      {/* ---- Other Community Blogs ---- */}
-      <div>
-        <h2 class="mb-6 text-2xl font-bold text-forest">
-          Other Community Blogs
-        </h2>
-        <div
-          class="rounded-xl border border-dashed border-slate-300 bg-[#f8fafc] px-6 py-12 text-center"
-        >
-          <p class="mb-2 text-base font-semibold text-forest">Coming soon</p>
-          <p class="mx-auto max-w-md text-sm text-gray-muted">
-            We're building a curated collection of the best Fabric Planning
+      <!-- Community blogs -->
+      <div class="block">
+        <h2 class="page-h2">Other Community Blogs</h2>
+        <div class="soft-panel">
+          <h3>Coming soon</h3>
+          <p>
+            We&rsquo;re building a curated collection of the best Fabric Planning
             content from across the community. Check back soon.
           </p>
         </div>
       </div>
+
     </div>
   </section>
 </Layout>
+
+<style>
+  .sticky-post {
+    margin-bottom: 24px;
+  }
+  /* Override blog-card to be wider for sticky */
+  .sticky-post :global(.blog-card) {
+    max-width: 560px;
+  }
+</style>
