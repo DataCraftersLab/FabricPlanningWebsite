@@ -175,7 +175,7 @@ function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
             attention.
           </p>
         </div>
-        <a class="section-link" href="/faq">Start here →</a>
+        <a class="section-link" href="/start-here">Start here →</a>
       </div>
 
       <div class="explainer">
@@ -504,25 +504,8 @@ function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
         </div>
 
         <div class="ug-art">
-          <div class="ug-art-tag">FFUG · Est. 2026</div>
           <div class="ug-art-headline">
             Where finance meets <span class="italic">fabric.</span>
-          </div>
-          <div class="ug-art-stats">
-            <div>
-              <div class="ug-stat-k">Members</div>
-              <div class="ug-stat-v">412</div>
-            </div>
-            <div>
-              <div class="ug-stat-k">Sessions</div>
-              <div class="ug-stat-v">
-                {allEvents.filter((e) => e.data.isPast).length || 7}
-              </div>
-            </div>
-            <div>
-              <div class="ug-stat-k">Cost</div>
-              <div class="ug-stat-v">$0</div>
-            </div>
           </div>
         </div>
       </div>
@@ -1299,7 +1282,7 @@ function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
     padding: 36px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     position: relative;
     overflow: hidden;
     box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.8);
@@ -1327,16 +1310,6 @@ function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
     z-index: 1;
   }
 
-  .ug-art-tag {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--cyan);
-    font-weight: 500;
-    position: relative;
-    z-index: 1;
-  }
   .ug-art-headline {
     font-weight: 500;
     font-size: clamp(28px, 3.5vw, 48px);
@@ -1346,31 +1319,6 @@ function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
     position: relative;
     z-index: 1;
   }
-  .ug-art-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
-    padding-top: 20px;
-    border-top: 1px solid var(--rule);
-    position: relative;
-    z-index: 1;
-  }
-  .ug-stat-k {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-  }
-  .ug-stat-v {
-    font-weight: 500;
-    font-size: 22px;
-    letter-spacing: -0.02em;
-    color: var(--fg);
-    margin-top: 4px;
-    line-height: 1;
-  }
-
   /* ── NEWSLETTER ─────────────────────────────────────────────── */
   .newsletter {
     padding: 128px 0;
