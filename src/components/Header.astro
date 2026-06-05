@@ -5,7 +5,7 @@ import MobileMenu from "./MobileMenu.tsx";
 <header class="site-header">
   <div class="site-header-inner">
     <a href="/" class="brand">
-      <span class="brand-mark" aria-hidden="true">F</span>
+      <img src="/logo-bgfiiled.svg" alt="Fabric Planning logo" class="brand-mark" width="34" height="34" />
       <span>
         <span class="brand-name">Fabric Planning</span><span class="brand-sub">.io</span>
       </span>
@@ -78,19 +78,9 @@ import MobileMenu from "./MobileMenu.tsx";
   .brand-mark {
     width: 34px;
     height: 34px;
-    background: linear-gradient(135deg, var(--cyan) 0%, var(--cyan-700) 100%);
-    color: var(--cyan-ink);
-    display: grid;
-    place-items: center;
-    font-family: var(--font-sans);
-    font-size: 15px;
-    font-weight: 700;
-    line-height: 1;
     border-radius: 6px;
-    box-shadow:
-      0 0 0 1px rgba(0, 240, 209, 0.35),
-      0 0 24px rgba(0, 240, 209, 0.3);
     flex-shrink: 0;
+    display: block;
   }
 
   .brand-name {
