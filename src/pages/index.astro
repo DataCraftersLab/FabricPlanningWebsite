@@ -240,17 +240,6 @@ function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
                           loading="lazy"
                         />
                       )}
-                      <span class="event-badge event-badge-live">
-                        {daysUntil === 0
-                          ? "Today"
-                          : daysUntil === 1
-                            ? "Tomorrow"
-                            : `Upcoming`}
-                      </span>
-                      <span class="event-date-chip">
-                        <span class="event-day">{fmtDay(event.data.date)}</span>
-                        <span class="event-mon">{fmtMon(event.data.date)}</span>
-                      </span>
                     </div>
                     <div class="event-body">
                       <div class="event-meta-row">
@@ -265,7 +254,7 @@ function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
                       <h4 class="event-title">{event.data.title}</h4>
                       <p class="event-loc">{event.data.description}</p>
                       <div class="event-card-foot">
-                        <span class="event-card-time">{event.data.time}</span>
+                        <span class="event-card-time">{fmtDay(event.data.date)} {fmtMon(event.data.date)} · {event.data.time}</span>
                         <span class="event-card-arr">Register <span>→</span></span>
                       </div>
                     </div>
@@ -305,10 +294,6 @@ function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
                         />
                       )}
                       <span class="event-badge event-badge-past">Recording</span>
-                      <span class="event-date-chip">
-                        <span class="event-day">{fmtDay(event.data.date)}</span>
-                        <span class="event-mon">{fmtMon(event.data.date)}</span>
-                      </span>
                     </div>
                     <div class="event-body">
                       <div class="event-meta-row">
@@ -323,7 +308,7 @@ function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
                       <h4 class="event-title">{event.data.title}</h4>
                       <p class="event-loc">{event.data.description}</p>
                       <div class="event-card-foot">
-                        <span class="event-card-time">Recorded</span>
+                        <span class="event-card-time">{fmtDay(event.data.date)} {fmtMon(event.data.date)}</span>
                         <span class="event-card-arr">Watch <span>→</span></span>
                       </div>
                     </div>
@@ -913,19 +898,6 @@ function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
   }
-  .event-badge-live {
-    background: var(--cyan);
-    color: var(--cyan-ink);
-    box-shadow: 0 4px 18px var(--cyan-glow);
-  }
-  .event-badge-live::before {
-    content: "";
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--cyan-ink);
-    animation: pulse 2.2s ease-in-out infinite;
-  }
   .event-badge-past {
     background: rgba(7, 10, 12, 0.72);
     color: var(--fg);
@@ -936,37 +908,6 @@ function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
     font-size: 9px;
     color: var(--cyan);
     line-height: 1;
-  }
-
-  .event-date-chip {
-    position: absolute;
-    bottom: 14px;
-    left: 14px;
-    z-index: 2;
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    padding: 8px 12px;
-    background: rgba(7, 10, 12, 0.72);
-    border: 1px solid var(--rule-strong);
-    border-radius: 8px;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-  }
-  .event-day {
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 1;
-    letter-spacing: -0.02em;
-    color: var(--fg);
-  }
-  .event-mon {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--cyan);
-    font-weight: 500;
   }
 
   .event-body {
