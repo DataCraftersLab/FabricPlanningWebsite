@@ -6,11 +6,9 @@ interface Props {
   date: Date;
   excerpt: string;
   image?: string;
-  likes?: number;
-  comments?: number;
 }
 
-const { author, platform, url, date, excerpt, image, likes = 0 } = Astro.props;
+const { author, platform, url, date, excerpt, image } = Astro.props;
 
 const platformLabel =
   platform === "linkedin"
@@ -19,138 +17,78 @@ const platformLabel =
       ? "Reddit"
       : "X / Twitter";
 
-const formattedDate = date.toLocaleDateString("en-US", {
-  month: "short",
-  day: "numeric",
-});
+const avatarBg =
+  platform === "linkedin"
+    ? "bg-dc-blue"
+    : platform === "reddit"
+      ? "bg-dc-red"
+      : "bg-slate-700";
+
+const avatarText =
+  platform === "linkedin" ? "in" : platform === "reddit" ? "r/" : "x";
+
+const linkColor =
+  platform === "linkedin"
+    ? "text-dc-blue"
+    : platform === "reddit"
+      ? "text-dc-red"
+      : "text-slate-700";
+
+// Time ago, very simple
+const now = new Date();
+const diffMs = now.getTime() - date.getTime();
+const diffDays = Math.max(0, Math.floor(diffMs / (1000 * 60 * 60 * 24)));
+const timeAgo =
+  diffDays === 0
+    ? "today"
+    : diffDays === 1
+      ? "1 day ago"
+      : diffDays < 7
+        ? `${diffDays} days ago`
+        : diffDays < 30
+          ? `${Math.floor(diffDays / 7)}w ago`
+          : `${Math.floor(diffDays / 30)}mo ago`;
 ---
 
-<a class="social-card" href={url} target="_blank" rel="noopener noreferrer">
-  <div class="social-head">
-    <span class="social-platform">{platformLabel}</span>
-    <span>{formattedDate}</span>
+<article
+  class="flex min-w-[300px] max-w-[300px] flex-col rounded-xl border border-slate-200 bg-white p-6 shadow-sm"
+>
+  <div class="mb-4 flex items-center gap-3">
+    <div
+      class={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white ${avatarBg}`}
+      aria-hidden="true"
+    >
+      {avatarText}
+    </div>
+    <div class="min-w-0">
+      <p class="truncate text-sm font-semibold text-forest">{author}</p>
+      <p class="text-xs text-gray-muted">{platformLabel} &middot; {timeAgo}</p>
+    </div>
   </div>
 
-  <div class="social-body">
-    <h4 class="social-author">{author}</h4>
-    <p class="social-excerpt">{excerpt}</p>
-  </div>
+  <p class="mb-4 line-clamp-4 text-sm leading-relaxed text-slate-text">
+    &ldquo;{excerpt}&rdquo;
+  </p>
 
   {
     image && (
-      <div class="social-thumb">
-        <img
-          src={image}
-          alt=""
-          loading="lazy"
-          onerror="this.closest('.social-thumb').style.display='none'"
-        />
-      </div>
+      <img
+        src={image}
+        alt={`Post by ${author}`}
+        loading="lazy"
+        class="mb-4 h-[120px] w-full rounded-lg object-cover"
+      />
     )
   }
 
-  <div class="social-foot">
-    <span class="social-readon">Read on {platformLabel} →</span>
+  <div class="mt-auto border-t border-slate-100 pt-3">
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class={`text-sm font-semibold ${linkColor} hover:underline`}
+    >
+      Read on {platformLabel} &rarr;
+    </a>
   </div>
-</a>
-
-<style>
-  .social-card {
-    padding: 0;
-    background: var(--bg-1);
-    border: 1px solid var(--rule);
-    border-radius: 12px;
-    overflow: hidden;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    text-decoration: none;
-    color: var(--fg);
-    transition: all 0.18s;
-    scroll-snap-align: start;
-  }
-
-  .social-card > .social-head,
-  .social-card > .social-body {
-    padding-left: 24px;
-    padding-right: 24px;
-  }
-  .social-card > .social-head { padding-top: 24px; }
-
-  .social-card:hover {
-    border-color: var(--cyan);
-    transform: translateY(-2px);
-    box-shadow: 0 16px 40px -16px rgba(0, 240, 209, 0.25);
-  }
-  .social-card:hover .social-thumb img { transform: scale(1.04); }
-
-  .social-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--fg-muted);
-    margin-bottom: 16px;
-  }
-  .social-platform { color: var(--cyan); font-weight: 500; }
-
-  .social-author {
-    font-weight: 500;
-    font-size: 16px;
-    color: var(--fg);
-    margin: 0 0 10px;
-    letter-spacing: -0.015em;
-  }
-
-  .social-excerpt {
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--fg-soft);
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .social-thumb {
-    margin-top: 20px;
-    aspect-ratio: 16 / 9;
-    position: relative;
-    overflow: hidden;
-    background: var(--bg-2);
-    border-top: 1px solid var(--rule);
-  }
-  .social-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.45s ease;
-  }
-  .social-thumb::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 55%, rgba(7, 10, 12, 0.55) 100%);
-    pointer-events: none;
-  }
-
-  .social-foot {
-    padding: 16px 24px 22px;
-    border-top: 1px solid var(--rule);
-    margin-top: 4px;
-  }
-  .social-readon {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--cyan);
-    font-weight: 500;
-    transition: opacity 0.15s;
-  }
-  .social-card:hover .social-readon { opacity: 0.8; }
-</style>
+</article>
