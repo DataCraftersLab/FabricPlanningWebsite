@@ -30,4 +30,20 @@ const socialMedia = defineCollection({
   }),
 });
 
-export const collections = { events, socialMedia };
+const courses = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.md", base: "./content/courses" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    lessons: z.number().optional(),
+    duration: z.string(),          // e.g. "~3 hrs"
+    level: z.string().default("All levels"),
+    format: z.string().default("Online"),
+    url: z.string().url(),
+    featuredImage: z.string().url().optional(),
+    thumbnailAspect: z.string().optional(),  // e.g. "16/9", "4/3", "1/1"
+    available: z.boolean().default(true),
+  }),
+});
+
+export const collections = { events, socialMedia, courses };

@@ -2,11 +2,13 @@
 import { getCollection } from "astro:content";
 import Layout from "../layouts/Layout.astro";
 import SocialCard from "../components/SocialCard.astro";
+
 import { getEventStatus } from "../utils/eventStatus";
 import { fetchSubstackPosts } from "../utils/substackFeed";
 import blogStickyConfig from "../content/config/blog-sticky.json";
 
 const allEvents = await getCollection("events");
+const allCourses = (await getCollection("courses")).filter((c) => c.data.available);
 const upcomingEvents = allEvents
   .filter((e) => getEventStatus(e.data.date) === "upcoming")
   .sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
@@ -17,6 +19,12 @@ const pastEvents = allEvents
 const socialPosts = (await getCollection("socialMedia")).sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
+
+function parseAspectRatio(s?: string): number {
+  if (!s) return 4 / 3;
+  const parts = s.split("/");
+  return parts.length === 2 ? Number(parts[0]) / Number(parts[1]) : Number(s) || 4 / 3;
+}
 
 const allPosts = await fetchSubstackPosts();
 const stickyUrl = blogStickyConfig.stickyPostUrl;
@@ -318,6 +326,53 @@ function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
             )
           }
         </div>
+
+        <!-- Course -->
+        {allCourses.length > 0 && (
+          <div class="course-group">
+            <h3 class="events-group-head">
+              <span class="events-col-dot"></span> Course
+              <span class="count">{allCourses.length} available</span>
+            </h3>
+            <div class="course-grid">
+              {allCourses.map((course) => (
+                <a
+                  class="event-card event-card-course"
+                  href={course.data.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={`--thumb-ratio: ${parseAspectRatio(course.data.thumbnailAspect)}`}
+                >
+                  <div class="event-thumb">
+                    {course.data.featuredImage && (
+                      <img src={course.data.featuredImage} alt={course.data.title} loading="lazy" />
+                    )}
+                    {course.data.lessons !== undefined && (
+                      <span class="event-lessons-chip">
+                        <span class="lessons-num">{String(course.data.lessons).padStart(2, "0")}</span>
+                        <span class="lessons-label">Lessons</span>
+                      </span>
+                    )}
+                  </div>
+                  <div class="event-body">
+                    <div class="event-meta-row">
+                      <span>{course.data.format}</span>
+                      <span class="event-meta-sep">·</span>
+                      <span>{course.data.level}</span>
+                    </div>
+                    <h4 class="event-title">{course.data.title}</h4>
+                    <p class="event-loc">{course.data.description}</p>
+                    <div class="event-card-foot">
+                      <span class="event-card-time">{course.data.duration}</span>
+                      <span class="event-card-enroll">Enroll <span>→</span></span>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   </section>
@@ -997,6 +1052,104 @@ function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
     background: rgba(7, 10, 12, 0.25);
     pointer-events: none;
   }
+
+  /* ── COURSE ──────────────────────────────────────────────────── */
+  .course-group {
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule-strong);
+  }
+  .course-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: flex-start;
+  }
+
+  .event-card-course {
+    flex: 0 0 auto;
+    width: calc(220px * var(--thumb-ratio, 1.333));
+    border-color: rgba(0, 240, 209, 0.3);
+    box-shadow: 0 0 0 1px rgba(0, 240, 209, 0.12), 0 16px 48px -24px rgba(0, 240, 209, 0.2);
+  }
+  .event-card-course:hover {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 1px var(--cyan), 0 24px 60px -24px rgba(0, 240, 209, 0.45);
+  }
+  .event-card-course .event-thumb {
+    height: 220px;
+    width: calc(220px * var(--thumb-ratio, 1.333));
+    background:
+      radial-gradient(ellipse at 30% 60%, rgba(0, 240, 209, 0.1) 0%, transparent 65%),
+      var(--bg-2);
+    display: flex;
+    align-items: flex-end;
+    padding: 14px;
+  }
+  .event-card-course .event-thumb img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 12px;
+  }
+  .event-card-course .event-thumb::after { display: none; }
+  @media (max-width: 640px) {
+    .event-card-course { width: 100% !important; }
+    .event-card-course .event-thumb { height: auto; width: 100%; aspect-ratio: var(--thumb-ratio, 1.333); }
+  }
+
+  .event-lessons-chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(7, 10, 12, 0.72);
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .lessons-num {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+  }
+  .lessons-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cyan);
+    font-weight: 500;
+  }
+
+  .event-card-enroll {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cyan-ink);
+    background: var(--cyan);
+    padding: 8px 14px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.18s;
+    box-shadow: 0 4px 16px rgba(0, 240, 209, 0.3);
+  }
+  .event-card-course:hover .event-card-enroll {
+    background: #33f5d9;
+    box-shadow: 0 6px 24px rgba(0, 240, 209, 0.5);
+  }
+  .event-card-enroll span { transition: transform 0.18s; }
+  .event-card-course:hover .event-card-enroll span { transform: translateX(3px); }
+
 
   /* ── BLOG ────────────────────────────────────────────────────── */
   .blog-grid {
