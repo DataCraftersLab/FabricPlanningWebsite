@@ -4,11 +4,13 @@ import Layout from "../layouts/Layout.astro";
 import EventCard from "../components/EventCard.astro";
 import BlogCard from "../components/BlogCard.astro";
 import SocialCard from "../components/SocialCard.astro";
+
 import { getEventStatus } from "../utils/eventStatus";
 import { fetchSubstackPosts } from "../utils/substackFeed";
 import blogStickyConfig from "../content/config/blog-sticky.json";
 
 const allEvents = await getCollection("events");
+const allCourses = (await getCollection("courses")).filter((c) => c.data.available);
 const upcomingEvents = allEvents
   .filter((e) => getEventStatus(e.data.date) === "upcoming")
   .sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
@@ -210,6 +212,53 @@ const blogPosts = [
             )
           }
         </div>
+
+        <!-- Course -->
+        {allCourses.length > 0 && (
+          <div class="course-group">
+            <h3 class="events-group-head">
+              <span class="events-col-dot"></span> Course
+              <span class="count">{allCourses.length} available</span>
+            </h3>
+            <div class="course-grid">
+              {allCourses.map((course) => (
+                <a
+                  class="event-card event-card-course"
+                  href={course.data.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={`--thumb-ratio: ${parseAspectRatio(course.data.thumbnailAspect)}`}
+                >
+                  <div class="event-thumb">
+                    {course.data.featuredImage && (
+                      <img src={course.data.featuredImage} alt={course.data.title} loading="lazy" />
+                    )}
+                    {course.data.lessons !== undefined && (
+                      <span class="event-lessons-chip">
+                        <span class="lessons-num">{String(course.data.lessons).padStart(2, "0")}</span>
+                        <span class="lessons-label">Lessons</span>
+                      </span>
+                    )}
+                  </div>
+                  <div class="event-body">
+                    <div class="event-meta-row">
+                      <span>{course.data.format}</span>
+                      <span class="event-meta-sep">·</span>
+                      <span>{course.data.level}</span>
+                    </div>
+                    <h4 class="event-title">{course.data.title}</h4>
+                    <p class="event-loc">{course.data.description}</p>
+                    <div class="event-card-foot">
+                      <span class="event-card-time">{course.data.duration}</span>
+                      <span class="event-card-enroll">Enroll <span>→</span></span>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
       </div>
     </div>
   </section>
