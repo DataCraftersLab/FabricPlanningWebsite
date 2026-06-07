@@ -36,6 +36,12 @@ const blogPosts = [
   ...(stickyPost ? [stickyPost] : []),
   ...nonStickyPosts,
 ];
+
+function parseAspectRatio(s?: string): number {
+  if (!s) return 4 / 3;
+  const parts = s.split("/");
+  return parts.length === 2 ? Number(parts[0]) / Number(parts[1]) : Number(s) || 4 / 3;
+}
 ---
 
 <Layout
