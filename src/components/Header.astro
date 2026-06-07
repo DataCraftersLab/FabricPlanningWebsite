@@ -1,97 +1,258 @@
 ---
 import MobileMenu from "./MobileMenu.tsx";
-
-const resourceLinks = [
-  { href: "/resources/events", label: "Events" },
-  { href: "/resources/blog", label: "Blog" },
-  { href: "/resources/social-media", label: "Social Media" },
-];
 ---
 
-<header class="relative z-30 bg-forest text-white">
-  <div
-    class="mx-auto flex max-w-[1200px] items-center justify-between px-6 py-4"
-  >
-    <a
-      href="/"
-      class="text-xl font-bold tracking-tight text-white hover:text-mint-teal"
-    >
-      Fabric Planning
+<header class="site-header">
+  <div class="site-header-inner">
+    <a href="/" class="brand">
+      <img src="/logo-bgfiiled.svg" alt="Fabric Planning logo" class="brand-mark" width="34" height="34" />
+      <span>
+        <span class="brand-name">Fabric Planning</span><span class="brand-sub">.io</span>
+      </span>
     </a>
 
-    <nav class="hidden md:block">
-      <ul class="flex items-center gap-8">
-        <li>
-          <a
-            href="/"
-            class="text-sm font-medium text-white hover:text-mint-teal"
-          >
-            Home
+    <nav class="nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <div class="nav-dropdown">
+        <button
+          type="button"
+          class="nav-dropdown-trigger"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Resources <span class="nav-caret" aria-hidden="true">▾</span>
+        </button>
+        <div class="nav-menu" role="menu">
+          <a href="/resources/events" role="menuitem">
+            <span class="nav-menu-label">Events</span>
+            <span class="nav-menu-desc">Upcoming sessions &amp; recordings</span>
           </a>
-        </li>
-        <li>
-          <a
-            href="/faq"
-            class="text-sm font-medium text-white hover:text-mint-teal"
-          >
-            FAQ
+          <a href="/resources/blog" role="menuitem">
+            <span class="nav-menu-label">Blog</span>
+            <span class="nav-menu-desc">Articles from the publication</span>
           </a>
-        </li>
-
-        <li class="group relative">
-          <button
-            type="button"
-            aria-haspopup="true"
-            class="inline-flex items-center gap-1 text-sm font-medium text-white hover:text-mint-teal focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
-          >
-            Resources
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              aria-hidden="true"
-            >
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </button>
-          <!-- Hover/focus dropdown panel. pt-3 leaves a hover-safe gap. -->
-          <div
-            class="invisible absolute left-1/2 top-full z-40 -translate-x-1/2 pt-3 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
-          >
-            <div
-              class="min-w-[200px] rounded-xl border border-mint-teal/20 bg-white py-2 shadow-md"
-            >
-              {
-                resourceLinks.map((link) => (
-                  <a
-                    href={link.href}
-                    class="block px-4 py-2 text-sm font-medium text-slate-text hover:bg-mint-wash hover:text-deep-green"
-                  >
-                    {link.label}
-                  </a>
-                ))
-              }
-            </div>
-          </div>
-        </li>
-
-        <li>
-          <a
-            href="/about"
-            class="text-sm font-medium text-white hover:text-mint-teal"
-          >
-            About
+          <a href="/resources/social-media" role="menuitem">
+            <span class="nav-menu-label">Community</span>
+            <span class="nav-menu-desc">Field reports across social</span>
           </a>
-        </li>
-      </ul>
+        </div>
+      </div>
+      <a href="/faq">FAQ</a>
+      <a href="/about">About</a>
     </nav>
 
     <MobileMenu client:load />
   </div>
 </header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(7, 10, 12, 0.72);
+    backdrop-filter: saturate(140%) blur(16px);
+    -webkit-backdrop-filter: saturate(140%) blur(16px);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .site-header-inner {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 40px;
+    height: 68px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--fg);
+  }
+
+  .brand-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: block;
+  }
+
+  .brand-name {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    color: var(--fg);
+  }
+
+  .brand-sub {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--fg-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* Desktop nav */
+  .nav {
+    display: none;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 32px;
+  }
+
+  @media (min-width: 900px) {
+    .nav { display: flex; }
+  }
+
+  .nav > a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fg-soft);
+    text-decoration: none;
+    position: relative;
+    padding: 6px 0;
+    transition: color 0.15s;
+  }
+  .nav > a:hover { color: var(--cyan); }
+  .nav > a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 100%;
+    bottom: 0;
+    height: 1px;
+    background: var(--cyan);
+    transition: right 0.2s ease;
+  }
+  .nav > a:hover::after { right: 0; }
+
+  /* Resources dropdown */
+  .nav-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-dropdown-trigger {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fg-soft);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 6px 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    transition: color 0.15s;
+  }
+  .nav-dropdown-trigger::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 100%;
+    bottom: 0;
+    height: 1px;
+    background: var(--cyan);
+    transition: right 0.2s ease;
+  }
+
+  .nav-caret {
+    font-size: 10px;
+    transition: transform 0.2s ease;
+    color: var(--fg-muted);
+  }
+
+  .nav-dropdown:hover .nav-dropdown-trigger,
+  .nav-dropdown:focus-within .nav-dropdown-trigger { color: var(--cyan); }
+  .nav-dropdown:hover .nav-dropdown-trigger::after,
+  .nav-dropdown:focus-within .nav-dropdown-trigger::after { right: 0; }
+  .nav-dropdown:hover .nav-caret,
+  .nav-dropdown:focus-within .nav-caret { transform: rotate(180deg); color: var(--cyan); }
+
+  .nav-menu {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    min-width: 248px;
+    background: var(--bg-1);
+    border: 1px solid var(--rule-strong);
+    border-radius: 12px;
+    padding: 8px;
+    display: grid;
+    gap: 2px;
+    box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.8);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+    z-index: 60;
+  }
+  .nav-menu::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    border-radius: 12px 12px 0 0;
+  }
+  /* hover bridge — keeps menu open in the gap between trigger and menu */
+  .nav-dropdown::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    height: 16px;
+  }
+  .nav-dropdown:hover .nav-menu,
+  .nav-dropdown:focus-within .nav-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .nav-menu a {
+    display: grid;
+    gap: 2px;
+    padding: 11px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .nav-menu a::after { display: none; }
+  .nav-menu a:hover { background: var(--cyan-weak); }
+
+  .nav-menu-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fg);
+    transition: color 0.15s;
+  }
+  .nav-menu a:hover .nav-menu-label { color: var(--cyan); }
+
+  .nav-menu-desc {
+    font-size: 12px;
+    color: var(--fg-muted);
+    line-height: 1.4;
+  }
+
+  @media (max-width: 899px) {
+    .site-header-inner {
+      grid-template-columns: 1fr auto;
+      padding: 0 20px;
+      height: 60px;
+    }
+    .nav { display: none; }
+  }
+</style>
