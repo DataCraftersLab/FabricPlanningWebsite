@@ -6,5 +6,6 @@ level: "Advanced"
 format: "Virtual"
 url: "https://www.eventbrite.com/e/mastering-fabric-planning-powertable-tickets-1989223528121"
 featuredImage: "https://media.fabricplanning.io/events/courses/Mastering-Fabric-Planning-PowerTable.webp"
+thumbnailAspect: "16/9"
 available: true
 ---
