@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
-import EventCard from "../../components/EventCard.astro";
 import { getEventStatus } from "../../utils/eventStatus";
 
 const all = await getCollection("events");
@@ -13,74 +12,245 @@ const upcoming = all
 const past = all
   .filter((e) => getEventStatus(e.data.date) === "past")
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+function fmtDay(d: Date) {
+  return d.getDate().toString().padStart(2, "0");
+}
+function fmtMon(d: Date) {
+  return d.toLocaleDateString("en-US", { month: "short" });
+}
+function getTypeLabel(type: "virtual" | "in-person" | "webinar") {
+  return type === "virtual" ? "Virtual" : type === "in-person" ? "In-person" : "Webinar";
+}
 ---
 
 <Layout
   title="Events — Fabric Planning"
   description="Upcoming sessions, past recordings, and community meetups for Microsoft Fabric Planning."
 >
-  <section class="bg-white">
-    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
-      <header class="mb-12 text-center">
-        <p
-          class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-fabric-purple"
-        >
-          Resources
-        </p>
-        <h1
-          class="mb-4 text-4xl font-bold tracking-tight text-forest md:text-5xl"
-        >
-          Events
-        </h1>
-        <p class="mx-auto max-w-2xl text-base text-gray-muted md:text-lg">
-          Upcoming sessions, past recordings, and community meetups for finance
-          and data professionals working with Microsoft Fabric Planning.
-        </p>
-      </header>
+  <section class="page-hero">
+    <div class="container page-hero-inner">
+      <span class="eyebrow"><span class="section-no">§</span> Resources</span>
+      <h1><span class="italic">Events</span></h1>
+      <p class="page-hero-sub">
+        Upcoming sessions, past recordings, and community meetups for finance
+        and data professionals working with Microsoft Fabric Planning.
+      </p>
+    </div>
+  </section>
 
-      <h2 class="mb-6 text-2xl font-bold text-forest">Upcoming events</h2>
-      {
-        upcoming.length === 0 ? (
-          <p class="mb-12 text-base text-gray-muted">
-            No upcoming events scheduled.
-          </p>
-        ) : (
-          <div class="mb-16 grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {upcoming.map((event) => (
-              <EventCard
-                title={event.data.title}
-                date={event.data.date}
-                time={event.data.time}
-                location={event.data.location}
-                type={event.data.type}
-                registrationUrl={event.data.registrationUrl}
-                featuredImage={event.data.featuredImage}
-              />
-            ))}
-          </div>
-        )
-      }
+  <section class="slab" style="padding-top: 88px;">
+    <div class="container">
 
-      <h2 class="mb-6 text-2xl font-bold text-forest">Past events</h2>
-      {
-        past.length === 0 ? (
-          <p class="text-base text-gray-muted">No past events yet.</p>
-        ) : (
-          <div class="grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {past.map((event) => (
-              <EventCard
-                title={event.data.title}
-                date={event.data.date}
-                time={event.data.time}
-                location={event.data.location}
-                type={event.data.type}
-                registrationUrl={event.data.registrationUrl}
-                featuredImage={event.data.featuredImage}
-              />
-            ))}
-          </div>
-        )
-      }
+      <!-- Upcoming -->
+      <div class="block">
+        <h2 class="page-h2">
+          <span class="dot"></span> Upcoming events
+        </h2>
+        <p class="page-h2-sub">
+          {upcoming.length === 0 ? "No upcoming events scheduled." : `${upcoming.length} session${upcoming.length === 1 ? "" : "s"} scheduled.`}
+        </p>
+        {
+          upcoming.length === 0 ? (
+            <div class="soft-panel">
+              <h3>No upcoming events</h3>
+              <p>New sessions are added regularly. Subscribe on Substack to be notified.</p>
+              <a class="btn btn-primary" href="https://fabricplanning.substack.com" target="_blank" rel="noopener noreferrer">
+                Subscribe <span class="arr">→</span>
+              </a>
+            </div>
+          ) : (
+            <div class="card-grid">
+              {upcoming.map((event) => (
+                <a
+                  class="event-card"
+                  href={event.data.registrationUrl ?? "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div class="event-thumb">
+                    {event.data.featuredImage && (
+                      <img src={event.data.featuredImage} alt={event.data.title} loading="lazy" />
+                    )}
+                  </div>
+                  <div class="event-body">
+                    <div class="event-meta-row">
+                      <span>{getTypeLabel(event.data.type)}</span>
+                      {event.data.location && (
+                        <>
+                          <span class="event-meta-sep">·</span>
+                          <span>{event.data.location}</span>
+                        </>
+                      )}
+                    </div>
+                    <h4 class="event-title">{event.data.title}</h4>
+                    <p class="event-loc">{event.data.description}</p>
+                    <div class="event-card-foot">
+                      <span class="event-card-time">{fmtDay(event.data.date)} {fmtMon(event.data.date)} · {event.data.time}</span>
+                      <span class="event-card-arr">Register <span>→</span></span>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </div>
+
+      <!-- Past / Recordings -->
+      <div class="block">
+        <h2 class="page-h2">
+          <span class="dot dot-muted"></span> Recordings
+        </h2>
+        <p class="page-h2-sub">
+          {past.length === 0 ? "No recordings yet." : `${past.length} recording${past.length === 1 ? "" : "s"} available.`}
+        </p>
+        {
+          past.length === 0 ? (
+            <div class="soft-panel">
+              <h3>No recordings yet</h3>
+              <p>Past session recordings will appear here once available.</p>
+            </div>
+          ) : (
+            <div class="card-grid events-past">
+              {past.map((event) => (
+                <a
+                  class="event-card"
+                  href={event.data.registrationUrl ?? "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div class="event-thumb">
+                    {event.data.featuredImage && (
+                      <img src={event.data.featuredImage} alt={event.data.title} loading="lazy" />
+                    )}
+                    <span class="event-badge event-badge-past">Recording</span>
+                  </div>
+                  <div class="event-body">
+                    <div class="event-meta-row">
+                      <span>{getTypeLabel(event.data.type)}</span>
+                      {event.data.location && (
+                        <>
+                          <span class="event-meta-sep">·</span>
+                          <span>{event.data.location}</span>
+                        </>
+                      )}
+                    </div>
+                    <h4 class="event-title">{event.data.title}</h4>
+                    <p class="event-loc">{event.data.description}</p>
+                    <div class="event-card-foot">
+                      <span class="event-card-time">{fmtDay(event.data.date)} {fmtMon(event.data.date)}</span>
+                      <span class="event-card-arr">Watch <span>→</span></span>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </div>
+
     </div>
   </section>
 </Layout>
+
+<style>
+  /* Event card styles scoped to this page */
+  .event-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-1);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--fg);
+    transition: all 0.22s ease;
+  }
+  .event-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--cyan);
+    box-shadow: 0 24px 60px -24px rgba(0, 240, 209, 0.35);
+  }
+  .event-card:hover .event-card-arr {
+    transform: translateX(4px);
+    color: var(--cyan-ink);
+    background: var(--cyan);
+  }
+
+  .event-thumb {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--bg-2);
+  }
+  .event-thumb img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform 0.45s ease;
+  }
+  .event-card:hover .event-thumb img { transform: scale(1.04); }
+  .event-thumb::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(7, 10, 12, 0.65) 100%);
+    pointer-events: none;
+  }
+
+  .event-badge {
+    position: absolute; top: 14px; left: 14px; z-index: 2;
+    font-family: var(--font-mono);
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    font-weight: 500; padding: 6px 10px; border-radius: 999px;
+    display: inline-flex; align-items: center; gap: 7px;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
+  .event-badge-past {
+    background: rgba(7, 10, 12, 0.72); color: var(--fg);
+    border: 1px solid var(--rule-strong);
+  }
+  .event-badge-past::before {
+    content: "▶"; font-size: 9px; color: var(--cyan); line-height: 1;
+  }
+
+  .event-body { padding: 22px 22px 20px; display: flex; flex-direction: column; flex: 1; }
+  .event-meta-row {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--fg-muted);
+    margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-weight: 500;
+  }
+  .event-meta-sep { color: var(--fg-faint); }
+  .event-title {
+    font-weight: 500; font-size: 16px; line-height: 1.25; letter-spacing: -0.02em;
+    color: var(--fg); margin: 0 0 10px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .event-loc {
+    font-size: 13px; color: var(--fg-soft); margin: 0; flex: 1;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .event-card-foot {
+    margin-top: auto; padding-top: 18px; border-top: 1px solid var(--rule);
+    display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  }
+  .event-card-time {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--fg-muted); font-weight: 500;
+  }
+  .event-card-arr {
+    font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg);
+    padding: 8px 14px; border: 1px solid var(--rule-strong); border-radius: 6px;
+    background: rgba(234, 246, 243, 0.03);
+    display: inline-flex; align-items: center; gap: 8px; transition: all 0.18s;
+  }
+  .event-card-arr span { transition: transform 0.18s; }
+
+  .events-past .event-card { opacity: 0.92; }
+  .events-past .event-thumb::before {
+    content: ""; position: absolute; inset: 0; z-index: 1;
+    background: rgba(7, 10, 12, 0.25); pointer-events: none;
+  }
+
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:.45 } }
+</style>

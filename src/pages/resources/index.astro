@@ -8,7 +8,6 @@ const cards = [
     title: "Events",
     description:
       "Upcoming sessions, past recordings, and community meetups for finance and data professionals working with Microsoft Fabric Planning.",
-    accent: "border-t-medium-green",
     cta: "Browse events",
   },
   {
@@ -17,7 +16,6 @@ const cards = [
     title: "Blog",
     description:
       "Long-form analysis, walkthroughs, and lessons from practitioners building real planning models on Microsoft Fabric.",
-    accent: "border-t-fabric-purple",
     cta: "Read the blog",
   },
   {
@@ -26,7 +24,6 @@ const cards = [
     title: "Social Media",
     description:
       "Discussions, insights, and updates from across LinkedIn, Reddit, and beyond — curated for the Fabric Planning community.",
-    accent: "border-t-dc-blue",
     cta: "See what's being said",
   },
 ];
@@ -36,41 +33,28 @@ const cards = [
   title="Resources — Fabric Planning"
   description="Events, blog posts, and community discussions on Microsoft Fabric Planning."
 >
-  <section class="bg-white">
-    <div class="mx-auto max-w-[1200px] px-6 py-20 md:py-24">
-      <header class="mb-16 text-center">
-        <p
-          class="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-fabric-purple"
-        >
-          Resources
-        </p>
-        <h1
-          class="mb-4 text-4xl font-bold tracking-tight text-forest md:text-5xl"
-        >
-          Everything in one place
-        </h1>
-        <p class="mx-auto max-w-2xl text-base text-gray-muted md:text-lg">
-          Events, articles, and community conversations on Microsoft Fabric
-          Planning — all in one hub.
-        </p>
-      </header>
+  <section class="page-hero">
+    <div class="container page-hero-inner">
+      <span class="eyebrow"><span class="section-no">§</span> Resources</span>
+      <h1>Everything in <span class="italic">one place</span></h1>
+      <p class="page-hero-sub">
+        Events, articles, and community conversations on Microsoft Fabric
+        Planning — all in one hub.
+      </p>
+    </div>
+  </section>
 
-      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+  <section class="slab" style="padding-top: 88px;">
+    <div class="container">
+      <div class="card-grid">
         {
           cards.map((card) => (
-            <a
-              href={card.href}
-              class={`group flex flex-col rounded-xl border-t-[3px] ${card.accent} bg-white p-8 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-1 hover:shadow-md`}
-            >
-              <p class="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-gray-muted">
-                {card.eyebrow}
-              </p>
-              <h2 class="mb-3 text-2xl font-bold text-forest">{card.title}</h2>
-              <p class="mb-6 flex-1 text-base leading-relaxed text-slate-text">
-                {card.description}
-              </p>
-              <span class="text-sm font-semibold text-deep-green group-hover:underline">
-                {card.cta} &rarr;
+            <a class="nav-card" href={card.href}>
+              <span class="nav-card-eyebrow">{card.eyebrow}</span>
+              <h2 class="nav-card-title">{card.title}</h2>
+              <p class="nav-card-desc">{card.description}</p>
+              <span class="nav-card-cta">
+                {card.cta} <span class="arr">→</span>
               </span>
             </a>
           ))
@@ -79,3 +63,77 @@ const cards = [
     </div>
   </section>
 </Layout>
+
+<style>
+  .nav-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-1);
+    border: 1px solid var(--rule);
+    border-radius: 14px;
+    padding: 28px;
+    text-decoration: none;
+    color: var(--fg);
+    transition: all 0.22s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .nav-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity: 0;
+    transition: opacity 0.22s;
+  }
+  .nav-card:hover {
+    border-color: var(--cyan);
+    transform: translateY(-4px);
+    box-shadow: 0 24px 60px -24px rgba(0, 240, 209, 0.3);
+  }
+  .nav-card:hover::before { opacity: 1; }
+  .nav-card:hover .nav-card-cta { color: var(--cyan); }
+  .nav-card:hover .arr { transform: translateX(4px); }
+
+  .nav-card-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .nav-card-title {
+    font-weight: 500;
+    font-size: 28px;
+    letter-spacing: -0.025em;
+    color: var(--fg);
+    margin: 0 0 14px;
+    line-height: 1.1;
+  }
+  .nav-card-desc {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--fg-soft);
+    margin: 0 0 24px;
+    flex: 1;
+  }
+  .nav-card-cta {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.18s;
+    margin-top: auto;
+  }
+  .arr { transition: transform 0.18s ease; }
+</style>
