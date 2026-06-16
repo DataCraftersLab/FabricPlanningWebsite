@@ -1,0 +1,1089 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout
+  title="Capacity & Cost Calculator — Fabric Planning"
+  description="Size your Microsoft Fabric capacity by user role — Planner, Stakeholder, Viewer — then see the F-SKU that fits and what it costs per month in your region."
+>
+  <!-- ── Page hero ─────────────────────────────────────────────── -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="calc-hero-grid">
+        <div class="page-hero-inner">
+          <span class="eyebrow"><span class="section-no">§</span> Calculator</span>
+          <h1>Fabric Planning <span class="italic">capacity &amp; cost</span></h1>
+          <p class="page-hero-sub">
+            Size your Microsoft Fabric capacity by user role, then see the
+            F-SKU that fits and what it costs each month.
+          </p>
+        </div>
+
+        <aside class="calc-hero-aside">
+          <div class="eyebrow"><span class="section-no">§</span> The model</div>
+          <p class="calc-aside-lead">Three roles. One unit of capacity.</p>
+          <ul class="calc-aside-rates">
+            <li>
+              <span class="calc-rate-name"
+                ><span class="calc-rate-dot" style="background:#00f0d1"></span
+                >Planner</span
+              >
+              <span class="calc-rate-val">1.16 <small>CU</small></span>
+            </li>
+            <li>
+              <span class="calc-rate-name"
+                ><span class="calc-rate-dot" style="background:#f472b6"></span
+                >Stakeholder</span
+              >
+              <span class="calc-rate-val">0.23 <small>CU</small></span>
+            </li>
+            <li>
+              <span class="calc-rate-name"
+                ><span class="calc-rate-dot" style="background:#a78bdb"></span
+                >Viewer</span
+              >
+              <span class="calc-rate-val">0.05 <small>CU</small></span>
+            </li>
+          </ul>
+          <p class="calc-aside-foot">
+            Sustained CU per user — the share of your F-SKU each role keeps
+            occupied. Add up everyone and that is the capacity you need.
+          </p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── The tool ──────────────────────────────────────────────── -->
+  <section class="slab" style="padding-top: 72px;">
+    <div class="container">
+      <div class="fp-calc">
+        <div class="grid">
+          <div>
+            <div class="card">
+              <div class="eyebrow"><span class="num">01</span>Your users</div>
+              <h2>Who is using Fabric Planning?</h2>
+              <p class="hint">
+                Rates below are sustained CU, the average capacity each user
+                keeps occupied.
+              </p>
+              <div id="roles"></div>
+
+              <div class="buffer" id="buffer">
+                <div class="buffer-row">
+                  <div class="buffer-lbl">
+                    Add overhead buffer<small
+                      >Optional safety margin on top of consumption.</small
+                    >
+                  </div>
+                  <label class="sw"
+                    ><input type="checkbox" id="buffer-toggle" /><span
+                      class="track"></span
+                  ></label>
+                </div>
+                <div class="buffer-ctrl">
+                  <span class="pct-suffix">Buffer</span>
+                  <input
+                    type="number"
+                    id="buffer-pct"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value="15"
+                  />
+                  <span class="pct-suffix">% added to your total CU</span>
+                </div>
+              </div>
+
+              <div class="total-row">
+                <span class="total-label"
+                  >Total capacity needed<small id="total-note"
+                    >sustained CU</small
+                  ></span
+                >
+                <span class="total-cu"
+                  ><span id="totalCU">0</span><small>CU</small></span
+                >
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="card">
+              <div class="eyebrow"><span class="num">02</span>Capacity that fits</div>
+              <h2>Your plan</h2>
+              <div id="visual"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card dollars" id="dollars">
+          <div class="dollars-head">
+            <label class="sw"
+              ><input type="checkbox" id="dollars-toggle" /><span class="track"
+              ></span
+            ></label>
+            <span class="dollars-toggle-lbl">Show dollars</span>
+          </div>
+          <div id="dollars-body">
+            <div class="region-row">
+              <div class="region">
+                <label for="region">Region <span class="star">*</span></label>
+                <select id="region"></select>
+              </div>
+              <p class="region-row-note">
+                Region only changes the dollar price of one CU, not how much
+                capacity you need.
+              </p>
+            </div>
+            <div class="region-note">
+              Picking a region does not confirm availability. Verify with
+              Microsoft that <b>both Fabric and Fabric Planning</b> are offered in
+              your selected region before relying on these figures.
+            </div>
+            <p class="asof">Pricing as of June 16, 2026 &middot; figures in USD.</p>
+            <div id="pricing"></div>
+          </div>
+        </div>
+
+        <div class="card bill">
+          <div class="eyebrow"><span class="num">03</span>How it works</div>
+          <h2>How Fabric Planning is billed</h2>
+          <p>
+            When you start using Fabric Planning, the cost follows a 30-day
+            pattern. The first time a user takes an action, that action sets
+            their role, and that role's capacity is billed for the next 30 days.
+          </p>
+          <p class="roles-line">
+            <b>Build or model the plan,</b> you are a Planner.
+            <b>Enter or write back data,</b> you are a Stakeholder.
+            <b>View only,</b> you are a Viewer.
+          </p>
+          <p>
+            Each role holds a sustained slice of capacity: a Planner holds 1.16
+            CU, a Stakeholder 0.23 CU, a Viewer 0.05 CU. Sustained CU is the
+            average capacity a role keeps occupied, in the same unit your Fabric
+            capacity (the F-SKU) is sold in. It is not CU per hour, and it is not
+            CU-seconds, so it lines up directly with the SKU number. One Planner
+            holds 1.16 of an F2's 2 CU, about 58% of it.
+          </p>
+          <p>
+            Add up the sustained CU across everyone and that total is what your
+            plan needs. Microsoft meters this per second underneath, but from a
+            capacity view it reads cleanly as the share of your F-SKU each role
+            occupies.
+          </p>
+          <p>
+            The number of CUs each role consumes is the same in every region.
+            What changes by region is the dollar price of one CU, which is what
+            the region selector adjusts.
+          </p>
+          <p>
+            This calculator is kept deliberately simple: one consistent unit and
+            one set of numbers. For the fuller, more detailed capacity estimator,
+            see Lumel, Microsoft's development partner for Fabric Planning, at
+            <a
+              href="https://lumel.com/fabric-planning-capacity-pricing/"
+              target="_blank"
+              rel="noopener">lumel.com</a
+            >. For the current dollar cost of a CU in your region, see
+            Microsoft's
+            <a
+              href="https://azure.microsoft.com/en-us/pricing/details/microsoft-fabric/#pricing"
+              target="_blank"
+              rel="noopener">Fabric pricing page</a
+            >.
+          </p>
+          <p class="disclaimer">
+            Prices are per-CU figures derived from published F2 capacity pricing
+            (F2 = 2 CU), in USD, as of June 16, 2026. Reservation reflects a
+            1-year monthly equivalent. Confirm current rates with Microsoft, as
+            pricing changes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  /* ────────────────────────────────────────────────────────────────
+     Fabric Planning capacity calculator
+     Reskinned onto the site's Obsidian-terminal design system.
+     All structural CSS is preserved from the original tool; only the
+     custom-property values are remapped to the dark/cyan palette, plus
+     a handful of targeted overrides for hardcoded light colors.
+  ──────────────────────────────────────────────────────────────── */
+  .fp-calc {
+    /* Remap the original tool tokens onto site theme tokens */
+    --ink: var(--fg);
+    --muted: var(--fg-muted);
+    --faint: var(--fg-faint);
+    --line: var(--rule-strong);
+    --panel: var(--bg-1);
+    --recessed: var(--bg-3);
+    --recessed-line: var(--rule-strong);
+    --hover: var(--cyan-weak);
+    --hover-fp: var(--cyan-haze);
+    --hover-line: var(--cyan);
+    --fp-tint: var(--cyan-haze);
+    --fp-border: rgba(0, 240, 209, 0.25);
+
+    /* Role / category colors — distinguishable on dark, drawn from theme */
+    --planner: #00f0d1; /* cyan */
+    --stakeholder: #f472b6; /* rose */
+    --viewer: #a78bdb; /* light purple */
+    --overhead: #fbbf24; /* amber */
+    --reserve: #4ade80; /* green */
+
+    --display: var(--font-display);
+    --body: var(--font-sans);
+
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  .fp-calc * { box-sizing: border-box; }
+
+  /* ── Hero: two-column layout with a spec card on the right ───── */
+  .calc-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(300px, 0.82fr);
+    gap: 56px;
+    align-items: center;
+  }
+  .calc-hero-grid .page-hero-inner { max-width: none; }
+  .calc-hero-aside {
+    position: relative;
+    z-index: 2;
+    background: var(--bg-1);
+    border: 1px solid var(--rule-strong);
+    border-radius: 14px;
+    padding: 26px 26px 22px;
+    box-shadow: 0 24px 60px -30px rgba(0, 0, 0, 0.85);
+  }
+  .calc-hero-aside::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    border-radius: 14px 14px 0 0;
+  }
+  .calc-aside-lead {
+    font-family: var(--font-display);
+    font-size: 21px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+    margin: 14px 0 18px;
+  }
+  .calc-aside-rates { list-style: none; margin: 0; padding: 0; }
+  .calc-aside-rates li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .calc-aside-rates li:first-child { border-top: none; }
+  .calc-rate-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    color: var(--fg);
+    font-size: 15px;
+  }
+  .calc-rate-dot { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+  .calc-rate-val {
+    font-family: var(--font-display);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--fg);
+  }
+  .calc-rate-val small { font-size: 11px; color: var(--fg-muted); font-weight: 500; margin-left: 3px; }
+  .calc-aside-foot {
+    margin: 16px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--fg-muted);
+  }
+  @media (max-width: 900px) {
+    .calc-hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  /* Region row (lives inside the dollars panel) */
+  .fp-calc .region-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 14px 0 18px;
+  }
+  .fp-calc .region-row-note {
+    margin: 0;
+    color: var(--fg-muted);
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 38ch;
+    flex: 1;
+    min-width: 220px;
+  }
+  .fp-calc .region { display: flex; flex-direction: column; gap: 6px; }
+  .fp-calc .region label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-muted);
+    font-weight: 500;
+  }
+  .fp-calc .region select {
+    font-family: var(--body);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fg);
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--bg-2);
+    min-width: 230px;
+    cursor: pointer;
+  }
+  .fp-calc .region .star { color: var(--overhead); }
+
+  .fp-calc .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 880px) {
+    .fp-calc .grid { grid-template-columns: 1fr; }
+  }
+
+  .fp-calc .card {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: var(--card-radius);
+    padding: 22px 24px;
+    margin-bottom: 20px;
+  }
+
+  /* Eyebrow — matched to the site eyebrow (mono, cyan index) */
+  .fp-calc .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--fg-muted);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .fp-calc .eyebrow .num { color: var(--cyan); font-weight: 500; }
+
+  .fp-calc .card h2 {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0 0 4px;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+  }
+  .fp-calc .hint { font-size: 12px; color: var(--muted); margin: 0 0 14px; }
+
+  .fp-calc .role { padding: 15px 0; border-top: 1px solid var(--line); }
+  .fp-calc .role:first-of-type { border-top: none; padding-top: 6px; }
+  .fp-calc .role-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 9px;
+  }
+  .fp-calc .role-name {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--fg);
+  }
+  .fp-calc .swatch { width: 11px; height: 11px; border-radius: 3px; flex: none; }
+  .fp-calc .role-rate { font-size: 12px; color: var(--muted); font-weight: 400; }
+  .fp-calc .role-cu {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 15px;
+    font-variant-numeric: tabular-nums;
+  }
+  .fp-calc .controls { display: flex; align-items: center; gap: 14px; }
+
+  .fp-calc input[type="range"] {
+    flex: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 5px;
+    border-radius: 4px;
+    background: var(--bg-3);
+    outline: none;
+    cursor: pointer;
+  }
+  .fp-calc input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent, var(--cyan));
+    border: 3px solid var(--bg-1);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+  .fp-calc input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent, var(--cyan));
+    border: 3px solid var(--bg-1);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+  .fp-calc input[type="number"] {
+    width: 76px;
+    font-family: var(--display);
+    font-variant-numeric: tabular-nums;
+    font-size: 15px;
+    font-weight: 500;
+    text-align: center;
+    color: var(--fg);
+    padding: 7px 6px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--bg-2);
+  }
+  .fp-calc input[type="number"]:focus,
+  .fp-calc .region select:focus {
+    border-color: var(--cyan);
+    outline: 2px solid var(--cyan-weak);
+  }
+  .fp-calc input[type="number"]:hover,
+  .fp-calc .region select:hover { border-color: var(--hover-line); }
+  .fp-calc input[type="range"]:hover::-webkit-slider-thumb {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5), 0 0 0 5px var(--cyan-weak);
+  }
+
+  .fp-calc .buffer { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .fp-calc .buffer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .fp-calc .buffer-lbl { font-weight: 600; font-size: 14px; color: var(--fg); }
+  .fp-calc .buffer-lbl small {
+    display: block;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .fp-calc .buffer-ctrl {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .fp-calc .buffer.on .buffer-ctrl { display: flex; }
+  .fp-calc .buffer-ctrl input[type="number"] { width: 64px; }
+  .fp-calc .pct-suffix { font-size: 13px; color: var(--muted); font-weight: 500; }
+
+  /* Toggle switch */
+  .fp-calc .sw { position: relative; width: 42px; height: 23px; flex: none; }
+  .fp-calc .sw input { opacity: 0; width: 0; height: 0; }
+  .fp-calc .sw .track {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    background: var(--bg-3);
+    border: 1px solid var(--rule-strong);
+    transition: background 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+  .fp-calc .sw .track::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    transition: left 0.2s;
+  }
+  .fp-calc .sw input:checked + .track {
+    background: var(--cyan);
+    border-color: var(--cyan);
+  }
+  .fp-calc .sw input:checked + .track::after { left: 21px; }
+
+  .fp-calc .total-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 2px solid var(--cyan);
+  }
+  .fp-calc .total-label { font-weight: 600; color: var(--fg); }
+  .fp-calc .total-label small {
+    display: block;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .fp-calc .total-cu {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 30px;
+    font-variant-numeric: tabular-nums;
+    color: var(--cyan);
+  }
+  .fp-calc .total-cu small {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+
+  /* Visual: tank + breakdown */
+  .fp-calc .visual { display: flex; gap: 26px; align-items: stretch; }
+  .fp-calc .tankwrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 9px;
+  }
+  .fp-calc .sku-badge {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--cyan);
+  }
+  .fp-calc .tank {
+    position: relative;
+    width: 104px;
+    height: 212px;
+    border-radius: 16px;
+    background: var(--recessed);
+    border: 1px solid var(--recessed-line);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-shadow: inset 0 2px 9px rgba(0, 0, 0, 0.5);
+  }
+  .fp-calc .seg { width: 100%; transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+  .fp-calc .seg.top { box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.25); }
+  .fp-calc .tank-cap { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .fp-calc .cap-pct { color: var(--fg); font-weight: 600; }
+
+  .fp-calc .breakdown {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .fp-calc .bd-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .fp-calc .bd-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--fg);
+  }
+  .fp-calc .bd-val {
+    font-family: var(--display);
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  .fp-calc .bd-total {
+    border-top: 2px solid var(--rule-strong);
+    margin-top: 4px;
+    padding-top: 9px;
+    border-bottom: none;
+  }
+  .fp-calc .bd-total .bd-name { font-weight: 600; }
+  .fp-calc .bd-total .bd-val { font-weight: 700; }
+  .fp-calc .headroom { margin-top: 10px; font-size: 12px; color: var(--muted); }
+
+  .fp-calc .empty { color: var(--muted); font-size: 14px; padding: 34px 10px; text-align: center; }
+
+  /* Dollars panel */
+  .fp-calc .dollars-head { display: flex; align-items: center; gap: 11px; margin-bottom: 2px; }
+  .fp-calc .dollars-toggle-lbl {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--fg);
+  }
+  .fp-calc #dollars-body { display: none; }
+  .fp-calc .dollars.on #dollars-body { display: block; }
+  .fp-calc .region-note {
+    font-size: 12px;
+    color: var(--fg-soft);
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.25);
+    border-radius: 9px;
+    padding: 10px 13px;
+    margin: 14px 0 18px;
+    line-height: 1.55;
+  }
+  .fp-calc .region-note b { color: var(--fg); }
+  .fp-calc .asof { font-size: 12px; color: var(--muted); margin: -6px 0 16px; }
+
+  .fp-calc .colhead {
+    display: grid;
+    grid-template-columns: 1fr 132px 132px;
+    column-gap: 28px;
+    padding: 0 0 4px;
+    margin-bottom: 4px;
+  }
+  .fp-calc .colhead span {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-align: right;
+  }
+  .fp-calc .colhead span:first-child { text-align: left; }
+  .fp-calc .colhead span:nth-child(2) {
+    color: var(--fg);
+    border-bottom: 2px solid var(--rule-strong);
+    padding-bottom: 7px;
+  }
+  .fp-calc .colhead span:nth-child(3) {
+    color: var(--reserve);
+    border-bottom: 2px solid var(--reserve);
+    padding-bottom: 7px;
+  }
+
+  .fp-calc .hero {
+    display: grid;
+    grid-template-columns: 1fr 132px 132px;
+    column-gap: 28px;
+    align-items: baseline;
+    padding: 16px 0;
+    border-bottom: 2px solid var(--cyan);
+  }
+  .fp-calc .hero .lbl { font-weight: 700; font-size: 17px; color: var(--fg); }
+  .fp-calc .hero .sub {
+    display: block;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .fp-calc .hero .amt {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 25px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--fg);
+  }
+  .fp-calc .hero .amt.res { color: var(--reserve); }
+
+  .fp-calc .bd-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--muted);
+    margin: 16px 0 2px;
+  }
+  .fp-calc .bd-sublabel { font-size: 12px; color: var(--muted); margin: 0 0 8px; }
+
+  .fp-calc .bucket { border-bottom: 1px solid var(--line); }
+  .fp-calc .bucket:last-of-type { border-bottom: none; }
+  .fp-calc .bucket.fp {
+    background: var(--fp-tint);
+    border: 1px solid var(--fp-border);
+    border-radius: 11px;
+    margin: 4px 0 8px;
+    padding: 0 14px;
+  }
+  .fp-calc .bhead {
+    display: grid;
+    grid-template-columns: 1fr 132px 132px;
+    column-gap: 28px;
+    align-items: center;
+    padding: 13px 0;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+  .fp-calc .bhead:hover { background: var(--hover); }
+  .fp-calc .bucket.fp .bhead:hover { background: var(--hover-fp); }
+  .fp-calc .bhead .lbl {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 600;
+    font-size: 15px;
+    flex-wrap: wrap;
+    color: var(--fg);
+  }
+  .fp-calc .bhead .lbl .sub {
+    display: block;
+    width: 100%;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--muted);
+    padding-left: 17px;
+  }
+  .fp-calc .chev {
+    width: 9px;
+    height: 9px;
+    border-right: 2px solid var(--muted);
+    border-bottom: 2px solid var(--muted);
+    transform: rotate(-45deg);
+    transition: transform 0.2s;
+    flex: none;
+  }
+  .fp-calc .bucket.open .chev { transform: rotate(45deg); }
+  .fp-calc .bhead .amt {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 18px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--fg);
+  }
+  .fp-calc .bhead .amt.res { color: var(--reserve); }
+  .fp-calc .pct-chip {
+    font-family: var(--display);
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-variant-numeric: tabular-nums;
+  }
+  .fp-calc .fp .pct-chip { background: var(--cyan); color: var(--cyan-ink); }
+  .fp-calc .other .pct-chip { background: rgba(234, 246, 243, 0.08); color: var(--muted); }
+
+  .fp-calc .body { display: none; padding: 2px 0 12px; }
+  .fp-calc .bucket.open .body { display: block; }
+  .fp-calc .srow {
+    display: grid;
+    grid-template-columns: 1fr 132px 132px;
+    column-gap: 28px;
+    align-items: center;
+    padding: 8px 0 8px 26px;
+  }
+  .fp-calc .srow .lbl {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--fg);
+  }
+  .fp-calc .srow .lbl .sub { color: var(--muted); font-weight: 400; }
+  .fp-calc .srow .amt {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 14px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--fg-soft);
+  }
+  .fp-calc .srow .amt.res { color: var(--reserve); }
+  .fp-calc .srow.off .lbl,
+  .fp-calc .srow.off .amt { color: var(--fg-faint); }
+  .fp-calc .opill {
+    font-family: var(--body);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--fg-faint);
+    border: 1px solid var(--rule-strong);
+    border-radius: 10px;
+    padding: 1px 7px;
+  }
+  .fp-calc .na { color: var(--muted); font-weight: 500; font-size: 14px; font-family: var(--body); }
+
+  .fp-calc .price-foot { margin-top: 14px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+  /* How-it-works prose */
+  .fp-calc .bill h2 { margin-bottom: 10px; }
+  .fp-calc .bill p { margin: 0 0 10px; font-size: 14px; color: var(--fg-soft); line-height: 1.65; }
+  .fp-calc .bill .roles-line b { color: var(--fg); }
+  .fp-calc .disclaimer { font-size: 12px; color: var(--faint); line-height: 1.6; margin-top: 6px; }
+  .fp-calc .bill a {
+    color: var(--cyan);
+    font-weight: 500;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-color: rgba(0, 240, 209, 0.4);
+  }
+  .fp-calc .bill a:hover { text-decoration-color: var(--cyan); }
+
+  @media (max-width: 560px) {
+    .fp-calc .colhead,
+    .fp-calc .hero,
+    .fp-calc .bhead,
+    .fp-calc .srow {
+      grid-template-columns: 1fr 92px 92px;
+      column-gap: 14px;
+    }
+    .fp-calc .hero .amt { font-size: 20px; }
+    .fp-calc .bhead .amt { font-size: 16px; }
+    .fp-calc .bucket.fp { padding: 0 11px; }
+  }
+</style>
+
+<script>
+  const PRICING = {
+    "Central US": { payg: 131.4, reservation: 78.167 }, "East US": { payg: 131.4, reservation: 78.167 },
+    "East US 2": { payg: 131.4, reservation: 78.167 }, "North Central US": { payg: 131.4, reservation: 78.167 },
+    "South Central US": { payg: 131.4, reservation: 78.167 }, "West Central US": { payg: 146.0, reservation: 86.8335 },
+    "West US": { payg: 146.0, reservation: 86.8335 }, "West US 2": { payg: 131.4, reservation: 78.167 },
+    "West US 3": { payg: 131.4, reservation: 78.167 }, "UK South": { payg: 153.3, reservation: 91.167 },
+    "UK West": { payg: 153.3, reservation: 91.167 }, "UAE Central": { payg: 204.4, reservation: null },
+    "UAE North": { payg: 160.6, reservation: 95.5 }, "Switzerland North": { payg: 167.9, reservation: 99.8335 },
+    "Switzerland West": { payg: 211.7, reservation: 125.8335 }, "Sweden Central": { payg: 138.7, reservation: 82.5 },
+    "Spain Central": { payg: 138.7, reservation: 82.5 }, "Qatar Central": { payg: 160.6, reservation: 111.8335 },
+    "Poland Central": { payg: 160.6, reservation: 95.5 }, "Norway East": { payg: 175.2, reservation: 104.167 },
+    "Norway West": { payg: 226.3, reservation: null }, "New Zealand North": { payg: 160.6, reservation: 95.5 },
+    "Mexico Central": { payg: 138.7, reservation: 82.5 }, "Malaysia West": { payg: 138.7, reservation: 82.5 },
+    "Korea Central": { payg: 153.3, reservation: 91.167 }, "Korea South": { payg: 204.4, reservation: null },
+    "Japan East": { payg: 153.3, reservation: 91.167 }, "Japan West": { payg: 153.3, reservation: 91.167 },
+    "Italy North": { payg: 153.3, reservation: 91.167 }, "Israel Central": { payg: 146.0, reservation: 86.8335 },
+    "Indonesia Central": { payg: 138.7, reservation: 82.5 }, "Central India": { payg: 146.0, reservation: 86.8335 },
+    "South India": { payg: 160.6, reservation: 95.5 }, "West India": { payg: 146.0, reservation: null },
+    "Germany North": { payg: 204.4, reservation: null }, "Germany West Central": { payg: 160.6, reservation: 95.5 },
+    "France Central": { payg: 146.0, reservation: 86.8335 }, "France South": { payg: 189.8, reservation: null },
+    "North Europe": { payg: 138.7, reservation: 82.5 }, "West Europe": { payg: 160.6, reservation: 95.5 },
+    "Denmark East": { payg: 170.82, reservation: null }, "Chile Central": { payg: 182.5, reservation: 108.5835 },
+    "Canada Central": { payg: 146.0, reservation: 86.8335 }, "Canada East": { payg: 146.0, reservation: 86.8335 },
+    "Brazil South": { payg: 204.4, reservation: 121.5 }, "Belgium Central": { payg: 170.82, reservation: null },
+    "US Gov Texas": { payg: 131.4, reservation: 78.167 }, "US Gov Virginia": { payg: 131.4, reservation: 78.167 },
+    "Austria East": { payg: 170.82, reservation: null }, "Australia East": { payg: 153.3, reservation: 91.167 },
+    "Australia Southeast": { payg: 153.3, reservation: 91.167 }, "East Asia": { payg: 131.4, reservation: 78.167 },
+    "Southeast Asia": { payg: 160.6, reservation: 95.5 }, "South Africa North": { payg: 175.2, reservation: 104.167 },
+    "South Africa West": { payg: 226.3, reservation: null },
+  };
+
+  const SKUS = [2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048];
+  const ROLES = [
+    { key: "planner", name: "Planner", rate: 1.16, color: "var(--planner)" },
+    { key: "stakeholder", name: "Stakeholder", rate: 0.23, color: "var(--stakeholder)" },
+    { key: "viewer", name: "Viewer", rate: 0.05, color: "var(--viewer)" },
+  ];
+  const state = { planner: 1, stakeholder: 1, viewer: 1, region: "Central US", bufferOn: false, bufferPct: 15 };
+  const usd = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  const regionSel = document.getElementById("region");
+  Object.keys(PRICING).sort().forEach((r) => {
+    const o = document.createElement("option");
+    o.value = r;
+    o.textContent = r;
+    if (r === state.region) o.selected = true;
+    regionSel.appendChild(o);
+  });
+  regionSel.addEventListener("change", (e) => { state.region = e.target.value; render(); });
+
+  const rolesEl = document.getElementById("roles");
+  ROLES.forEach((role) => {
+    const w = document.createElement("div");
+    w.className = "role";
+    w.style.setProperty("--accent", role.color);
+    w.innerHTML = `
+      <div class="role-head">
+        <span class="role-name"><span class="swatch" style="background:${role.color}"></span>${role.name}
+          <span class="role-rate">&middot; ${role.rate} sustained CU/user</span></span>
+        <span class="role-cu" id="cu-${role.key}">0.00 CU</span>
+      </div>
+      <div class="controls">
+        <input type="range" min="0" max="100" step="1" value="${state[role.key]}" id="slider-${role.key}">
+        <input type="number" min="0" step="1" value="${state[role.key]}" id="num-${role.key}">
+      </div>`;
+    rolesEl.appendChild(w);
+    const slider = w.querySelector(`#slider-${role.key}`), num = w.querySelector(`#num-${role.key}`);
+    slider.addEventListener("input", () => { state[role.key] = +slider.value; num.value = slider.value; render(); });
+    num.addEventListener("input", () => { let v = Math.max(0, Math.floor(+num.value || 0)); state[role.key] = v; slider.value = Math.min(v, 100); render(); });
+  });
+
+  const bufferEl = document.getElementById("buffer");
+  document.getElementById("buffer-toggle").addEventListener("change", (e) => {
+    state.bufferOn = e.target.checked;
+    bufferEl.classList.toggle("on", state.bufferOn);
+    render();
+  });
+  document.getElementById("buffer-pct").addEventListener("input", (e) => {
+    state.bufferPct = Math.max(0, +e.target.value || 0);
+    render();
+  });
+
+  const dollarsEl = document.getElementById("dollars");
+  document.getElementById("dollars-toggle").addEventListener("change", (e) => {
+    dollarsEl.classList.toggle("on", e.target.checked);
+  });
+
+  function skuFor(cu) { for (const s of SKUS) if (cu <= s) return s; return null; }
+  function toggleBucket(id) { document.getElementById(id).classList.toggle("open"); }
+  window.toggleBucket = toggleBucket;
+
+  function priceCell(amount, available, res) {
+    if (!available) return `<div class="amt na">Not available</div>`;
+    return `<div class="amt ${res ? "res" : ""}">${usd.format(amount)}</div>`;
+  }
+
+  function render() {
+    const base = ROLES.reduce((s, r) => s + state[r.key] * r.rate, 0);
+    const overheadCU = state.bufferOn ? (base * state.bufferPct) / 100 : 0;
+    const planning = base + overheadCU;
+
+    ROLES.forEach((r) => { document.getElementById(`cu-${r.key}`).textContent = (state[r.key] * r.rate).toFixed(2) + " CU"; });
+    document.getElementById("totalCU").textContent = planning.toFixed(2);
+    document.getElementById("total-note").textContent = state.bufferOn
+      ? `sustained CU incl. ${state.bufferPct}% buffer` : "sustained CU";
+
+    const rate = PRICING[state.region];
+    const visual = document.getElementById("visual");
+    const pricing = document.getElementById("pricing");
+
+    if (planning <= 0) {
+      visual.innerHTML = `<div class="empty">Add users on the left to size your plan.</div>`;
+      pricing.innerHTML = `<div class="empty">No usage yet, nothing to price.</div>`;
+      return;
+    }
+
+    const sku = skuFor(planning);
+    if (sku === null) {
+      visual.innerHTML = `<div class="empty">Your ${planning.toFixed(2)} CU exceeds the largest single plan (F2048). You would need more than one capacity.</div>`;
+      pricing.innerHTML = "";
+      return;
+    }
+
+    const fillPct = (planning / sku) * 100;
+
+    const segs = [];
+    if (overheadCU > 0) segs.push({ cu: overheadCU, color: "var(--overhead)", label: "Overhead buffer" });
+    segs.push({ cu: state.viewer * 0.05, color: "var(--viewer)", label: "Viewer" });
+    segs.push({ cu: state.stakeholder * 0.23, color: "var(--stakeholder)", label: "Stakeholder" });
+    segs.push({ cu: state.planner * 1.16, color: "var(--planner)", label: "Planner" });
+    const segHTML = segs.map((s, i) => (s.cu > 0 ? `<div class="seg ${i === 0 ? "top" : ""}" style="height:${(s.cu / sku) * 100}%;background:${s.color}"></div>` : "")).join("");
+
+    visual.innerHTML = `
+      <div class="visual">
+        <div class="tankwrap">
+          <div class="sku-badge">F${sku}</div>
+          <div class="tank">${segHTML}</div>
+          <div class="tank-cap">${planning.toFixed(2)} of ${sku} CU &middot; <span class="cap-pct">${fillPct.toFixed(0)}% full</span></div>
+        </div>
+        <div class="breakdown">
+          ${ROLES.map((r) => `
+            <div class="bd-row">
+              <span class="bd-name"><span class="swatch" style="background:${r.color}"></span>${r.name}
+                <span class="role-rate">&times; ${state[r.key]}</span></span>
+              <span class="bd-val">${(state[r.key] * r.rate).toFixed(2)} CU</span>
+            </div>`).join("")}
+          ${overheadCU > 0 ? `<div class="bd-row"><span class="bd-name"><span class="swatch" style="background:var(--overhead)"></span>Overhead (${state.bufferPct}%)</span><span class="bd-val">${overheadCU.toFixed(2)} CU</span></div>` : ""}
+          <div class="bd-row bd-total"><span class="bd-name">Total needed</span><span class="bd-val">${planning.toFixed(2)} CU</span></div>
+          <div class="headroom">${(sku - planning).toFixed(2)} CU headroom (${(100 - fillPct).toFixed(0)}% spare in F${sku})</div>
+        </div>
+      </div>`;
+
+    const resAvail = rate.reservation !== null;
+    const capP = sku * rate.payg, capR = resAvail ? sku * rate.reservation : null;
+    const fpP = planning * rate.payg, fpR = resAvail ? planning * rate.reservation : null;
+    const otherCU = sku - planning;
+    const otP = otherCU * rate.payg, otR = resAvail ? otherCU * rate.reservation : null;
+    const fpPct = (planning / sku) * 100, otPct = 100 - fpPct;
+    const savePct = resAvail ? (1 - rate.reservation / rate.payg) * 100 : 0;
+
+    const roleRows = ROLES.map((r) => {
+      const cu = state[r.key] * r.rate;
+      if (state[r.key] <= 0) return "";
+      return `<div class="srow">
+        <div class="lbl"><span class="swatch" style="background:${r.color}"></span>${r.name}
+          <span class="sub">&middot; ${state[r.key]} ${state[r.key] == 1 ? "user" : "users"} &middot; ${cu.toFixed(2)} CU</span></div>
+        ${priceCell(cu * rate.payg, true, false)}
+        ${priceCell(resAvail ? cu * rate.reservation : null, resAvail, true)}
+      </div>`;
+    }).join("");
+
+    const overheadRow = state.bufferOn
+      ? `<div class="srow"><div class="lbl"><span class="swatch" style="background:var(--overhead)"></span>Overhead buffer <span class="sub">&middot; ${state.bufferPct}% &middot; ${overheadCU.toFixed(2)} CU</span></div>${priceCell(overheadCU * rate.payg, true, false)}${priceCell(resAvail ? overheadCU * rate.reservation : null, resAvail, true)}</div>`
+      : `<div class="srow off"><div class="lbl">Overhead buffer <span class="opill">off</span></div><div class="amt">$0.00</div>${resAvail ? '<div class="amt res">$0.00</div>' : '<div class="amt na">Not available</div>'}</div>`;
+
+    pricing.innerHTML = `
+      <div class="colhead"><span></span><span>Pay-as-you-go</span><span>Reservation (1-yr)</span></div>
+
+      <div class="hero">
+        <div class="lbl">Fabric capacity cost<span class="sub">the capacity you buy &middot; F${sku} (${sku} CU)</span></div>
+        <div class="amt">${usd.format(capP)}</div>
+        ${resAvail ? `<div class="amt res">${usd.format(capR)}</div>` : `<div class="amt na">Not available</div>`}
+      </div>
+
+      <div class="bd-label">Breakdown of this capacity cost</div>
+      <p class="bd-sublabel">How the one capacity cost above divides up. These are not separate charges.</p>
+
+      <div class="bucket fp open" id="bkt-fp">
+        <div class="bhead" onclick="toggleBucket('bkt-fp')">
+          <div class="lbl"><span class="chev"></span>Consumed by Fabric Planning
+            <span class="pct-chip">${fpPct.toFixed(0)}%</span>
+            <span class="sub">${planning.toFixed(2)} CU of your F${sku}</span></div>
+          <div class="amt">${usd.format(fpP)}</div>
+          ${resAvail ? `<div class="amt res">${usd.format(fpR)}</div>` : `<div class="amt na">N/A</div>`}
+        </div>
+        <div class="body">
+          ${roleRows}
+          ${overheadRow}
+        </div>
+      </div>
+
+      <div class="bucket other" id="bkt-other">
+        <div class="bhead" onclick="toggleBucket('bkt-other')">
+          <div class="lbl"><span class="chev"></span>Other
+            <span class="pct-chip">${otPct.toFixed(0)}%</span>
+            <span class="sub">already part of the capacity you buy &middot; headroom or room for other Fabric workloads</span></div>
+          <div class="amt">${usd.format(otP)}</div>
+          ${resAvail ? `<div class="amt res">${usd.format(otR)}</div>` : `<div class="amt na">N/A</div>`}
+        </div>
+        <div class="body">
+          <div class="srow"><div class="lbl">Unused / available <span class="sub">&middot; ${otherCU.toFixed(2)} CU of your F${sku}</span></div>
+            ${priceCell(otP, true, false)}${priceCell(otR, resAvail, true)}</div>
+        </div>
+      </div>
+
+      <p class="price-foot">
+        Consumed by Fabric Planning plus Other equals the Fabric capacity cost (${usd.format(fpP)} + ${usd.format(otP)} = ${usd.format(capP)}, pay-as-you-go). Figures rounded to the nearest cent.
+        ${resAvail ? `Reservation runs about ${savePct.toFixed(0)}% below pay-as-you-go.` : `Reservation pricing is not offered in ${state.region}.`}
+      </p>`;
+  }
+
+  render();
+</script>
