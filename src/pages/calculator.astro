@@ -932,7 +932,7 @@ import Layout from "../layouts/Layout.astro";
     rolesEl.appendChild(w);
     const slider = w.querySelector(`#slider-${role.key}`), num = w.querySelector(`#num-${role.key}`);
     slider.addEventListener("input", () => { state[role.key] = +slider.value; num.value = slider.value; render(); });
-    num.addEventListener("input", () => { let v = Math.max(0, Math.floor(+num.value || 0)); state[role.key] = v; slider.value = Math.min(v, 100); render(); });
+    num.addEventListener("input", () => { const v = Math.max(0, Math.floor(+num.value || 0)); state[role.key] = v; slider.value = Math.min(v, 100); render(); });
   });
 
   const bufferEl = document.getElementById("buffer");
