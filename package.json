@@ -10,7 +10,10 @@
     "preview": "astro preview",
     "astro": "astro",
     "tina:dev": "tinacms dev",
-    "tina:build": "tinacms build"
+    "tina:build": "tinacms build",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@astrojs/react": "^5.0.3",
@@ -26,13 +29,21 @@
     "react-dom": "^19.0.0",
     "rss-parser": "^3.13.0",
     "tailwindcss": "^4.0.0",
-    "tinacms": "^2.7.0"
+    "tinacms": "^3.9.3"
   },
   "devDependencies": {
-    "@tinacms/cli": "^1.9.0",
+    "@eslint/js": "^10.0.1",
+    "@tinacms/cli": "^2.5.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "typescript": "^5.7.0"
+    "eslint": "^10.5.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^1.7.0",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.4",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.61.1"
   },
   "overrides": {
     "astro": {
