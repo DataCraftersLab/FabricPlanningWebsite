@@ -1,0 +1,9 @@
+dist
+node_modules
+.astro
+public/admin
+public/md
+public/llms.txt
+public/llms-full.txt
+tina/__generated__
+package-lock.json
